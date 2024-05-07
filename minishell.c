@@ -25,9 +25,9 @@ void	print_tree(t_tree *root)
 	printf("Done!");
 }
 
-       #include <stdio.h>
-       #include "readline/readline.h"
-       #include <readline/history.h>
+#include <stdio.h>
+#include "readline/readline.h"
+#include <readline/history.h>
 
 /* binary tree */
 int main()
@@ -50,6 +50,11 @@ int main()
 	// l2_n1->lisr = l2_n4;
 	// print_tree(root);
 
-	line = readline("minishell");
-	printf("%s\n", line);
+	/*safi salat minishell*/
+	while (1)
+	{
+		line = readline("\e[0;32m[minishell]~\e[0;0m");
+		printf("%s\n", line);
+	}
+	
 }
