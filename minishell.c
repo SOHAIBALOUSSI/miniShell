@@ -25,10 +25,6 @@ void	print_tree(t_tree *root)
 	printf("Done!");
 }
 
-#include <stdio.h>
-#include "readline/readline.h"
-#include <readline/history.h>
-
 /* binary tree */
 int main()
 {
