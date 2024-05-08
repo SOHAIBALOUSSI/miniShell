@@ -5,7 +5,7 @@
 #include <stdlib.h>
 int main()
 {
-  /* compile wityh -lreadline */
+  /* compile with -lreadline */
   char *line = readline("minishell :");
   while (strcmp(line, "exit") != 0)
   {
@@ -17,6 +17,9 @@ int main()
     }
     line = readline("minishell  :");
   }
+  for (int i = history_base; i < history_length; i++) {
+    printf("%d: %s\n", i, history_get(i)->line);
+    }
   if (line)
     free(line);
     return (0);
