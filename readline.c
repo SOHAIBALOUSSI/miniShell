@@ -1,8 +1,5 @@
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include "minishell.h"
+
 int main()
 {
   /* compile with -lreadline */
@@ -17,6 +14,7 @@ int main()
     }
     line = readline("minishell  :");
   }
+  /* history logs */
   for (int i = history_base; i < history_length; i++) {
     printf("%d: %s\n", i, history_get(i)->line);
     }
