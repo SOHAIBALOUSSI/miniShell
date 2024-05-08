@@ -50,7 +50,12 @@ int main()
 	while (1)
 	{
 		line = readline("\e[0;32m[minishell]~\e[0;0m");
-		printf("%s\n", line);
+		if (!ft_strncmp("cd ~\n", line, 4))
+		{
+			printf("Done\n");
+			system(line);
+		}
+		else
+			printf("%s\n", line);
 	}
-	
 }
