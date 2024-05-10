@@ -1,4 +1,5 @@
 #include "minishell.h"
+#include <asm-generic/signal-defs.h>
 
 t_tree	*new_node(int content)
 {
@@ -24,38 +25,31 @@ void	print_tree(t_tree *root)
 	print_tree(root->limn);
 	printf("Done!");
 }
+void	handler(int sig, siginfo_t *info, void *context)
+{
+	(void)context;
+		// printf("ctrl + c catched!\n");
+	// rl_on_new_line();
+	readline(">");	
 
-/* binary tree */
+}
+
 int main()
 {
+	struct sigaction sa;
+
 	char *line;
-	// t_tree *root = new_node(1);
-	// t_tree *l1_n1 = new_node(2);
-	// t_tree *l1_n2 = new_node(3);
-	// t_tree *l2_n1 = new_node(4);
-	// t_tree *l2_n2 = new_node(5);
-	// t_tree *l2_n3 = new_node(6);
-	// t_tree *l2_n4 = new_node(7);
-
-
-	// root->limn = l1_n1;
-	// root->lisr = l1_n2;
-	// l1_n1->limn = l2_n1;
-	// l1_n1->lisr = l2_n2;
-	// l2_n1->limn = l2_n3;
-	// l2_n1->lisr = l2_n4;
-	// print_tree(root);
-
-	/*safi salat minishell*/
-	while (1)
+	sa.sa_flags = SA_SIGINFO;
+	sa.sa_sigaction = handler;
+	sigaction(SIGINT,&sa, NULL);
+	line = readline("\e[0;32m[minishell]>_\e[0;0m");
+	while (line)
 	{
-		line = readline("\e[0;32m[minishell]~\e[0;0m");
-		if (!ft_strncmp("cd ~\n", line, 4))
-		{
-			printf("Done\n");
-			system(line);
-		}
-		else
-			printf("%s\n", line);
+		add_history(line);
+		printf("%s\n", line);
+		free(line);
+		line = readline("\e[0;32m[minishell]>_\e[0;0m");
 	}
+	rl_clear_history();
+	return (free(line), 0);
 }
