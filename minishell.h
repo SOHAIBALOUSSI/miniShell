@@ -7,7 +7,17 @@
 #include <unistd.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-// #include "./libft/libft.h"
+#include "./libs/libft/libft.h"
+
+# define ALLOC 'A'
+# define FREE 'F'
+
+/* The Struct used in the garbage collector */
+typedef struct s_gc
+{
+	void		*ptr;
+	struct s_gc	*next;
+}				t_gc;
 
 
 typedef struct	s_tree
@@ -17,5 +27,6 @@ typedef struct	s_tree
 	struct s_tree *limn;
 }				t_tree;
 
+void	*m_alloc(size_t __size, char todo);
 
-#endif /*MINISHELL_H*/
+#endif /*	MINISHELL_H	*/
