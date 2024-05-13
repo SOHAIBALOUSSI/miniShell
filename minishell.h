@@ -12,6 +12,8 @@
 # define ALLOC 'A'
 # define FREE 'F'
 
+
+
 /* The Struct used in the garbage collector */
 typedef struct s_gc
 {
@@ -19,6 +21,7 @@ typedef struct s_gc
 	struct s_gc	*next;
 }				t_gc;
 
+/* lexer */
 
 typedef struct	s_tree
 {
