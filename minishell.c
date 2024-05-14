@@ -21,24 +21,20 @@ void	handle_signals(void)
 	signal(SIGINT, handler);
 }
 
-void	parse_input(char *line)
-{
-	int i = 0;
-	while (line[i])
-	{
-		if (line[i] == '|')
-
-	}
-	
-}
 void	read_cmd(void)
 {
 	line = readline("\e[0;32m[minishell]$ \e[0;0m");
 	if (!line) // EOF
 		exit(0);
 	add_history(line);
-	parse_input(line);
-	printf("%s", line);
+	char **tokens = history_tokenize(line);
+	int i = 0;
+	while (tokens[i])
+	{
+		printf("%s\n", tokens[i]);
+		i++;
+	}
+	
 	free(line);
 }
 int main()
