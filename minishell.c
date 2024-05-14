@@ -1,7 +1,6 @@
 #include "minishell.h"
 #include <asm-generic/signal-defs.h>
 
-char *line;
 
 void	read_cmd(void);
 void	handle_signals(void);
@@ -21,20 +20,31 @@ void	handle_signals(void)
 	signal(SIGINT, handler);
 }
 
+t_token	*tokenizer(char *line)
+{
+	t_token *tokens;
+
+	tokens = lexer(line);
+	return tokens;
+}
+
 void	read_cmd(void)
 {
-	line = readline("\e[0;32m[minishell]$ \e[0;0m");
-	if (!line) // EOF
-		exit(0);
+	char	*line;
+	t_token	*token_lst;
+	t_token *tmp;
+
+	line = readline(SHELL_PROMPT);
+	if (!line) // CTRL + D
+		return(printf("exit\n"), exit(-1));
 	add_history(line);
-	char **tokens = history_tokenize(line);
-	int i = 0;
-	while (tokens[i])
+	token_lst = tokenizer(line);
+	tmp = token_lst;
+	while (tmp != NULL)
 	{
-		printf("%s\n", tokens[i]);
-		i++;
+		printf("TYPE = [%d] LENGHT = [%zu]\n", tmp->type, tmp->location.lenght);
+		tmp = tmp->next;
 	}
-	
 	free(line);
 }
 int main()
