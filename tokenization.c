@@ -5,6 +5,8 @@ e_tok decode_type(char c1, char c2)
 {
 	if (c1 == '|' && c2 != '|')
 		return (_PIPE);
+	else if (c1 == ' ')
+		return (_SPACE);
 	else if (c1 == '|' && c2 == '|')
 		return (_OR);
 	else if (c1 == '<' && c2 != '<')
@@ -35,6 +37,7 @@ t_token	*make_new_node(e_tok type, char *start, size_t length)
 		exit(EXIT_FAILURE);
 	new->type = type;
 	new->location = (t_slice){start, length};
+	new->prev = 
 	new->next = NULL;
 	return (new);
 }
@@ -67,8 +70,8 @@ int	add_op_token(t_token **head, int c1, int c2, char *start)
 void	add_word_token(t_token **head, char *start, size_t word$ize)
 {
 	e_tok			type;
-	t_token         *new;
-	t_token         *last;
+	t_token			*new;
+	t_token			*last;
 
 	last = *head;
 	if (!*head)
@@ -91,16 +94,18 @@ int is_op(char c)
 {
 	return (c == '|' || c == '>' || c == '<' || c == '&' || c == '(' || c == ')');
 }
-t_token  *lexer(char *input)
+t_token	*tokenizer(char *input)
 {
-	char	*start;
 	t_token	*head;
 	size_t	word$ize;
+	char	*start;
 
 	head = NULL;
 	while (*input)
 	{
 		word$ize = 0;
+		if (*input && is_space(*input))
+			input += add_op_token(&head, *input, *(input + 1), start);
 		while (*input && is_space(*input))
 			input++;
 		start = input;
@@ -112,27 +117,62 @@ t_token  *lexer(char *input)
 			input++;
 			word$ize++;
 		}
-		if ((word$ize != 0))
+		if (word$ize != 0)
 			add_word_token(&head, start, word$ize);
 	}
 	return (head);
 }
 
-// int main(int ac, char **av)
+int	count_tokens(char *input)
+{
+
+	int counter = 0;
+	while (*input)
+	{
+		if (*input && is_space(*input))
+			counter++;
+		while (*input && is_space(*input))
+			input++;
+		if (*input && is_op(*input))
+			counter++;
+		while (*input && is_op(*input))
+			input++;
+		if (*input && (!is_space(*input) && !is_op(*input)))
+			counter++;
+		while (*input && (!is_space(*input) && !is_op(*input)))
+			input++;
+	}
+	return (counter);
+}
+
+
+// t_token	*arr_tokenizer(char *input)
 // {
+// 	arr_token	*tokens;
+// 	size_t	word$ize;
+// 	char	*start;
+// 	int tokens_count = 0;
 
-// 	char *input;
-// 	if (ac != 2)
-// 		return (0);
-// 	input = av[1];
-// 	t_token *tokens;
-// 	t_token *tmp;
-
-// 	tokens = lexer(input);
-// 	tmp = tokens;
-// 	while (tmp != NULL)
+// 	tokens_count = count_tokens(input)
+// 	head = NULL;
+// 	while (*input)
 // 	{
-// 		printf("token type is %d and its lenght is %zu\n", tmp->type, tmp->location.lenght);
-// 		tmp = tmp->next;
+// 		word$ize = 0;
+// 		if (*input && is_space(*input))
+// 			input += add_op_token(&head, *input, *(input + 1), start);
+// 		while (*input && is_space(*input))
+// 			input++;
+// 		start = input;
+// 		if (*input && is_op(*input))
+// 			input += add_op_token(&head, *input, *(input + 1), start);
+// 		start = input;
+// 		while (*input && (!is_space(*input) && !is_op(*input)))
+// 		{
+// 			input++;
+// 			word$ize++;
+// 		}
+// 		if (word$ize != 0)
+// 			add_word_token(&head, start, word$ize);
 // 	}
+// 	return (head);
 // }

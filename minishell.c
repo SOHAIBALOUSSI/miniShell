@@ -20,14 +20,6 @@ void	handle_signals(void)
 	signal(SIGINT, handler);
 }
 
-t_token	*tokenizer(char *line)
-{
-	t_token *tokens;
-
-	tokens = lexer(line);
-	return tokens;
-}
-
 void	read_cmd(void)
 {
 	char	*line;
@@ -39,12 +31,13 @@ void	read_cmd(void)
 		return(printf("exit\n"), exit(-1));
 	add_history(line);
 	token_lst = tokenizer(line);
-	tmp = token_lst;
-	while (tmp != NULL)
-	{
-		printf("TYPE = [%d] LENGHT = [%zu]\n", tmp->type, tmp->location.lenght);
-		tmp = tmp->next;
-	}
+	
+	// tmp = token_lst;
+	// while (tmp != NULL)
+	// {
+	// 	printf("TYPE = [%d] LENGHT = [%zu]\n", tmp->type, tmp->location.lenght);
+	// 	tmp = tmp->next;
+	// }
 	free(line);
 }
 int main()

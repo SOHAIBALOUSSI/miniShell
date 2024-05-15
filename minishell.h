@@ -16,19 +16,18 @@
 /* The Struct used in the Tokenizer */
 typedef enum e_tok
 {
-    ERROR, // ??
-    _WORD,
-    _SPECIAL, // ??
-    _OR,
-    _PIPE,
-    _AMPER,
-    _AND,
-    _REDIRECT,
-    _GREAT,
-    _LESS,
-    _HEREDOC,
-    _PAREN_L,
-    _PAREN_R,
+	_SPACE,
+	_WORD,
+	_OR,
+	_PIPE,
+	_AMPER,
+	_AND,
+	_REDIRECT,
+	_GREAT,
+	_LESS,
+	_HEREDOC,
+	_PAREN_L,
+	_PAREN_R,
 }	e_tok;
 
 
@@ -46,6 +45,7 @@ typedef struct s_token
 	e_tok			type;
 	t_slice			location;
 	struct s_token	*next;
+	struct s_token	*prev;
 }   			t_token;
 
 /* The Struct used in the garbage collector */
@@ -55,6 +55,13 @@ typedef struct s_gc
 	struct s_gc	*next;
 }				t_gc;
 
+typedef	struct token
+{
+	char *value;
+	t_slice	location;
+	int idx;
+	e_tok	type;
+}	arr_token;
 
 
 typedef struct	s_tree
@@ -65,6 +72,6 @@ typedef struct	s_tree
 }				t_tree;
 
 void	*m_alloc(size_t __size, char todo);
-t_token	*lexer(char *input);
+t_token	*tokenizer(char *input);
 
 #endif /*	MINISHELL_H	*/
