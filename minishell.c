@@ -32,12 +32,12 @@ void	read_cmd(void)
 	add_history(line);
 	token_lst = tokenizer(line);
 	
-	// tmp = token_lst;
-	// while (tmp != NULL)
-	// {
-	// 	printf("TYPE = [%d] LENGHT = [%zu]\n", tmp->type, tmp->location.lenght);
-	// 	tmp = tmp->next;
-	// }
+	tmp = token_lst;
+	while (tmp != NULL)
+	{
+		printf("TYPE = [%d] LENGHT = [%zu]\n", tmp->type, tmp->location.lenght);
+		tmp = tmp->next;
+	}
 	free(line);
 }
 int main()

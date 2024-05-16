@@ -66,6 +66,10 @@ void	*m_alloc(size_t __size, char todo)
 	}
 	ptr = malloc(__size);
 	if (!ptr || m_add_back(&arena, m_new_node(ptr)))
-		return (m_alloc(0, FREE), NULL);
+	{
+		m_alloc(0, FREE);
+		write(2, "Malloc() Failed!\n", 18);
+		exit(EXIT_FAILURE);
+	}
 	return (ptr);
 }

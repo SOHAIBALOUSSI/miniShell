@@ -16,18 +16,23 @@
 /* The Struct used in the Tokenizer */
 typedef enum e_tok
 {
-	_SPACE,
-	_WORD,
-	_OR,
-	_PIPE,
-	_AMPER,
-	_AND,
-	_REDIRECT,
-	_GREAT,
-	_LESS,
-	_HEREDOC,
-	_PAREN_L,
-	_PAREN_R,
+	_SPACE, // 0
+	_WORD, // 1
+	_OR, // 2
+	_PIPE, // 3
+	_AMPER, // 4
+	_AND, // 5
+	_REDIRECT, // 6
+	_GREAT, // 7
+	_LESS, // 8
+	_HEREDOC, // 9
+	_PAREN_L, // 10
+	_PAREN_R, // 11
+	_WILDCARD, // 12
+	_DOUBLE_Q, // 13
+	_Q_CONTENT, // 14
+	_SINGLE_Q, // 15
+	_$ENV, // 16
 }	e_tok;
 
 
@@ -36,8 +41,6 @@ typedef struct s_slice
 	char	*location;
 	size_t	lenght;
 }			t_slice;
-
-
 
 /* lexer */
 typedef struct s_token
@@ -55,13 +58,12 @@ typedef struct s_gc
 	struct s_gc	*next;
 }				t_gc;
 
-typedef	struct token
+typedef	struct s_minishell
 {
-	char *value;
-	t_slice	location;
-	int idx;
-	e_tok	type;
-}	arr_token;
+	size_t	quote_count;
+
+}			t_minishell;
+
 
 
 typedef struct	s_tree
