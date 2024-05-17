@@ -106,9 +106,12 @@ void	add_quote(t_token **head, e_tok type, char *start)
 {
 	t_token		*new;
 	t_token		*last;
+
+	last = *head;
 	if (!*head)
 	{
 		*head = make_new_node(type, start, 1);
+		printf("here\n");
 		return ;
 	}
 	new = make_new_node(type, start, 1);
@@ -116,50 +119,47 @@ void	add_quote(t_token **head, e_tok type, char *start)
 		last = last->next;
 	last->next = new;
 	new->prev = last;
-	return ;
 }
 
-void	add_quote_content(t_token **head, char *q_content, size_t content$ize)
+void add_quote_content(t_token **head, char type, char *q_content)
 {
-	t_token		*new;
-	t_token		*last;
-	if (!*head)
-	{
-		*head = make_new_node(_Q_CONTENT, q_content, content$ize);
-		return ;
-	}
-	new = make_new_node(_Q_CONTENT, q_content, content$ize);
-	while (last->next)
-		last = last->next;
-	last->next = new;
-	new->prev = last;
-	return ;
+	t_token	*new;
+	t_token	*last;
+	size_t	content_size;
+	char	*start;
+	
+	start = q_content;
+    content_size = 0;
+    while (*q_content != type && *q_content)
+    {
+        content_size++;
+        q_content++;
+    }
+    last = *head;
+    if (!*head)
+    {
+        *head = make_new_node(_Q_CONTENT, start, content_size);
+        return;
+    }
+    new = make_new_node(_Q_CONTENT, start, content_size);
+    while (last->next)
+        last = last->next;
+    last->next = new;
+    new->prev = last;
 }
 
 
-int	add_quote_token(t_token **head, char *start)
+int add_quote_token(t_token **head, char type, char *start)
 {
-	char		*save_;
-	size_t		content_size;
+	// e_tok e_type;
 
-	content_size = 0;
-	if (*start == '\'')
-		add_quote(head, _SINGLE_Q, *start);
-	else
-		add_quote(head, _DOUBLE_Q, *start);
-	start++;
-	save_ = start;
-	while (*start && *start != '\'' && *start != '\"')
-	{
-		content_size++;
-		*start++;
-	}
-	add_quote_content(head, save_, content_size);
-	if (*start == '\'')
-		add_quote(head, _SINGLE_Q, *start);
-	else 	
-		add_quote(head, _DOUBLE_Q, *start);
-	return (content_size);
+	// e_type = ((type == '\'') * _SINGLE_Q ) + ((type == '\"') * _DOUBLE_Q);
+	// add_litteral(head, type, start);
+    // add_quote(head, e_type, start);
+    // add_quote_content(head, type, start + 1);
+    // return (1);
+
+	
 }
 
 t_token	*tokenizer(char *input)
@@ -176,6 +176,7 @@ t_token	*tokenizer(char *input)
 			input += add_op_token(&head, *input, *(input + 1), start);
 		while (*input && is_space(*input))
 			input++;
+		start = input;
 		if (*input && (*input == '\'' || *input == '\"'))
 			input += add_quote_token(&head, *input, start);
 		start = input;
