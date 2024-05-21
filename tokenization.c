@@ -1,46 +1,29 @@
-
 #include "minishell.h"
 
-t_minishell		g_shell = {0};
-
-e_tok decode_type(char c1, char c2)
+void	pop_error(char *error_msg)
 {
-	if (c1 == '|' && c2 != '|')
-		return (_PIPE);
-	else if (c1 == ' ')
-		return (_SPACE);
-	else if (c1 == '|' && c2 == '|')
-		return (_OR);
-	else if (c1 == '<' && c2 != '<')
-		return (_LESS);
-	else if (c1 == '<' && c2 == '<')
-		return (_HEREDOC);
-	else if (c1 == '>' && c2 != '>')
-		return (_GREAT);
-	else if (c1 == '>' && c2 == '>')
-		return (_REDIRECT);
-	else if (c1 == '&' && c2!= '&')
-		return (_AMPER);
-	else if (c1 == '&' && c2 == '&')
-		return (_AND);
-	else if (c1 == '(')
-		return (_PAREN_L);
-	else if (c1 == ')')
-		return (_PAREN_R);
-	else if (c1 == '\"')
-		return (_DOUBLE_Q);
-	else if (c1 == '\'')
-		return (_SINGLE_Q);
-	else if (c1 == '$')
-		return (_$ENV);
-	else if (c1 == '*')
-		return (_WILDCARD);
-	return (_WORD);
+	write(2, "\e[0;31m", 8);
+	write(2, error_msg, ft_strlen(error_msg));
+	write(2, "\e[0;m", 6);
+	g_shell = (t_minishell){0};
 }
 
-t_token	*make_new_node(e_tok type, char *start, size_t length)
+e_tok	decode_type(char c1, char c2)
 {
-	t_token *new;
+	e_tok	type;
+
+	type = (c1 == '(') * _PAREN_OPEN + (c1 == ')') * _PAREN_CLOSED
+		+ (c1 == '$') * _$ENV + (c1 == '*') * _WILDCARD + (c1 == '|' && c2 != '|') * _PIPE
+		+ (c1 == '|' && c2 == '|') * _OR + (c1 == '<' && c2 != '<') * _RED_IN
+		+ (c1 == '<' && c2 == '<') * _HEREDOC + (c1 == '>' && c2 != '>') * _RED_OUT
+		+ (c1 == '>' && c2 == '>') * _APPEND + (c1 == '&' && c2 == '&') * _AND
+		+ (c1 == '&' && c2 != '&') * _BAD;
+	return (type);
+}
+
+t_token	*create_token(e_tok type, char *start, size_t length)
+{
+	t_token	*new;
 
 	new = m_alloc(sizeof(t_token), ALLOC);
 	new->type = type;
@@ -50,147 +33,142 @@ t_token	*make_new_node(e_tok type, char *start, size_t length)
 	return (new);
 }
 
+void	append_token(t_token **head, t_token *token)
+{
+	t_token	*last;
 
-int is_space(char c)
+	if (!*head)
+	{
+		*head = token;
+		return;
+	}
+	last = *head;
+	while (last->next)
+		last = last->next;
+	last->next = token;
+	token->prev = last;
+}
+
+int	is_space(char c)
 {
 	return (c == ' ' || c == '\t');
 }
-int is_op(char c)
+
+int	is_op(char c)
 {
-	return (c == '|' || c == '>' || c == '<' || c == '&' || c == '(' 
-			|| c == ')' || c == '*' || c == '$');
+	return (c == '|' || c == '>' || c == '<' || c == '(' 
+			|| c == ')' || c == '*' || c == '$' || c == '&');
 }
 
 int	add_op_token(t_token **head, int c1, int c2, char *start)
 {
-	e_tok			type;
-	t_token			*new;
-	t_token			*last;
-	size_t			length;
+	e_tok	type;
+	size_t	length;
+	t_token	*new;
 
-	last = *head;
 	type = decode_type(c1, c2);
-	length = (1 * (type == _HEREDOC || type == _AND \
-		|| type == _OR || type == _REDIRECT)) + 1;
-	if (!*head)
-	{
-		*head = make_new_node(type, start, length);
-		return (length);
-	}
-	new = make_new_node(type, start, length);
-	while (last->next)
-		last = last->next;
-	last->next = new;
-	new->prev = last;
+	g_shell.open_paren_count += (type == _PAREN_OPEN) * 1;
+	g_shell.closed_paren_count += (type == _PAREN_CLOSED) * 1;
+	length = (type == _HEREDOC || type == _AND ||
+			type == _OR || type == _APPEND) * 1 + 1;
+	new = create_token(type, start, length);
+	append_token(head, new);
 	return (length);
 }
 
-void	add_word_token(t_token **head, char *start, size_t word$ize)
+size_t	add_word_token(t_token **head, char *start)
 {
-	t_token			*new;
-	t_token			*last;
-
-	last = *head;
-	if (!*head)
-	{
-		*head = make_new_node(_WORD, start, word$ize);
-		return ;
-	}
-	new = make_new_node(_WORD, start, word$ize);
-	while (last->next)
-		last = last->next;
-	last->next = new;
-	new->prev = last;
-}
-void	add_quote(t_token **head, e_tok type, char *start)
-{
-	t_token		*new;
-	t_token		*last;
-
-	last = *head;
-	if (!*head)
-	{
-		*head = make_new_node(type, start, 1);
-		printf("here\n");
-		return ;
-	}
-	new = make_new_node(type, start, 1);
-	while (last->next)
-		last = last->next;
-	last->next = new;
-	new->prev = last;
-}
-
-void add_quote_content(t_token **head, char type, char *q_content)
-{
-	t_token	*new;
-	t_token	*last;
-	size_t	content_size;
-	char	*start;
+	t_token *new;
+	size_t length;
+	char *p;
 	
-	start = q_content;
-    content_size = 0;
-    while (*q_content != type && *q_content)
-    {
-        content_size++;
-        q_content++;
-    }
-    last = *head;
-    if (!*head)
-    {
-        *head = make_new_node(_Q_CONTENT, start, content_size);
-        return;
-    }
-    new = make_new_node(_Q_CONTENT, start, content_size);
-    while (last->next)
-        last = last->next;
-    last->next = new;
-    new->prev = last;
+	p = start;
+	length = 0;
+	while (*p && (!is_space(*p) && !is_op(*p)) && *p != '\'' && *p != '"')
+	{
+		p++;
+		length++;
+	}
+	new = create_token(_WORD, start, length);
+	append_token(head, new);
+	return (length);
 }
 
-
-int add_quote_token(t_token **head, char type, char *start)
+int	add_quote(t_token **head, e_tok type, char *start)
 {
-	// e_tok e_type;
+	g_shell.single_quote_count += (type == _SINGLE_Q) * 1;
+	g_shell.double_quote_count += (type == _DOUBLE_Q) * 1;
+	append_token(head, create_token(type, start, 1));
+	if (*start)
+		return (1);
+	return (0);
+}
 
-	// e_type = ((type == '\'') * _SINGLE_Q ) + ((type == '\"') * _DOUBLE_Q);
-	// add_litteral(head, type, start);
-    // add_quote(head, e_type, start);
-    // add_quote_content(head, type, start + 1);
-    // return (1);
-
+size_t	add_literal(t_token **head, char *line, char type)
+{
+	char	*p;
+	size_t	length;
 	
+	p = line;
+	length = 0;
+	while (*p && *p != type)
+	{
+		p++;
+		length++;
+	}
+	append_token(head, create_token(_Q_CONTENT, line, length));
+	return (length);
+}
+
+size_t	add_quote_token(t_token **head, char *line)
+{
+	size_t	size;
+	
+	size = 0;
+	if (*line == SQ)
+	{
+		line += add_quote(head, _SINGLE_Q, line);
+		if (*line && *line != SQ)
+			size += add_literal(head, line, SQ);
+		line += size;
+		if (*line == SQ)
+			size += add_quote(head, _SINGLE_Q, line);
+	}
+	else if (*line == DQ)
+	{
+		line += add_quote(head, _DOUBLE_Q, line);
+		if (*line && *line != DQ)
+			size += add_literal(head, line, DQ);
+		line += size;
+		if (*line == DQ)
+			size += add_quote(head, _DOUBLE_Q, line);
+	}
+	return (size + 1);
 }
 
 t_token	*tokenizer(char *input)
 {
-	t_token	*head;
-	size_t	word$ize;
 	char	*start;
+	t_token	*head;
 
 	head = NULL;
-	while (*input)
+	start = input;
+	while (*input != '\0')
 	{
-		word$ize = 0;
 		if (*input && is_space(*input))
-			input += add_op_token(&head, *input, *(input + 1), start);
-		while (*input && is_space(*input))
 			input++;
-		start = input;
-		if (*input && (*input == '\'' || *input == '\"'))
-			input += add_quote_token(&head, *input, start);
-		start = input;
-		if (*input && is_op(*input))
-			input += add_op_token(&head, *input, *(input + 1), start);
-		start = input;
-		while (*input && (!is_space(*input) && !is_op(*input)))
+		else if (*input && is_op(*input))
+			input += add_op_token(&head, *input, *(input + 1), input);
+		else if (*input && (*input == SQ || *input == DQ))
 		{
-			input++;
-			word$ize++;
+			start = input;
+			input += add_quote_token(&head, start);
 		}
-		if (word$ize != 0)
-			add_word_token(&head, start, word$ize);
+		else
+		{
+			start = input;
+			input += add_word_token(&head, start);
+		}
 	}
 	return (head);
 }
-

@@ -12,6 +12,10 @@
 # define ALLOC 'A'
 # define FREE 'F'
 # define SHELL_PROMPT "\e[0;32m[minishell]$ \e[0;0m"
+# define SQ '\''
+# define DQ '\"'
+
+
 
 /* The Struct used in the Tokenizer */
 typedef enum e_tok
@@ -20,26 +24,26 @@ typedef enum e_tok
 	_WORD, // 1
 	_OR, // 2
 	_PIPE, // 3
-	_AMPER, // 4
-	_AND, // 5
-	_REDIRECT, // 6
-	_GREAT, // 7
-	_LESS, // 8
-	_HEREDOC, // 9
-	_PAREN_L, // 10
-	_PAREN_R, // 11
-	_WILDCARD, // 12
-	_DOUBLE_Q, // 13
-	_Q_CONTENT, // 14
-	_SINGLE_Q, // 15
-	_$ENV, // 16
+	_AND, // 4
+	_APPEND, // 5
+	_RED_OUT, // 6
+	_RED_IN, // 7
+	_HEREDOC, // 8
+	_PAREN_OPEN, // 9
+	_PAREN_CLOSED, // 10
+	_WILDCARD, // 11
+	_DOUBLE_Q, // 12
+	_Q_CONTENT, // 13
+	_SINGLE_Q, // 14
+	_$ENV, // 15
+	_BAD, // 16
 }	e_tok;
 
 
 typedef struct s_slice
 {
 	char	*location;
-	size_t	lenght;
+	size_t	length;
 }			t_slice;
 
 /* lexer */
@@ -58,13 +62,21 @@ typedef struct s_gc
 	struct s_gc	*next;
 }				t_gc;
 
+/*
+**	Struct for the g_shell global variable,
+** 	You can use it in any file, add a member
+** 	to the struct and enjoy the hack :D
+*/
 typedef	struct s_minishell
 {
-	size_t	quote_count;
-
+	size_t	single_quote_count;
+	size_t	double_quote_count;
+	size_t	open_paren_count;
+	size_t	closed_paren_count;
+	int		exit_status;
 }			t_minishell;
 
-
+extern	t_minishell g_shell;
 
 typedef struct	s_tree
 {
@@ -75,5 +87,7 @@ typedef struct	s_tree
 
 void	*m_alloc(size_t __size, char todo);
 t_token	*tokenizer(char *input);
+void	pop_error(char *error_msg);
+void    catch_syntax_errors(t_token	*token_lst);
 
 #endif /*	MINISHELL_H	*/
