@@ -27,6 +27,7 @@ void	read_cmd(void)
 	char	*line;
 	t_token	*token_lst;
 	t_token *tmp;
+	t_token	*api;
 	// t_tree	*tree;
 
 	char *type[] = {"SPACE", "WORD", "OR", "PIPE", "AND", \
@@ -34,12 +35,16 @@ void	read_cmd(void)
 	"DOUBLE_Q", "Q_CONTENT", "SINGLE_Q", "$ENV", "BAD"};
 
 	line = readline(SHELL_PROMPT);
-	if (!line) // CTRL + D
+	if (!line)
 		return (printf("exit\n"), m_alloc(0, FREE), exit(-1));
+
 	add_history(line);
 	token_lst = tokenizer(line);
 	catch_syntax_errors(token_lst);
+	// api = simplify_tokens(&token_lst);
 	// parser(token_lst, tree);
+
+
 	tmp = token_lst;
 	while (tmp != NULL)
 	{

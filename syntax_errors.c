@@ -5,7 +5,7 @@ int	is_redirection(e_tok type)
 	return (type == _APPEND || type == _HEREDOC || type == _RED_IN || type == _RED_OUT);
 }
 
-int	is_logical_op(e_tok	type)
+int	is_pipe_or_and(e_tok	type)
 {
 	return (type == _PIPE || type == _OR || type == _AND);
 }
@@ -25,6 +25,7 @@ void	syntax_err(t_token *current)
 	g_shell = (t_minishell){0};
 }
 /* '  "  *  $  WORD  (  ) >  >>  <  <<   |  ||  && */
+
 /*  ARC lfila7a */
 void	catch_syntax_errors(t_token	*token_lst)
 {
@@ -39,14 +40,24 @@ void	catch_syntax_errors(t_token	*token_lst)
 	// A Command can't start with these .
 	while (current)
 	{
-		// Check for LOGICAL OPERATIONS
-		if ((is_logical_op(current->type)) && (!current->prev || !current->next || is_logical_op(current->prev->type) || is_redirection(current->prev->type)) )
-			return (syntax_err(current));
-		if (is_redirection(current->type) && !current->next)
-			return (syntax_err(current));
-		// if (current->type == _PAREN_OPEN && current->next->type)
+		// Check for PIPE OR AND OPERATIONS
+		if (is_pipe_or_and(current->type))
+		{
+			if ((!current->prev || !current->next )||(is_pipe_or_and(current->prev->type) || is_redirection(current->prev->type)))
+				return (syntax_err(current));
+		}
+		// check for Parentheses
+		if (current->type == _PAREN_OPEN && current->next && current->prev)
+		{
+			if ((!is_pipe_or_and(current->prev->type)) && current->prev->type != _PAREN_OPEN)
+				return (syntax_err(current));
+			else if (is_pipe_or_and(current->next->type) || current->next->type != _PAREN_OPEN)
+				return (syntax_err(current));		
+		}	
+		// Check redirection ops
+		// if (is_redirection(current->type) && !current->next)
+		// 	return (syntax_err(current));
 		// if ((is_redirection(current->type)) && )
-		// Check for REDIRECTION ..
 
 		// MORE CHECKS IDK ...
 
