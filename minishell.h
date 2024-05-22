@@ -14,8 +14,11 @@
 # define SHELL_PROMPT "\e[0;32m[minishell]$ \e[0;0m"
 # define SQ '\''
 # define DQ '\"'
+# define PAREN_ERR	"Minishell: syntax error (unclosed parenthesis)"
 
-
+/*	COLORS*/
+# define RED "\e[0;31m"
+# define RESTORE "\e[0;m"
 
 /* The Struct used in the Tokenizer */
 typedef enum e_tok
@@ -37,6 +40,7 @@ typedef enum e_tok
 	_SINGLE_Q, // 14
 	_$ENV, // 15
 	_BAD, // 16
+	_ERROR,
 }	e_tok;
 
 
@@ -87,7 +91,8 @@ typedef struct	s_tree
 
 void	*m_alloc(size_t __size, char todo);
 t_token	*tokenizer(char *input);
+e_tok	decode_type(char c1, char c2);
 void	pop_error(char *error_msg);
-void    catch_syntax_errors(t_token	*token_lst);
+void	catch_syntax_errors(t_token	*token_lst);
 
 #endif /*	MINISHELL_H	*/

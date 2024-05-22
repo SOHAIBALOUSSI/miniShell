@@ -2,9 +2,9 @@
 
 void	pop_error(char *error_msg)
 {
-	write(2, "\e[0;31m", 8);
-	write(2, error_msg, ft_strlen(error_msg));
-	write(2, "\e[0;m", 6);
+	ft_putstr_fd(RED, 2);
+	ft_putstr_fd(error_msg, 2);
+	ft_putstr_fd(RESTORE, 2);
 	g_shell = (t_minishell){0};
 }
 
@@ -54,43 +54,41 @@ int	is_space(char c)
 	return (c == ' ' || c == '\t');
 }
 
-int	is_op(char c)
+int	is_op(char c, char c1)
 {
+	if (c == '&' && c1 == '&')
+		return (1);
 	return (c == '|' || c == '>' || c == '<' || c == '(' 
-			|| c == ')' || c == '*' || c == '$' || c == '&');
+			|| c == ')' || c == '*' || c == '$');
 }
 
 int	add_op_token(t_token **head, int c1, int c2, char *start)
 {
 	e_tok	type;
 	size_t	length;
-	t_token	*new;
 
 	type = decode_type(c1, c2);
 	g_shell.open_paren_count += (type == _PAREN_OPEN) * 1;
 	g_shell.closed_paren_count += (type == _PAREN_CLOSED) * 1;
 	length = (type == _HEREDOC || type == _AND ||
 			type == _OR || type == _APPEND) * 1 + 1;
-	new = create_token(type, start, length);
-	append_token(head, new);
+	append_token(head, create_token(type, start, length));
 	return (length);
 }
 
 size_t	add_word_token(t_token **head, char *start)
 {
-	t_token *new;
-	size_t length;
-	char *p;
+	char	*p;
+	size_t	length;
 	
 	p = start;
 	length = 0;
-	while (*p && (!is_space(*p) && !is_op(*p)) && *p != '\'' && *p != '"')
+	while (*p && (!is_space(*p) && !is_op(*p, *(p + 1))) && (*p != '\'' && *p != '"'))
 	{
 		p++;
 		length++;
 	}
-	new = create_token(_WORD, start, length);
-	append_token(head, new);
+	append_token(head, create_token(_WORD, start, length));
 	return (length);
 }
 
@@ -157,7 +155,7 @@ t_token	*tokenizer(char *input)
 	{
 		if (*input && is_space(*input))
 			input++;
-		else if (*input && is_op(*input))
+		else if (*input && is_op(*input, *(input + 1)))
 			input += add_op_token(&head, *input, *(input + 1), input);
 		else if (*input && (*input == SQ || *input == DQ))
 		{
