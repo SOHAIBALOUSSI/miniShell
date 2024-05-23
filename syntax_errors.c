@@ -10,10 +10,15 @@ int	is_pipe_or_and(e_tok	type)
 	return (type == _PIPE || type == _OR || type == _AND);
 }
 
+int is_word(e_tok	type)
+{
+	return (type == _WORD || type == _$ENV || type == _DOUBLE_Q || type == _SINGLE_Q);
+}
+
 void	syntax_err(t_token *current)
 {
 	char *err;
-	if (is_redirection(current->type))
+	if (current == NULL)
 		err = ft_strdup("newline");
 	else
 		err = ft_substr(current->location.location, 0, current->location.length);
@@ -30,38 +35,48 @@ void	syntax_err(t_token *current)
 void	catch_syntax_errors(t_token	*token_lst)
 {
 	t_token *current;
-	
+
 	current = token_lst;
-	if (g_shell.single_quote_count % 2 != 0 || g_shell.double_quote_count % 2 != 0)
-		return (pop_error("Minishell: syntax error (unclosed quotes)\n"));
-	else if (g_shell.closed_paren_count != g_shell.open_paren_count)
-		return (pop_error("Minishell: syntax error (unclosed parenthesis)\n"));
-	
-	// A Command can't start with these .
 	while (current)
 	{
 		// Check for PIPE OR AND OPERATIONS
 		if (is_pipe_or_and(current->type))
 		{
-			if ((!current->prev || !current->next )||(is_pipe_or_and(current->prev->type) || is_redirection(current->prev->type)))
-				return (syntax_err(current));
+			if ((!current->prev || !current->next) || (is_pipe_or_and(current->prev->type)))
+				return (syntax_err(current->next));
+		}
+		// Check redirection ops
+		else if (is_redirection(current->type))
+		{
+			if ((!current->next || !is_word(current->next->type)))
+				return (syntax_err(current->next));
 		}
 		// check for Parentheses
-		if (current->type == _PAREN_OPEN && current->next && current->prev)
+		else if (current->type == _PAREN_OPEN && current->next)
 		{
-			if ((!is_pipe_or_and(current->prev->type)) && current->prev->type != _PAREN_OPEN)
-				return (syntax_err(current));
-			else if (is_pipe_or_and(current->next->type) || current->next->type != _PAREN_OPEN)
-				return (syntax_err(current));		
+			if (is_pipe_or_and(current->next->type) || current->next->type == _PAREN_CLOSED)
+				return (syntax_err(current->next));		
+		}
+		else if (current->type == _PAREN_CLOSED && current->next)
+		{
+			if (current->next->type == _PAREN_OPEN || current->next->type == _WORD)
+				return (syntax_err(current->next));	
 		}	
-		// Check redirection ops
-		// if (is_redirection(current->type) && !current->next)
-		// 	return (syntax_err(current));
-		// if ((is_redirection(current->type)) && )
-
+		// word check
+		else if (is_word(current->type) && current->next)
+		{
+			if (current->next->type == _PAREN_OPEN)
+			{
+				if (!current->prev || !is_word(current->prev->type))
+					return (syntax_err(current->next->next));
+				return (syntax_err(current->next));
+			}
+		}
 		// MORE CHECKS IDK ...
-
 		current = current->next;	
 	}
+	if (g_shell.single_quote_count % 2 != 0 || g_shell.double_quote_count % 2 != 0)
+		return (pop_error("Minishell: syntax error 'unclosed quotes'\n"));
+	else if (g_shell.closed_paren_count != g_shell.open_paren_count)
+		return (pop_error("Minishell: syntax error 'unclosed parenthesis'\n"));
 }
-
