@@ -43,7 +43,7 @@ void	catch_syntax_errors(t_token	*token_lst)
 		if (is_pipe_or_and(current->type))
 		{
 			if ((!current->prev || !current->next) || (is_pipe_or_and(current->prev->type)))
-				return (syntax_err(current->next));
+				return (syntax_err(current));
 		}
 		// Check redirection ops
 		else if (is_redirection(current->type))
