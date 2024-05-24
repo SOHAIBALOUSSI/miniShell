@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void    simplify_tokens(t_token **tokens)
-{
+// void    simplify_tokens(t_token **tokens)
+// {
     
-}
+// }

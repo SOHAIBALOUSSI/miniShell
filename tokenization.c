@@ -83,8 +83,10 @@ size_t	add_word_token(t_token **head, char *start)
 	
 	p = start;
 	length = 0;
-	while (*p && (!is_space(*p) && !is_op(*p, *(p + 1))) && (*p != '\'' && *p != '"'))
+	while (*p && (!is_space(*p)))
 	{
+		g_shell.single_quote_count += (*p == SQ) * 1;
+		g_shell.double_quote_count += (*p == DQ) * 1;
 		p++;
 		length++;
 	}
@@ -157,11 +159,6 @@ t_token	*tokenizer(char *input)
 			input++;
 		else if (*input && is_op(*input, *(input + 1)))
 			input += add_op_token(&head, *input, *(input + 1), input);
-		else if (*input && (*input == SQ || *input == DQ))
-		{
-			start = input;
-			input += add_quote_token(&head, start);
-		}
 		else
 		{
 			start = input;

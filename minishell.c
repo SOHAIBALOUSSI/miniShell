@@ -41,7 +41,7 @@ void	read_cmd(void)
 	add_history(line);
 	token_lst = tokenizer(line);
 	catch_syntax_errors(token_lst);
-	simplify_tokens(&token_lst);
+	// simplify_tokens(&token_lst);
 	// parser(token_lst, tree);
 
 
