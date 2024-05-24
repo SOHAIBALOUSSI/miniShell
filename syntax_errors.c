@@ -29,6 +29,8 @@ void	syntax_err(t_token *current)
 	ft_putstr_fd(RESTORE, 2);
 	g_shell = (t_minishell){0};
 }
+
+
 /* '  "  *  $  WORD  (  ) >  >>  <  <<   |  ||  && */
 
 /*  ARC lfila7a */
@@ -39,19 +41,16 @@ void	catch_syntax_errors(t_token	*token_lst)
 	current = token_lst;
 	while (current)
 	{
-		// Check for PIPE OR AND OPERATIONS
 		if (is_pipe_or_and(current->type))
 		{
 			if ((!current->prev || !current->next) || (is_pipe_or_and(current->prev->type)))
 				return (syntax_err(current));
 		}
-		// Check redirection ops
 		else if (is_redirection(current->type))
 		{
 			if ((!current->next || !is_word(current->next->type)))
 				return (syntax_err(current->next));
 		}
-		// check for Parentheses
 		else if (current->type == _PAREN_OPEN && current->next)
 		{
 			if (is_pipe_or_and(current->next->type) || current->next->type == _PAREN_CLOSED)
@@ -62,7 +61,6 @@ void	catch_syntax_errors(t_token	*token_lst)
 			if (current->next->type == _PAREN_OPEN || current->next->type == _WORD)
 				return (syntax_err(current->next));	
 		}	
-		// word check
 		else if (is_word(current->type) && current->next)
 		{
 			if (current->next->type == _PAREN_OPEN)
@@ -72,7 +70,6 @@ void	catch_syntax_errors(t_token	*token_lst)
 				return (syntax_err(current->next));
 			}
 		}
-		// MORE CHECKS IDK ...
 		current = current->next;	
 	}
 	if (g_shell.single_quote_count % 2 != 0 || g_shell.double_quote_count % 2 != 0)

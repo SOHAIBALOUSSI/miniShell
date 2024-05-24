@@ -42,9 +42,9 @@
 		{
 			"id": "pointer:pointer",
 			"typeName": "pointer",
-			"x": 505.8839779356704,
-			"y": -40.85944671608888,
-			"lastActivityTimestamp": 1716395014584,
+			"x": 284.7196144640295,
+			"y": 207.4312994067616,
+			"lastActivityTimestamp": 1716548257324,
 			"meta": {}
 		},
 		{
@@ -61,7 +61,7 @@
 			"brush": null,
 			"scribbles": [],
 			"cursor": {
-				"type": "cross",
+				"type": "default",
 				"rotation": 0
 			},
 			"isFocusMode": false,
@@ -71,12 +71,12 @@
 			"screenBounds": {
 				"x": 0,
 				"y": 0,
-				"w": 1237,
-				"h": 678
+				"w": 1381.6666259765625,
+				"h": 490.83331298828125
 			},
 			"insets": [
 				false,
-				false,
+				true,
 				true,
 				false
 			],
@@ -90,7 +90,7 @@
 			"isFocused": true,
 			"devicePixelRatio": 1,
 			"isCoarsePointer": false,
-			"isHoveringCanvas": true,
+			"isHoveringCanvas": false,
 			"openMenus": [],
 			"isChangingStyle": false,
 			"isReadonly": false,
@@ -114,9 +114,9 @@
 			"typeName": "instance_page_state"
 		},
 		{
-			"x": 110.47965842796589,
-			"y": 166.31399217063432,
-			"z": 1.1,
+			"x": -0.3165198219126637,
+			"y": 132.40938376551233,
+			"z": 1.43108565151319,
 			"meta": {},
 			"id": "camera:page:page",
 			"typeName": "camera"
