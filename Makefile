@@ -12,7 +12,7 @@ ft_lstmap_bonus.c ft_putadress.c ft_split.c ft_strncmp.c ft_isprint.c ft_lstnew_
 ft_putchar.c ft_strchr.c ft_strnstr.c ft_itoa.c ft_lstsize_bonus.c ft_putchar_fd.c \
 ft_strdup.c ft_strrchr.c ft_base16.c get_next_line_utils.c)
 
-SRCS = minishell.c tokenization.c Justice.c syntax_errors.c $(LIBFT_SRC)
+SRCS = minishell.c tokenization.c Justice.c syntax_errors.c  $(LIBFT_SRC) # cd.c
 
 OBJS = $(SRCS:.c=.o)
 

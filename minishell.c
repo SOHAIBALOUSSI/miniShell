@@ -36,11 +36,12 @@ void	read_cmd(void)
 
 	line = readline(SHELL_PROMPT);
 	if (!line)
-		return (printf("exit\n"), m_alloc(0, FREE), exit(-1));
+		return (printf("exit"), m_alloc(0, FREE), exit(-1));
 
 	add_history(line);
 	token_lst = tokenizer(line);
 	catch_syntax_errors(token_lst);
+
 	// simplify_tokens(&token_lst);
 	// parser(token_lst, tree);
 
@@ -53,11 +54,13 @@ void	read_cmd(void)
 	}
 	free(line);
 }
-int main()
+int main(int ac, char **av, char **env)
 {
+	g_shell.env = env;
 	handle_signals();
 	while (1)
 	{
+
 		read_cmd();
 		m_alloc(0, FREE);	
 	}

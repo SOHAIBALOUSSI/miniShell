@@ -6,7 +6,8 @@
         "stdlib.h": "c",
         "string.h": "c",
         "unistd.h": "c",
-        "history.h": "c"
+        "history.h": "c",
+        "limits.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <signal.h>
 #include <unistd.h>
+#include <linux/limits.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "./libs/libft/libft.h"
@@ -15,7 +16,6 @@
 # define SHELL_PROMPT "\e[0;32m[minishell]$ \e[0;0m"
 # define SQ '\''
 # define DQ '\"'
-# define PAREN_ERR	"Minishell: syntax error (unclosed parenthesis)"
 
 /*	COLORS*/
 # define RED "\e[0;31m"
@@ -78,6 +78,7 @@ typedef	struct s_minishell
 	size_t	double_quote_count;
 	size_t	open_paren_count;
 	size_t	closed_paren_count;
+	char	**env;
 	int		exit_status;
 }			t_minishell;
 

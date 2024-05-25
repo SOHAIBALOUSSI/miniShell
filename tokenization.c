@@ -16,8 +16,7 @@ e_tok	decode_type(char c1, char c2)
 		+ (c1 == '$') * _$ENV + (c1 == '*') * _WILDCARD + (c1 == '|' && c2 != '|') * _PIPE
 		+ (c1 == '|' && c2 == '|') * _OR + (c1 == '<' && c2 != '<') * _RED_IN
 		+ (c1 == '<' && c2 == '<') * _HEREDOC + (c1 == '>' && c2 != '>') * _RED_OUT
-		+ (c1 == '>' && c2 == '>') * _APPEND + (c1 == '&' && c2 == '&') * _AND
-		+ (c1 == '&' && c2 != '&') * _BAD;
+		+ (c1 == '>' && c2 == '>') * _APPEND + (c1 == '&' && c2 == '&') * _AND;
 	return (type);
 }
 
@@ -83,7 +82,7 @@ size_t	add_word_token(t_token **head, char *start)
 	
 	p = start;
 	length = 0;
-	while (*p && (!is_space(*p)))
+	while (*p && (!is_space(*p) && !is_op(*p, *(p + 1))))
 	{
 		g_shell.single_quote_count += (*p == SQ) * 1;
 		g_shell.double_quote_count += (*p == DQ) * 1;
@@ -94,66 +93,14 @@ size_t	add_word_token(t_token **head, char *start)
 	return (length);
 }
 
-int	add_quote(t_token **head, e_tok type, char *start)
-{
-	g_shell.single_quote_count += (type == _SINGLE_Q) * 1;
-	g_shell.double_quote_count += (type == _DOUBLE_Q) * 1;
-	append_token(head, create_token(type, start, 1));
-	if (*start)
-		return (1);
-	return (0);
-}
-
-size_t	add_literal(t_token **head, char *line, char type)
-{
-	char	*p;
-	size_t	length;
-	
-	p = line;
-	length = 0;
-	while (*p && *p != type)
-	{
-		p++;
-		length++;
-	}
-	append_token(head, create_token(_Q_CONTENT, line, length));
-	return (length);
-}
-
-size_t	add_quote_token(t_token **head, char *line)
-{
-	size_t	size;
-	
-	size = 0;
-	if (*line == SQ)
-	{
-		line += add_quote(head, _SINGLE_Q, line);
-		if (*line && *line != SQ)
-			size += add_literal(head, line, SQ);
-		line += size;
-		if (*line == SQ)
-			size += add_quote(head, _SINGLE_Q, line);
-	}
-	else if (*line == DQ)
-	{
-		line += add_quote(head, _DOUBLE_Q, line);
-		if (*line && *line != DQ)
-			size += add_literal(head, line, DQ);
-		line += size;
-		if (*line == DQ)
-			size += add_quote(head, _DOUBLE_Q, line);
-	}
-	return (size + 1);
-}
-
 t_token	*tokenizer(char *input)
 {
-	char	*start;
 	t_token	*head;
+	char	*start;
 
 	head = NULL;
 	start = input;
-	while (*input != '\0')
+	while (*input)
 	{
 		if (*input && is_space(*input))
 			input++;
