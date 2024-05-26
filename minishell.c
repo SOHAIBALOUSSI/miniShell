@@ -58,6 +58,7 @@ int main(int ac, char **av, char **env)
 	int i = 0;
 
 	g_shell.env_list = get_env_list(env);
+	search_and_change(&g_shell.env_list, "PWD", ft_strdup("batman"));
 	while (g_shell.env_list)
 	{
 		if (g_shell.env_list == NULL)
