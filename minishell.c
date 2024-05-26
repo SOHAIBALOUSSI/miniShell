@@ -54,9 +54,57 @@ void	read_cmd(void)
 	}
 	free(line);
 }
+
+// void print_env(t_env *head)
+// {
+// 	t_env *temp;
+
+// 	temp = head;
+// 	while (temp)
+// 	{
+// 		printf("%s\n", (char *)temp->content);
+// 		temp = temp->next;
+// 	}
+// }
+
+// t_list * get_env(char**env)
+// {
+// 	int i;
+// 	t_list *env_list;
+
+// 	env_list = NULL;
+// 	i = 0;
+// 	while (env[i])
+// 	{
+// 		ft_lstadd_back(&env_list, ft_lstnew((char *)env[i]));
+// 		i++;
+// 	}
+// 	return (env_list);
+// }
+
+// void ft_split_node(t_list *head)
+// {
+// 	while (head)
+// 	{
+// 		head->key = ft_substr()
+// 		head->value = ft_substr()
+// 	}
+// 	// x0 -> export var1+=ls
+// 	// head search (head +=)
+// 	// else if (ft_strcmp(key , ))
+// }
+// void ft_search(t_list *head, char *target)
+// {
+// 	// head => PAGER=LS
+// 	// key = PAGER ----> SUBSTR(HEAD, 0, FT_FOUND(=));
+// 	//value = LS ----> SUBSTR(HEAD, FT_FOUND(=) + 1, FT_STRLEN)HEAD);
+// }
 int main(int ac, char **av, char **env)
 {
-	g_shell.env = env;
+
+	g_shell.env_list = get_env(g_shell.env);
+	print_env(g_shell.env_list);
+	exit(0);
 	handle_signals();
 	while (1)
 	{

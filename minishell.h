@@ -67,6 +67,13 @@ typedef struct s_gc
 	struct s_gc	*next;
 }				t_gc;
 
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}				t_env;
+
 /*
 **	Struct for the g_shell global variable,
 ** 	You can use it in any file, add a member
@@ -78,7 +85,7 @@ typedef	struct s_minishell
 	size_t	double_quote_count;
 	size_t	open_paren_count;
 	size_t	closed_paren_count;
-	char	**env;
+	t_env	*env_list;
 	int		exit_status;
 }			t_minishell;
 
