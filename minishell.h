@@ -100,8 +100,10 @@ typedef struct	s_tree
 
 void	*m_alloc(size_t __size, char todo);
 t_token	*tokenizer(char *input);
+t_env	*get_env_list(char **env);
 e_tok	decode_type(char c1, char c2);
 void	pop_error(char *error_msg);
 void	catch_syntax_errors(t_token	*token_lst);
+
 
 #endif /*	MINISHELL_H	*/
