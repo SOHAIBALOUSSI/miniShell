@@ -10,6 +10,7 @@ int    pwd(void)
 	printf("%s\n", pwd);
 	return 0;
 }
+
 // void    change_dir(void)
 // {
 // 	char *current_dir;
