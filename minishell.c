@@ -58,7 +58,9 @@ int main(int ac, char **av, char **env)
 	int i = 0;
 
 	g_shell.env_list = get_env_list(env);
-	search_and_change(&g_shell.env_list, "PWD", ft_strdup("batman"));
+	// search_and_change(&g_shell.env_list, "PWD", ft_strdup("batman"));
+	char *type[] = {"PWD=batman", "OLDPWD=batman", "v2=batman", "batman=sbe3b3", NULL};
+	export(type);
 	while (g_shell.env_list)
 	{
 		if (g_shell.env_list == NULL)

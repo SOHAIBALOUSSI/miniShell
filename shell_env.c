@@ -3,12 +3,14 @@
 void search_and_change(t_env **env_lst, char *key, char *new_value)
 {
     t_env *tmp;
+
     tmp = *env_lst;
     while (tmp->next)
     {
         if (!ft_strncmp(key, tmp->key, ft_strlen(key)))
         {
             free(tmp->value);
+			printf("changed!\n");
             tmp->value = new_value;
             return ;
         }
@@ -33,25 +35,26 @@ void	append_env(t_env **lst, t_env *new)
 	last->next = new;
 }
 
-char *get_key(char *env)
+char *get_key(char *s)
 {
 	int i = 0;
-	char *key;
-	if (!env)
-		return NULL;
-	while (env[i] != '=')
+
+	while (s[i] && s[i] != '=' && s[i] != '+')
 		i++;
-	key = ft_substr(env, 0, i);
-	return (key);
+	return(ft_substr(s, 0, i));
 }
 
 t_env	*create_env(char *env)
 {
 	t_env	*node;
-
+	char	*value;
 	node = m_alloc(sizeof(t_env), ALLOC);
 	node->key = get_key(env);
-	node->value = ft_substr((env + ft_strlen(node->key) + 1), 0, ft_strlen(env));
+	value = ft_strchr(env, '=');
+	if (!value)
+		node->value = ft_strdup("");
+	else
+		node->value = ft_strdup(value);
 	return (node);
 }
 

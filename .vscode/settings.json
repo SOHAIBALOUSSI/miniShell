@@ -7,7 +7,8 @@
         "string.h": "c",
         "unistd.h": "c",
         "history.h": "c",
-        "limits.h": "c"
+        "limits.h": "c",
+        "signal-defs.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

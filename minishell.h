@@ -98,12 +98,19 @@ typedef struct	s_tree
 	struct s_tree *limn;
 }				t_tree;
 
+/*	ENV */
+t_env	*get_env_list(char **env);
+void	export(char **args);
+void	search_and_change(t_env **env_lst, char *key, char *new_value);
+t_env	*create_env(char *env);
+bool	is_exist(char *s);
+void	append_env(t_env **lst, t_env *new);
+char 	*get_key(char *s);
+
 void	*m_alloc(size_t __size, char todo);
 t_token	*tokenizer(char *input);
-t_env	*get_env_list(char **env);
 e_tok	decode_type(char c1, char c2);
 void	pop_error(char *error_msg);
 void	catch_syntax_errors(t_token	*token_lst);
-void	search_and_change(t_env **env_lst, char *key, char *new_value);
 
 #endif /*	MINISHELL_H	*/
