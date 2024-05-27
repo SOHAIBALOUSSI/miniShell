@@ -1,6 +1,24 @@
 #include "minishell.h"
 
 
+void	export(char *arg)
+{
+	// check for += || =
+		// pop error in case invalid format
+	/*	if its += we need to appeand the new value to 'key' if exist
+			if its not exist we need to create it with the given value
+		else if = we need to change the value of 'key' if exist
+			if its not exist we need to create it with the given value
+
+		append the created env to env_list
+	*/
+	char *check = ft_strchr(arg, '=');
+	if (check)
+	{
+		
+	}
+}
+
 int    pwd(void)
 {
 	char *pwd;
