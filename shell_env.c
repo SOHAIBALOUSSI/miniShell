@@ -1,38 +1,20 @@
 #include "minishell.h"
 
-void search_and_change(t_env **env_lst, char *key, char *new_value)
-{
-    t_env *tmp;
-
-    tmp = *env_lst;
-    while (tmp->next)
-    {
-        if (!ft_strncmp(key, tmp->key, ft_strlen(key)))
-        {
-            free(tmp->value);
-			printf("changed!\n");
-            tmp->value = new_value;
-            return ;
-        }
-        tmp = tmp->next;
-    }
-    pop_error("Env variable not found\n");
-}
 void	append_env(t_env **lst, t_env *new)
 {
-	t_env	*last;
+	t_env	*tail;
 
 	if (lst == NULL)
 		return ;
-	last = *lst;
+	tail = *lst;
 	if (*lst == NULL)
 	{
 		*lst = new;
 		return ;
 	}
-	while (last->next)
-		last = last->next;
-	last->next = new;
+	while (tail->next)
+		tail = tail->next;
+	tail->next = new;
 }
 
 char *get_key(char *s)
@@ -48,6 +30,7 @@ t_env	*create_env(char *env)
 {
 	t_env	*node;
 	char	*value;
+
 	node = m_alloc(sizeof(t_env), ALLOC);
 	node->key = get_key(env);
 	value = ft_strchr(env, '=');

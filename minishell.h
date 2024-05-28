@@ -87,6 +87,7 @@ typedef	struct s_minishell
 	size_t	closed_paren_count;
 	t_env	*env_list;
 	int		exit_status;
+	int		is_add;
 }			t_minishell;
 
 extern	t_minishell g_shell;
@@ -98,10 +99,11 @@ typedef struct	s_tree
 	struct s_tree *limn;
 }				t_tree;
 
-/*	ENV */
-t_env	*get_env_list(char **env);
+/*	ENV	*/
+
 void	export(char **args);
-void	search_and_change(t_env **env_lst, char *key, char *new_value);
+t_env	*get_env_list(char **env);
+void	search_and_change(t_env *var);
 t_env	*create_env(char *env);
 bool	is_exist(char *s);
 void	append_env(t_env **lst, t_env *new);

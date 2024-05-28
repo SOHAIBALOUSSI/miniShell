@@ -53,21 +53,24 @@ void	read_cmd(void)
 	free(line);
 }
 
-int main(int ac, char **av, char **env)
+int	main(int ac, char **av, char **env)
 {
-	int i = 0;
+	int	i = 0;
 
 	g_shell.env_list = get_env_list(env);
 	// search_and_change(&g_shell.env_list, "PWD", ft_strdup("batman"));
-	char *type[] = {"PWD=batman", "OLDPWD=batman", "v2=batman", "batman=sbe3b3", NULL};
+	char *type[] = {"var1=2023", "var2=2024", "var1+=/05", "var2+=/06",NULL};
 	export(type);
-	while (g_shell.env_list)
+	t_env	*tmp;
+	tmp = g_shell.env_list;
+	while (tmp)	
 	{
-		if (g_shell.env_list == NULL)
+		if (tmp == NULL)
 			break;
-		printf("%s=%s\n", g_shell.env_list->key, g_shell.env_list->value);
-		g_shell.env_list = g_shell.env_list->next;
+		printf("%s=%s\n", tmp->key, tmp->value);
+		tmp = tmp->next;
 	}
+
 	exit(0);
 
 	handle_signals();

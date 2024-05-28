@@ -1,71 +1,108 @@
 #include "minishell.h"
 
-bool	is_valid_var(char *s)
+void	built_ins_err(char *err_key)
 {
-	int i;
+	ft_putstr_fd(RED, 2);
+	ft_putstr_fd("Minishell: export: `", 2);
+	ft_putstr_fd(err_key, 2);
+	ft_putstr_fd("\': not a valid identifier\n", 2);
+	ft_putstr_fd(RESTORE, 2);
+}
+
+bool	is_valid_key(char *s)
+{
+	int	i;
 
 	i = 0;
 	if (!ft_isalpha(s[i]))
 		return (false);
-	while (s[i] && s[i] != '+' && s[i] != '=')
+	while (s[i] && s[i] != '=')
 	{
+		if (s[i] == '+')
+		{
+			if (s[i + 1] == '=')
+			{
+				g_shell.is_add = 1;
+				return (true);
+			}
+			return (false);
+		}
 		if (!ft_isalnum(s[i]) && s[i] != '_' )
 			return (false);
 		i++;
 	}
-	if ((s[i] == '+' && s[i + 1] != '='))
-		return false;
 	return (true);
 }
 
-bool	is_exist(char *s)
+t_env	*find_env_var(char *key, t_env *env_list)
 {
-	int i = 0;
-	t_env *tmp;
+	t_env	*tmp;
 
-	tmp = g_shell.env_list;
+	tmp = env_list;
 	while (tmp)
 	{
-		if (!ft_strncmp(tmp->key, s, ft_strlen(s)))
-			return (true);
+		if (strcmp(tmp->key, key) == 0)
+			return (tmp);
 		tmp = tmp->next;
 	}
-	return (false);
+	return (NULL);
 }
 
+void	update_env_var_value(t_env *var, char *new_value, bool is_add)
+{
+	char	*tmp;
 
+	if (is_add)
+	{
+		tmp = ft_strjoin(var->value, new_value);
+		free(var->value);
+		var->value = tmp;
+	}
+	else
+	{
+		free(var->value);
+		var->value = ft_strdup(new_value);
+	}
+}
+void	put_sorted_env()
+{
+	t_env	*put;
+	
+	put = g_shell.env_list;
+
+	int alpha = 0;
+	while (/* condition */)
+	{
+		/* code */
+	}
+	
+	
+}
 void	export(char **args)
 {
-	// check for += || =
-		// pop error in case invalid format
-	/*	if its += we need to appeand the new value to 'key' if exist
-			if its not exist we need to create it with the given value
-		else if = we need to change the value of 'key' if exist
-			if its not exist we need to create it with the given value
-
-		append the created env to env_list
-	*/
-	int i = 0;
-	char *key;
-	char *value;
-
-	while (args[i])
+	t_env	*var;
+	t_env	*existing_var;
+	// if (!*args)
+	// 	put_sorted_env();
+	while (*args)
 	{
-		key = get_key(args[i]);
-		value = ft_strchr(args[i], '=');
-		if (is_valid_var(key))
+		if (is_valid_key(*args))
 		{
-			if (is_exist(key))
+			var = create_env(*args);
+			existing_var = find_env_var(var->key, g_shell.env_list);
+			if (existing_var)
 			{
-				search_and_change(&g_shell.env_list, key, value);
-				i++;
-				continue;
+				if (g_shell.is_add)
+					update_env_var_value(existing_var, var->value, true);
+				else
+					update_env_var_value(existing_var, var->value, false);
 			}
-			append_env(&g_shell.env_list, create_env(args[i]));
+			else
+				append_env(&g_shell.env_list, var);
 		}
 		else
-			pop_error("not valid var\n");
-		i++;
+			built_ins_err(*args);
+		args++;
 	}
 }
 
@@ -74,7 +111,7 @@ void	export(char **args)
 // 	char *pwd;
 // 	pwd = getenv("PWD");
 // 	if (!pwd)
-// 		return(printf("PWD envirment variable not found\n"), -1);
+// 		return(printf("PWD envirment keyiable not found\n"), -1);
 // 	printf("%s\n", pwd);
 // 	return 0;
 // }
@@ -102,5 +139,5 @@ void	export(char **args)
 
 // int main()
 // {
-// 	printf("%s\n", get_var("value+="));
+// 	printf("%s\n", get_key("value+="));
 // }
