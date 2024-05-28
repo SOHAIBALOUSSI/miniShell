@@ -59,7 +59,7 @@ int	main(int ac, char **av, char **env)
 
 	g_shell.env_list = get_env_list(env);
 	// search_and_change(&g_shell.env_list, "PWD", ft_strdup("batman"));
-	char *type[] = {"var1=2023", "var2=2024", "var1+=/05", "var2+=/06",NULL};
+	char *type[] = {"m=1", "z=2", NULL};
 	export(type);
 	t_env	*tmp;
 	tmp = g_shell.env_list;
@@ -70,6 +70,8 @@ int	main(int ac, char **av, char **env)
 		printf("%s=%s\n", tmp->key, tmp->value);
 		tmp = tmp->next;
 	}
+	printf("%s", RED);
+	export(NULL);
 
 	exit(0);
 
