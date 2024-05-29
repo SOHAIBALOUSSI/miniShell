@@ -123,4 +123,8 @@ t_env	*find_env_var(char *key, t_env *env_list);
 size_t	lst_size(t_env **lst);
 void	built_ins_err(char *err_key);
 
+/*	ENV */
+
+void    builtin_env(void);
+void    builtin_unset(char **args);
 #endif /*	MINISHELL_H	*/

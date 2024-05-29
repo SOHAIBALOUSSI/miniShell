@@ -59,8 +59,12 @@ int	main(int ac, char **av, char **env)
 
 	g_shell.env_list = get_env_list(env);
 	// search_and_change(&g_shell.env_list, "PWD", ft_strdup("batman"));
-	char *type[] = {"2b", "batman=2", "3b", "bat", NULL};
-	export(type);
+	// char *type[] = {"2b", "batman=2", "_=_", "bat", NULL};
+	// export(type);
+	char *unset[] = {"PATH", NULL};
+	builtin_unset(unset);
+	// builtin_env();
+	// exit(0);
 	t_env	*tmp;
 	tmp = g_shell.env_list;
 	while (tmp)	
@@ -70,17 +74,17 @@ int	main(int ac, char **av, char **env)
 		printf("%s=%s\n", tmp->key, tmp->value);
 		tmp = tmp->next;
 	}
-	printf("%s", RED);
-	export(NULL);
+	// printf("%s", RED);
+	// export(NULL);
 
 	exit(0);
 
-	handle_signals();
-	while (1)
-	{
-		read_cmd();
-		m_alloc(0, FREE);	
-	}
-	rl_clear_history();
+	// handle_signals();
+	// while (1)
+	// {
+	// 	read_cmd();
+	// 	m_alloc(0, FREE);	
+	// }
+	// rl_clear_history();
 	return (0);
 }

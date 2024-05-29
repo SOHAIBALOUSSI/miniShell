@@ -57,7 +57,7 @@ bool	is_valid_key(char *s)
 	int	i;
 
 	i = 0;
-	if (!ft_isalpha(s[i]))
+	if (!ft_isalpha(s[i]) && s[i] != '_')
 		return (false);
 	while (s[i] && s[i] != '=')
 	{
