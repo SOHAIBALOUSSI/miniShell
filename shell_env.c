@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	append_env(t_env **lst, t_env *new)
+void	append_env(t_env **lst, t_env *new_env)
 {
 	t_env	*tail;
 
@@ -9,12 +9,12 @@ void	append_env(t_env **lst, t_env *new)
 	tail = *lst;
 	if (*lst == NULL)
 	{
-		*lst = new;
+		*lst = new_env;
 		return ;
 	}
 	while (tail->next)
 		tail = tail->next;
-	tail->next = new;
+	tail->next = new_env;
 }
 
 char *get_key(char *s)

@@ -1,5 +1,8 @@
 #include "minishell.h"
+#include "libs/libft/libft.h"
 #include <asm-generic/signal-defs.h>
+#include <stdio.h>
+#include <time.h>
 
 t_minishell g_shell = {0};
 
@@ -58,13 +61,13 @@ int	main(int ac, char **av, char **env)
 	int	i = 0;
 
 	g_shell.env_list = get_env_list(env);
-	// search_and_change(&g_shell.env_list, "PWD", ft_strdup("batman"));
-	// char *type[] = {"2b", "batman=2", "_=_", "bat", NULL};
-	// export(type);
-	char *unset[] = {"PATH", NULL};
+
+	char *type[] = {"bat=2", NULL};
+	builtin_export(type);
+	
+	char *unset[] = {"USER","PATH", NULL};
 	builtin_unset(unset);
-	// builtin_env();
-	// exit(0);
+
 	t_env	*tmp;
 	tmp = g_shell.env_list;
 	while (tmp)	
@@ -76,9 +79,10 @@ int	main(int ac, char **av, char **env)
 	}
 	// printf("%s", RED);
 	// export(NULL);
-
-	exit(0);
-
+	char *exits[] = {"1337", NULL};
+	builtin_exit(exits);
+	// exit(0);
+	ft_printf("hi");
 	// handle_signals();
 	// while (1)
 	// {

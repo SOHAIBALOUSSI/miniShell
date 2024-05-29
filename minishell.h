@@ -105,7 +105,7 @@ t_env	*get_env_list(char **env);
 void	search_and_change(t_env *var);
 t_env	*create_env(char *env);
 bool	is_exist(char *s);
-void	append_env(t_env **lst, t_env *new);
+void	append_env(t_env **lst, t_env *new_env);
 char 	*get_key(char *s);
 
 void	*m_alloc(size_t __size, char todo);
@@ -116,7 +116,7 @@ void	catch_syntax_errors(t_token	*token_lst);
 
 /* Export */
 
-void	export(char **args);
+void	builtin_export(char **args);
 bool	is_valid_key(char *s);
 char 	*get_value(char *key);
 t_env	*find_env_var(char *key, t_env *env_list);
@@ -127,4 +127,6 @@ void	built_ins_err(char *err_key);
 
 void    builtin_env(void);
 void    builtin_unset(char **args);
+void    builtin_exit(char **args);
+
 #endif /*	MINISHELL_H	*/

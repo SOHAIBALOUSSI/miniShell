@@ -87,7 +87,7 @@ static void	put_sorted_env(void)
 	}
 }
 
-void	export(char **args)
+void	builtin_export(char **args)
 {
 	t_env	*var;
 	t_env	*existing_var;
