@@ -101,7 +101,6 @@ typedef struct	s_tree
 
 /*	ENV	*/
 
-void	export(char **args);
 t_env	*get_env_list(char **env);
 void	search_and_change(t_env *var);
 t_env	*create_env(char *env);
@@ -114,5 +113,14 @@ t_token	*tokenizer(char *input);
 e_tok	decode_type(char c1, char c2);
 void	pop_error(char *error_msg);
 void	catch_syntax_errors(t_token	*token_lst);
+
+/* Export */
+
+void	export(char **args);
+bool	is_valid_key(char *s);
+char 	*get_value(char *key);
+t_env	*find_env_var(char *key, t_env *env_list);
+size_t	lst_size(t_env **lst);
+void	built_ins_err(char *err_key);
 
 #endif /*	MINISHELL_H	*/

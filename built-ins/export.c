@@ -1,54 +1,6 @@
-#include "minishell.h"
+#include "../minishell.h"
 
-void	built_ins_err(char *err_key)
-{
-	ft_putstr_fd(RED, 2);
-	ft_putstr_fd("Minishell: export: `", 2);
-	ft_putstr_fd(err_key, 2);
-	ft_putstr_fd("\': not a valid identifier\n", 2);
-	ft_putstr_fd(RESTORE, 2);
-}
-
-bool	is_valid_key(char *s)
-{
-	int	i;
-
-	i = 0;
-	if (!ft_isalpha(s[i]))
-		return (false);
-	while (s[i] && s[i] != '=')
-	{
-		if (s[i] == '+')
-		{
-			if (s[i + 1] == '=')
-			{
-				g_shell.is_add = 1;
-				return (true);
-			}
-			return (false);
-		}
-		if (!ft_isalnum(s[i]) && s[i] != '_' )
-			return (false);
-		i++;
-	}
-	return (true);
-}
-
-t_env	*find_env_var(char *key, t_env *env_list)
-{
-	t_env	*tmp;
-
-	tmp = env_list;
-	while (tmp)
-	{
-		if (strcmp(tmp->key, key) == 0)
-			return (tmp);
-		tmp = tmp->next;
-	}
-	return (NULL);
-}
-
-void	update_env_var_value(t_env *var, char *new_value, bool is_add)
+static void	update_env_var_value(t_env *var, char *new_value, bool is_add)
 {
 	char	*tmp;
 
@@ -65,28 +17,7 @@ void	update_env_var_value(t_env *var, char *new_value, bool is_add)
 	}
 }
 
-size_t	lst_size(t_env **lst)
-{
-	t_env	*tmp;
-	size_t	size;
-
-	tmp = *lst;
-	size = 0;
-	while (tmp)
-	{
-		if (strcmp(tmp->key, "_") == 0)
-		{
-			tmp = tmp->next;
-			continue;
-		}
-		size++;
-		tmp = tmp->next;
-	}
-	return (size);
-
-}
-
-char	**sort_array(char **arr)
+static char	**sort_array(char **arr)
 {
 	int i;
 	char *tmp;
@@ -94,7 +25,7 @@ char	**sort_array(char **arr)
 	i = 0;
 	while (arr[i])
 	{
-		if (arr[i + 1] && strcmp(arr[i], arr[i + 1]) >= 0)
+		if (arr[i + 1] && ft_strcmp(arr[i], arr[i + 1]) >= 0)
 		{
 			tmp = arr[i];
 			arr[i] = arr[i + 1];
@@ -107,7 +38,7 @@ char	**sort_array(char **arr)
 	return (arr);
 }
 
-char	**lst_to_arr(t_env **env_list)
+static char	**lst_to_arr(t_env **env_list)
 {
 	int		i;
 	t_env	*ptr;
@@ -118,7 +49,7 @@ char	**lst_to_arr(t_env **env_list)
 	ptr = *env_list;
 	while (ptr)
 	{
-		if (strcmp(ptr->key, "_") == 0)
+		if (ft_strcmp(ptr->key, "_") == 0)
 		{
 			ptr = ptr->next;
 			continue;
@@ -131,10 +62,10 @@ char	**lst_to_arr(t_env **env_list)
 	return (arr);
 }
 
-void	put_sorted_env()
+static void	put_sorted_env(void)
 {
 	int		i;
-	t_env	*put;
+	char	*put;
 	char	**env_array;
 
 	i = 0;
@@ -143,12 +74,12 @@ void	put_sorted_env()
 	while (env_array[i])
 	{
 		printf("declare -x ");
-		printf("%s", env_array[i]);
-		put = find_env_var(env_array[i], g_shell.env_list);
+		put = get_value(env_array[i]);
 		if (put)
 		{
+			printf("%s", env_array[i]);
 			printf("=\"");	
-			printf("%s\"\n", put->value);
+			printf("%s\"\n", put);
 		}
 		else
 			printf("\n");
@@ -162,7 +93,7 @@ void	export(char **args)
 	t_env	*existing_var;
 	
 	if (!args)
-		put_sorted_env();
+		return (put_sorted_env());
 	while (*args)
 	{
 		if (is_valid_key(*args))
@@ -201,7 +132,7 @@ void	export(char **args)
 
 // 	if (ac != 3)
 // 		return (ft_putstr_fd("Minishell: cd :too many arguments\n", 2), -1);
-// 	if (strcmp(av[1], "cd"))
+// 	if (ft_strcmp(av[1], "cd"))
 // 		return (ft_putstr_fd("Minishell: not cd command!\n", 2), -1);
 // 	current_dir = getcwd(NULL, PATH_MAX);
 // 	if (!current_dir)

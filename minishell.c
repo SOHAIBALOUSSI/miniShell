@@ -59,7 +59,7 @@ int	main(int ac, char **av, char **env)
 
 	g_shell.env_list = get_env_list(env);
 	// search_and_change(&g_shell.env_list, "PWD", ft_strdup("batman"));
-	char *type[] = {"m=1", "z=2", NULL};
+	char *type[] = {"2b", "batman=2", "3b", "bat", NULL};
 	export(type);
 	t_env	*tmp;
 	tmp = g_shell.env_list;
