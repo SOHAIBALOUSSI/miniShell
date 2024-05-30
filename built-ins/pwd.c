@@ -1,10 +1,8 @@
 
 #include "../minishell.h"
-#include <time.h>
 
-void    builtin_pwd(char **args)
+void    builtin_pwd(void)
 {
-    (void)args;
     char *pwd;
 
     pwd = getcwd(NULL, PATH_MAX);

@@ -65,7 +65,7 @@ int	main(int ac, char **av, char **env)
 	// char *type[] = {"bat=2", NULL};
 	// builtin_export(type);
 	
-	// char *unset[] = {"USER","PATH", NULL};
+	// char *unset[] = {"H", NULL};
 	// builtin_unset(unset);
 
 	// t_env	*tmp;
@@ -80,11 +80,20 @@ int	main(int ac, char **av, char **env)
 	// printf("%s", RED);
 	// export(NULL);
 
-	char *pwd[] = {"1337", NULL};
-	builtin_pwd(pwd);
 
-	char *exits[] = {"1337", NULL};
-	builtin_exit(exits);
+	char *cd[] = {"1337", "1337", NULL};
+	// char *cd[] = {NULL};
+	builtin_cd(cd);
+
+	// char *pwd[] = {"1337", NULL};
+	builtin_pwd();
+
+	// char *echo[] = {"-n", "-nnnn", "batman", NULL};
+	// builtin_echo(echo);
+
+	exit(0);
+	// char *exits[] = {"1337", NULL};
+	// builtin_exit(exits);
 
 	// handle_signals();
 	// while (1)

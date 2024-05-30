@@ -128,6 +128,8 @@ void	built_ins_err(char *err_key);
 void    builtin_env(void);
 void    builtin_unset(char **args);
 void    builtin_exit(char **args);
-void    builtin_pwd(char **args);
+void    builtin_pwd(void);
+void	builtin_echo(char **args);
+void    builtin_cd(char **args);
 
 #endif /*	MINISHELL_H	*/
