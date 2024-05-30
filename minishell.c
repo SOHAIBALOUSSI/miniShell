@@ -62,27 +62,30 @@ int	main(int ac, char **av, char **env)
 
 	g_shell.env_list = get_env_list(env);
 
-	char *type[] = {"bat=2", NULL};
-	builtin_export(type);
+	// char *type[] = {"bat=2", NULL};
+	// builtin_export(type);
 	
-	char *unset[] = {"USER","PATH", NULL};
-	builtin_unset(unset);
+	// char *unset[] = {"USER","PATH", NULL};
+	// builtin_unset(unset);
 
-	t_env	*tmp;
-	tmp = g_shell.env_list;
-	while (tmp)	
-	{
-		if (tmp == NULL)
-			break;
-		printf("%s=%s\n", tmp->key, tmp->value);
-		tmp = tmp->next;
-	}
+	// t_env	*tmp;
+	// tmp = g_shell.env_list;
+	// while (tmp)	
+	// {
+	// 	if (tmp == NULL)
+	// 		break;
+	// 	printf("%s=%s\n", tmp->key, tmp->value);
+	// 	tmp = tmp->next;
+	// }
 	// printf("%s", RED);
 	// export(NULL);
-	char *exits[] = {NULL};
-	builtin_exit(NULL);
-	// exit(0);
-	// ft_printf("hi");
+
+	char *pwd[] = {"1337", NULL};
+	builtin_pwd(pwd);
+
+	char *exits[] = {"1337", NULL};
+	builtin_exit(exits);
+
 	// handle_signals();
 	// while (1)
 	// {

@@ -116,15 +116,6 @@ void	builtin_export(char **args)
 	}
 }
 
-// int    pwd(void)
-// {
-// 	char *pwd;
-// 	pwd = getenv("PWD");
-// 	if (!pwd)
-// 		return(printf("PWD envirment keyiable not found\n"), -1);
-// 	printf("%s\n", pwd);
-// 	return 0;
-// }
 
 // void    change_dir(void)
 // {

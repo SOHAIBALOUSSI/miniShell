@@ -13,7 +13,7 @@ ft_putchar.c ft_strchr.c ft_strnstr.c ft_itoa.c ft_lstsize_bonus.c ft_putchar_fd
 ft_strdup.c ft_strrchr.c ft_base16.c get_next_line_utils.c)
 
 SRCS = minishell.c tokenization.c Justice.c syntax_errors.c shell_env.c \
-	$(addprefix ./built-ins/, export.c export_fts.c env.c unset.c exit.c) $(LIBFT_SRC)
+	$(addprefix ./built-ins/, export.c export_fts.c env.c unset.c exit.c pwd.c) $(LIBFT_SRC)
 
 OBJS = $(SRCS:.c=.o)
 
