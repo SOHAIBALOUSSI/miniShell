@@ -79,10 +79,10 @@ int	main(int ac, char **av, char **env)
 	}
 	// printf("%s", RED);
 	// export(NULL);
-	char *exits[] = {"1337", NULL};
-	builtin_exit(exits);
+	char *exits[] = {NULL};
+	builtin_exit(NULL);
 	// exit(0);
-	ft_printf("hi");
+	// ft_printf("hi");
 	// handle_signals();
 	// while (1)
 	// {

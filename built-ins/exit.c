@@ -2,50 +2,54 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-bool check_exit_value(char *val)
+
+bool	check_exit_value(char *value)
 {
-	while (*val)
-		if (!ft_isdigit(*val))
-			return (false);
-	return (true); 
-}
+	int			i;
+	int			s;
 
-
-size_t  sizeof_args(char **args)
-{
-	size_t size;
-
-	size = 0;
-	while (*args)
+	i = 0;
+	while (value[i] == ' ' && value[i] >= '\t' && value[i] <= '\r')
+		i++;
+	if (value[i] == '+' || value[i] == '-')
+		i++;
+	while (value[i])
 	{
-		size++;
-		args++;
+		if (!(value[i] >= '0' && value[i] <= '9'))
+			return (false);
+		i++;
 	}
-	return (size);
+	return (true);
 }
 
+void 	exit_clean(int exit_status)
+{
+	// printf("exit\n");
+	// m_alloc(0, FREE);
+	exit(exit_status);
+}
 void	builtin_exit(char **args)
 {
 	int	status;
 
-	if (!args)
+	if (!args || !args[0])
 	{
 		printf("exit\n");
-		exit(0);
+		exit_clean(g_shell.exit_status);
 	}
-	if (sizeof_args(args) > 1)
-	{
+	else if (args[0] && args[1])
 		pop_error("Minishell: exit: too many arguments\n");
-		g_shell.exit_status = 1;
+	else if (check_exit_value(args[0]))
+	{
+		printf("exit\n");
+		exit_clean(ft_atoi(args[0]));
 	}
 	else
 	{
-		if (check_exit_value(args[0]))
-		{
-			printf("exit\n");
-			exit(ft_atoi(args[0]));
-		}
 		printf("exit\n");
-
+		ft_putstr_fd("Minishell: exit: ", 2);
+		ft_putstr_fd(args[0], 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
+		exit_clean(2);
 	}
 }
