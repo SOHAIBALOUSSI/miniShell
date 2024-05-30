@@ -81,7 +81,7 @@ int	main(int ac, char **av, char **env)
 	// export(NULL);
 
 
-	char *cd[] = {"1337", "1337", NULL};
+	char *cd[] = {"..", NULL};
 	// char *cd[] = {NULL};
 	builtin_cd(cd);
 
