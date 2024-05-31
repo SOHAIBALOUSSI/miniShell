@@ -65,7 +65,7 @@ int	main(int ac, char **av, char **env)
 	// char *type[] = {"bat=2", NULL};
 	// builtin_export(type);
 	
-	// char *unset[] = {"H", NULL};
+	// char *unset[] = {"HOME", NULL};
 	// builtin_unset(unset);
 
 	// t_env	*tmp;
@@ -81,12 +81,15 @@ int	main(int ac, char **av, char **env)
 	// export(NULL);
 
 
-	char *cd[] = {"..", NULL};
-	// char *cd[] = {NULL};
-	builtin_cd(cd);
+	// char *cd[] = {"/dev", NULL};
+	// // char *cd[] = {NULL};
+	// builtin_cd(cd);
+	char *cd2[] = {"sasdasda", NULL};
+	builtin_cd(cd2);
+
 
 	// char *pwd[] = {"1337", NULL};
-	builtin_pwd();
+	// builtin_pwd();
 
 	// char *echo[] = {"-n", "-nnnn", "batman", NULL};
 	// builtin_echo(echo);
