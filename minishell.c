@@ -65,8 +65,8 @@ int	main(int ac, char **av, char **env)
 	// char *type[] = {"bat=2", NULL};
 	// builtin_export(type);
 	
-	// char *unset[] = {"HOME", NULL};
-	// builtin_unset(unset);
+	char *unset[] = {"OLDPWD", NULL};
+	builtin_unset(unset);
 
 	// t_env	*tmp;
 	// tmp = g_shell.env_list;
@@ -84,12 +84,17 @@ int	main(int ac, char **av, char **env)
 	// char *cd[] = {"/dev", NULL};
 	// // char *cd[] = {NULL};
 	// builtin_cd(cd);
-	char *cd2[] = {"/dev", NULL};
-	builtin_cd(cd2);
-
-
-	char *pwd[] = {"1337", NULL};
+	printf("before chdir:");
 	builtin_pwd();
+	printf("\n");
+
+	char *cd2[] = {"/nfs/sgoinfre/goinfre/Perso/sait-alo", NULL};
+	builtin_cd(cd2);
+	
+	printf("after chdir:");
+	builtin_pwd();
+
+	printf("oldcdw = %s\n", find_env_var("OLDPWD", g_shell.env_list)->value);
 
 	// char *echo[] = {"-n", "-nnnn", "batman", NULL};
 	// builtin_echo(echo);
