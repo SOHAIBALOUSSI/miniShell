@@ -44,10 +44,11 @@ void	builtin_cd(char **args)
 		pop_error("Minishell: cd: too many arguments\n");
 	else
 	{
-		if (chdir(args[0]) == -1);
+		if (chdir(args[0]) == -1)
 		{
-			perror(args[0]);
-			printf("Minishell:");
+			pop_error("Minishell :");
+			pop_error(args[0]);
+			pop_error(": No such file or directory\n");
 		}
 	}
 }

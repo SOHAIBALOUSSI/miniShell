@@ -84,12 +84,12 @@ int	main(int ac, char **av, char **env)
 	// char *cd[] = {"/dev", NULL};
 	// // char *cd[] = {NULL};
 	// builtin_cd(cd);
-	char *cd2[] = {"sasdasda", NULL};
+	char *cd2[] = {"/dev", NULL};
 	builtin_cd(cd2);
 
 
-	// char *pwd[] = {"1337", NULL};
-	// builtin_pwd();
+	char *pwd[] = {"1337", NULL};
+	builtin_pwd();
 
 	// char *echo[] = {"-n", "-nnnn", "batman", NULL};
 	// builtin_echo(echo);
