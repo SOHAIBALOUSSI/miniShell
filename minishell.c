@@ -20,8 +20,8 @@ void	handler(int sig)
 
 void	handle_signals(void)
 {
-	signal(SIGQUIT, SIG_IGN); // ignore CTRL + '\'
-	signal(SIGTERM, SIG_IGN); // ignore SIGTERM same as BASH 
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGTERM, SIG_IGN);
 	signal(SIGINT, handler);
 }
 
@@ -65,8 +65,8 @@ int	main(int ac, char **av, char **env)
 	// char *type[] = {"bat=2", NULL};
 	// builtin_export(type);
 	
-	char *unset[] = {"OLDPWD", NULL};
-	builtin_unset(unset);
+	// char *unset[] = {"OLDPWD", NULL};
+	// builtin_unset(unset);
 
 	// t_env	*tmp;
 	// tmp = g_shell.env_list;
@@ -81,27 +81,16 @@ int	main(int ac, char **av, char **env)
 	// export(NULL);
 
 
-	// char *cd[] = {"/dev", NULL};
-	// // char *cd[] = {NULL};
-	// builtin_cd(cd);
-	printf("before chdir:");
-	builtin_pwd();
-	printf("\n");
-
 	char *cd2[] = {"/nfs/sgoinfre/goinfre/Perso/sait-alo", NULL};
 	builtin_cd(cd2);
-	
-	printf("after chdir:");
-	builtin_pwd();
-
-	printf("oldcdw = %s\n", find_env_var("OLDPWD", g_shell.env_list)->value);
 
 	// char *echo[] = {"-n", "-nnnn", "batman", NULL};
 	// builtin_echo(echo);
 
-	exit(0);
 	// char *exits[] = {"1337", NULL};
 	// builtin_exit(exits);
+	
+	exit(0);
 
 	// handle_signals();
 	// while (1)

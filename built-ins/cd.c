@@ -10,13 +10,11 @@ static char	*get_home_dir(void)
 	return (home->value);
 }
 
-static void	update_pwd_env(char *new_dir)
+static void	update_pwd_env(char *new_dir, char *old_dir)
 {
-	char	cwd[PATH_MAX];
 	t_env	*pwd;
 	t_env	*oldpwd;
 
-	getcwd(cwd, PATH_MAX);
 	pwd = find_env_var("PWD", g_shell.env_list);
 	if (pwd)
 		pwd->value = ft_strdup(new_dir);
@@ -29,13 +27,12 @@ static void	update_pwd_env(char *new_dir)
 	}
 	oldpwd = find_env_var("OLDPWD", g_shell.env_list);
 	if (oldpwd)
-		oldpwd->value = ft_strdup(cwd);
+		oldpwd->value = ft_strdup(old_dir);
 	else
 	{
-		printf("hiiii\n");
 		oldpwd = m_alloc(sizeof(t_env), ALLOC);
 		oldpwd->key = ft_strdup("OLDPWD");
-		oldpwd->value = ft_strdup(cwd);
+		oldpwd->value = ft_strdup(old_dir);
 		append_env(&g_shell.env_list, oldpwd);
 	}
 }
@@ -47,7 +44,11 @@ void	builtin_cd(char **args)
 
 	getcwd(old_dir, PATH_MAX);
 	if (!args || !*args)
+	{
 		new_dir = get_home_dir();
+		if (!new_dir)
+			pop_error("Minishell: cd: HOME not set\n");
+	}
 	else if (args[1])
 		pop_error("Minishell: cd: too many arguments\n");
 	else
@@ -61,8 +62,6 @@ void	builtin_cd(char **args)
 			pop_error(": No such file or directory");
 		}
 		else
-			update_pwd_env(new_dir);
+			update_pwd_env(new_dir, old_dir);
 	}
-	else
-		pop_error("Minishell: cd: HOME not set\n");
 }
