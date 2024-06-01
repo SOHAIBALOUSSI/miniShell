@@ -6,7 +6,7 @@ void	set_newpwd(char *new_dir)
 
 	pwd = find_env_var("PWD", g_shell.env_list);
 	if (pwd)
-		pwd->value = ft_strdup(new_dir);
+		pwd->value = ft_strjoin(pwd->value, ft_strjoin("/", new_dir));
 	else
 	{
 		pwd = m_alloc(sizeof(t_env), ALLOC);
