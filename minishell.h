@@ -6,6 +6,9 @@
 #include <stdbool.h>
 #include <signal.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #include <linux/limits.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -118,18 +121,18 @@ void	catch_syntax_errors(t_token	*token_lst);
 
 void	builtin_export(char **args);
 bool	is_valid_key(char *s);
-char 	*get_value(char *key);
+char	*get_value(char *key);
 t_env	*find_env_var(char *key, t_env *env_list);
 size_t	lst_size(t_env **lst);
 void	built_ins_err(char *err_key);
 
 /*	ENV */
 
-void    builtin_env(void);
-void    builtin_unset(char **args);
-void    builtin_exit(char **args);
-void    builtin_pwd(void);
+void	builtin_env(void);
+void	builtin_unset(char **args);
+void	builtin_exit(char **args);
+void	builtin_pwd(void);
 void	builtin_echo(char **args);
-void    builtin_cd(char **args);
+int		builtin_cd(char **args);
 
 #endif /*	MINISHELL_H	*/

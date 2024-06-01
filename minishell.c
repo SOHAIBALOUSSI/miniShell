@@ -81,9 +81,11 @@ int	main(int ac, char **av, char **env)
 	// export(NULL);
 
 
-	char *cd2[] = {"/nfs/sgoinfre/goinfre/Perso/sait-alo", NULL};
+	char *cd2[] = {"libs",NULL};
 	builtin_cd(cd2);
+	builtin_pwd();
 
+	builtin_env();
 	// char *echo[] = {"-n", "-nnnn", "batman", NULL};
 	// builtin_echo(echo);
 
