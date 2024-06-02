@@ -65,8 +65,8 @@ int	main(int ac, char **av, char **env)
 	// char *type[] = {"bat=2", NULL};
 	// builtin_export(type);
 	
-	char *unset[] = {"SHELL", "PWD", NULL};
-	builtin_unset(unset);
+	// char *unset[] = {"SHELL", "PWD", NULL};
+	// builtin_unset(unset);
 
 	// t_env	*tmp;
 	// tmp = g_shell.env_list;
@@ -83,10 +83,10 @@ int	main(int ac, char **av, char **env)
 	// char *cd2[] = {NULL};
 	// builtin_cd(cd2);
 	// builtin_pwd();
-	builtin_env();
+	// builtin_env();
 
-	// char *echo[] = {"-n", "-nnnn", "batman", NULL};
-	// builtin_echo(echo);
+	char *echo[] = {"-n hi", NULL};
+	builtin_echo(echo);
 
 	// char *exits[] = {"1337", NULL};
 	// builtin_exit(exits);

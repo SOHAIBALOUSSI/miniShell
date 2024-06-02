@@ -1,32 +1,43 @@
 #include "../minishell.h"
 
+bool	check_n_option(char *arg)
+{
+	int i;
+
+	if (arg[0] == '-')
+	{
+		i = 1;
+		while (arg[i] == 'n')
+			i++;
+		if (arg[i] == '\0')
+			return (true);
+	}
+	return (false);
+}
+
 int	builtin_echo(char **args)
 {
 	int i;
-	int j;
 	int flag;
-	
+	int	ignore_n;
+
 	i = 0;
-	j = 0;
 	flag = 0;
+	ignore_n = 0;
 	if (!args || !*args) 
 		return (write(1, "\n", 1), EXIT_SUCCESS);
 	while (args[i])
 	{
-		j = 0;
-		if (args[i][0] == '-' && args[i][1] == 'n')
+		if (!ignore_n && check_n_option(args[i]) == true)
 		{
-			j = 1;
-			while (args[i][j] && args[i][j] == 'n')
-				j++;
 			flag = 1;
-			i++; 
-			continue; // if a char after -nnnnnnx 
+			i++;
+			continue ;
 		}
-		else 
-			printf("%s", args[i]);
+		printf("%s", args[i]);
 		if (args[i + 1])
 			printf(" ");
+		ignore_n = 1; // if a the arg is a word , any other -n will be ignored
 		i++;
 	}
 	if (!flag)
