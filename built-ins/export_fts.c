@@ -2,11 +2,11 @@
 
 void	built_ins_err(char *err_key)
 {
-	ft_putstr_fd(RED, 2);
+	// ft_putstr_fd(RED, 2);
 	ft_putstr_fd("Minishell: export: `", 2);
 	ft_putstr_fd(err_key, 2);
 	ft_putstr_fd("\': not a valid identifier\n", 2);
-	ft_putstr_fd(RESTORE, 2);
+	// ft_putstr_fd(RESTORE, 2);
 }
 size_t	lst_size(t_env **lst)
 {

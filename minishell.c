@@ -39,7 +39,7 @@ void	read_cmd(void)
 
 	line = readline(SHELL_PROMPT);
 	if (!line)
-		return (printf("exit"), m_alloc(0, FREE), exit(-1));
+		return (printf("exit"), exit(-1));
 
 	add_history(line);
 	token_lst = tokenizer(line);
@@ -65,8 +65,8 @@ int	main(int ac, char **av, char **env)
 	// char *type[] = {"bat=2", NULL};
 	// builtin_export(type);
 	
-	// char *unset[] = {"OLDPWD", NULL};
-	// builtin_unset(unset);
+	char *unset[] = {"SHELL", "PWD", NULL};
+	builtin_unset(unset);
 
 	// t_env	*tmp;
 	// tmp = g_shell.env_list;
@@ -80,12 +80,11 @@ int	main(int ac, char **av, char **env)
 	// printf("%s", RED);
 	// export(NULL);
 
-
-	char *cd2[] = {"libs",NULL};
-	builtin_cd(cd2);
-	builtin_pwd();
-
+	// char *cd2[] = {NULL};
+	// builtin_cd(cd2);
+	// builtin_pwd();
 	builtin_env();
+
 	// char *echo[] = {"-n", "-nnnn", "batman", NULL};
 	// builtin_echo(echo);
 

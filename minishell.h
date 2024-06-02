@@ -21,8 +21,8 @@
 # define DQ '\"'
 
 /*	COLORS*/
-# define RED "\e[0;31m"
-# define RESTORE "\e[0;m"
+// # define RED "\e[0;31m"
+// # define RESTORE "\e[0;m"
 
 /* The Struct used in the Tokenizer */
 typedef enum e_tok
@@ -129,10 +129,10 @@ void	built_ins_err(char *err_key);
 /*	ENV */
 
 void	builtin_env(void);
-void	builtin_unset(char **args);
+int		builtin_unset(char **args);
 void	builtin_exit(char **args);
-void	builtin_pwd(void);
-void	builtin_echo(char **args);
+int		builtin_pwd(void);
+int		builtin_echo(char **args);
 int		builtin_cd(char **args);
 
 #endif /*	MINISHELL_H	*/

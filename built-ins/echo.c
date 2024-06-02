@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-void	builtin_echo(char **args)
+int	builtin_echo(char **args)
 {
 	int i;
 	int j;
@@ -9,23 +9,19 @@ void	builtin_echo(char **args)
 	i = 0;
 	j = 0;
 	flag = 0;
-	if (!args || !*args)
-	{
-		ft_putchar('\n');
-		return ;
-	}
+	if (!args || !*args) 
+		return (write(1, "\n", 1), EXIT_SUCCESS);
 	while (args[i])
 	{
 		j = 0;
-
 		if (args[i][0] == '-' && args[i][1] == 'n')
 		{
 			j = 1;
 			while (args[i][j] && args[i][j] == 'n')
 				j++;
 			flag = 1;
-			i++;
-			continue;
+			i++; 
+			continue; // if a char after -nnnnnnx 
 		}
 		else 
 			printf("%s", args[i]);

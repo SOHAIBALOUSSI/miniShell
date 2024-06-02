@@ -22,11 +22,11 @@ void	syntax_err(t_token *current)
 		err = ft_strdup("newline");
 	else
 		err = ft_substr(current->location.location, 0, current->location.length);
-	ft_putstr_fd(RED, 2);
+	// ft_putstr_fd(RED, 2);
 	ft_putstr_fd("Minishell: syntax error near unexpected token `", 2);
 	ft_putstr_fd(err, 2);
 	ft_putstr_fd("\'\n", 2);
-	ft_putstr_fd(RESTORE, 2);
+	// ft_putstr_fd(RESTORE, 2);
 	g_shell = (t_minishell){0};
 }
 

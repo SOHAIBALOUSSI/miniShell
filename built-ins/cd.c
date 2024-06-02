@@ -1,28 +1,23 @@
 #include "../minishell.h"
 
-void	set_newpwd(char *new_dir)
+static void	update_pwd_env(char *new_dir, char *old_dir)
 {
 	t_env	*pwd;
+	t_env	*oldpwd;
 
 	pwd = find_env_var("PWD", g_shell.env_list);
 	if (pwd)
-		pwd->value = ft_strjoin(pwd->value, ft_strjoin("/", new_dir));
+		pwd->value = ft_strdup(getcwd(NULL, PATH_MAX)); // not a leak (m_alloc ghadi tkelef)
 	else
 	{
 		pwd = m_alloc(sizeof(t_env), ALLOC);
 		pwd->key = ft_strdup("PWD");
 		pwd->value = ft_strdup(new_dir);
 		append_env(&g_shell.env_list, pwd);
-	}
-}
-
-void	set_oldpwd(char *old_dir)
-{
-	t_env	*oldpwd;
-	
+	}	
 	oldpwd = find_env_var("OLDPWD", g_shell.env_list);
 	if (oldpwd)
-		oldpwd->value = ft_strdup(old_dir);
+		oldpwd->value = ft_strdup(old_dir); // m_alloc has a pointer to the prev address
 	else
 	{
 		oldpwd = m_alloc(sizeof(t_env), ALLOC);
@@ -32,10 +27,22 @@ void	set_oldpwd(char *old_dir)
 	}
 }
 
-static void	update_pwd_env(char *new_dir, char *old_dir)
+int	chdir_and_update_env(char *new_dir, char *old_dir)
 {
-	set_newpwd(new_dir);
-	set_oldpwd(old_dir);
+	if (chdir(new_dir) != 0)
+		return (perror("Minishell: cd: chdir"), EXIT_FAILURE);
+	update_pwd_env(new_dir, old_dir);
+	return (EXIT_SUCCESS);
+}
+
+int	go__home(char *old_dir)
+{
+	char	*new_dir;
+
+	new_dir = find_env_var("HOME", g_shell.env_list)->value;
+	if (!new_dir)
+		return (pop_error("Minishell: cd: HOME not set\n"), EXIT_FAILURE);
+	return (chdir_and_update_env(new_dir, old_dir));
 }
 
 int	builtin_cd(char **args)
@@ -44,27 +51,24 @@ int	builtin_cd(char **args)
 	char		old_dir[PATH_MAX];
 	struct stat	dir_stat;
 
-	getcwd(old_dir, PATH_MAX);
-	if (!args || !*args)
-	{
-		new_dir = find_env_var("HOME", g_shell.env_list)->value;
-		if (!new_dir)
-			return (pop_error("Minishell: cd: HOME not set\n"), EXIT_FAILURE);
-		return (chdir(new_dir), update_pwd_env(new_dir, old_dir), EXIT_SUCCESS);
-	}
-	else if (args[1])
+	if (!getcwd(old_dir, PATH_MAX))
+		return  (perror("Minishell: cd: getcwd: "), EXIT_FAILURE);
+	if (!*args)
+		return (go__home(old_dir));
+	if (args[1])
 		return (pop_error("Minishell: cd: too many arguments\n"), EXIT_FAILURE);
 	new_dir = args[0];
-	if (new_dir)
+	if (new_dir && *args[0])
 	{
 		if (access(new_dir, F_OK) != 0)
-			return (pop_error("Minishell: cd: No such file or directory\n"), EXIT_FAILURE);
-		if (stat(new_dir, &dir_stat) == 0)
-			if (S_ISDIR(dir_stat.st_mode) == 0)
-				return (pop_error("Minishell : cd: Not a direcotory\n"), EXIT_FAILURE);
-		if (access(new_dir, R_OK) != 0)
-			return (pop_error("Minishell: Permission denied\n"), EXIT_FAILURE);
-		return (chdir(new_dir), update_pwd_env(new_dir, old_dir), EXIT_SUCCESS);
+			return (perror("Minishell: cd "), EXIT_FAILURE);
+		if (stat(new_dir, &dir_stat) != 0)
+			return (perror("Minishell: cd: stat "), EXIT_FAILURE);
+		if (S_ISDIR(dir_stat.st_mode) == 0)
+			return (pop_error("Minishell: cd : Not a directory\n"), EXIT_FAILURE);
+		if (access(new_dir, X_OK) != 0) // bash can access a file with only execution permition
+			return (perror("Minishell: cd "), EXIT_FAILURE);
+		return (chdir_and_update_env(new_dir, old_dir));
 	}
 	return (EXIT_SUCCESS);
 }

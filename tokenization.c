@@ -2,9 +2,8 @@
 
 void	pop_error(char *error_msg)
 {
-	ft_putstr_fd(RED, 2);
 	ft_putstr_fd(error_msg, 2);
-	ft_putstr_fd(RESTORE, 2);
+	// ft_putstr_fd(RESTORE, 2);
 	g_shell = (t_minishell){0};
 }
 

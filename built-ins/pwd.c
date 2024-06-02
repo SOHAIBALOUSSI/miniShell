@@ -1,17 +1,12 @@
 
 #include "../minishell.h"
 
-void    builtin_pwd(void)
+int    builtin_pwd(void)
 {
-    char *pwd;
+	char	pwd[PATH_MAX];
 
-    pwd = getcwd(NULL, PATH_MAX);
-    if (!pwd)
-    {
-        pop_error("getcwd() failed!\n");
-        exit(-1);
-    }
-    printf("%s\n", pwd);
-    free(pwd);
-    pwd = NULL;
+	if (!getcwd(pwd, PATH_MAX))
+		return (perror("Minishell: pwd: getcwd"), EXIT_FAILURE);
+	printf("%s\n", pwd);
+	return (EXIT_SUCCESS);
 }
