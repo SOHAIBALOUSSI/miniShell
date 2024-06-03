@@ -58,8 +58,6 @@ void	read_cmd(void)
 
 int	main(int ac, char **av, char **env)
 {
-	int	i = 0;
-
 	g_shell.env_list = get_env_list(env);
 
 	// char *type[] = {"bat=2", NULL};
@@ -68,25 +66,14 @@ int	main(int ac, char **av, char **env)
 	// char *unset[] = {"SHELL", "PWD", NULL};
 	// builtin_unset(unset);
 
-	// t_env	*tmp;
-	// tmp = g_shell.env_list;
-	// while (tmp)	
-	// {
-	// 	if (tmp == NULL)
-	// 		break;
-	// 	printf("%s=%s\n", tmp->key, tmp->value);
-	// 	tmp = tmp->next;
-	// }
-	// printf("%s", RED);
-	// export(NULL);
-
 	// char *cd2[] = {NULL};
 	// builtin_cd(cd2);
+
 	// builtin_pwd();
 	// builtin_env();
 
-	char *echo[] = {"-n hi", NULL};
-	builtin_echo(echo);
+	// char *echo[] = {"hello world", "-n", NULL};
+	// builtin_echo(echo);
 
 	// char *exits[] = {"1337", NULL};
 	// builtin_exit(exits);
