@@ -60,32 +60,12 @@ int	main(int ac, char **av, char **env)
 {
 	g_shell.env_list = get_env_list(env);
 
-	// char *type[] = {"bat=2", NULL};
-	// builtin_export(type);
-	
-	// char *unset[] = {"SHELL", "PWD", NULL};
-	// builtin_unset(unset);
-
-	// char *cd2[] = {NULL};
-	// builtin_cd(cd2);
-
-	// builtin_pwd();
-	// builtin_env();
-
-	// char *echo[] = {"hello world", "-n", NULL};
-	// builtin_echo(echo);
-
-	// char *exits[] = {"1337", NULL};
-	// builtin_exit(exits);
-	
-	exit(0);
-
-	// handle_signals();
-	// while (1)
-	// {
-	// 	read_cmd();
-	// 	m_alloc(0, FREE);	
-	// }
-	// rl_clear_history();
+	handle_signals();
+	while (1)
+	{
+		read_cmd();
+		m_alloc(0, FREE);
+	}
+	rl_clear_history();
 	return (0);
 }
