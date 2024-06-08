@@ -27,7 +27,6 @@
 /* The Struct used in the Tokenizer */
 typedef enum e_tok
 {
-	_SPACE, // 0
 	_WORD, // 1
 	_OR, // 2
 	_PIPE, // 3
@@ -43,8 +42,6 @@ typedef enum e_tok
 	_Q_CONTENT, // 13
 	_SINGLE_Q, // 14
 	_$ENV, // 15
-	_BAD, // 16
-	_ERROR,
 }	e_tok;
 
 
@@ -97,9 +94,11 @@ extern	t_minishell g_shell;
 
 typedef struct	s_tree
 {
-	int data;
-	struct s_tree *lisr;
-	struct s_tree *limn;
+	e_tok	type;
+	t_slice	*value;
+	int		fds[2];
+	struct s_tree *left;
+	struct s_tree *right;
 }				t_tree;
 
 /*	ENV	*/
