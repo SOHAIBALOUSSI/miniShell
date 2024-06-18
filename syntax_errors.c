@@ -12,7 +12,7 @@ int	is_pipe_or_and(e_tok	type)
 
 int is_word(e_tok	type)
 {
-	return (type == _WORD || type == _$ENV || type == _DOUBLE_Q || type == _SINGLE_Q);
+	return (type == _WORD || type == _$ENV || type == _WILDCARD || type == _QUOTE);
 }
 
 void	syntax_err(t_token *current)

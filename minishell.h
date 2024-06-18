@@ -28,6 +28,7 @@
 typedef enum e_tok
 {
 	_WORD, // 1
+	_QUOTE, // 2
 	_OR, // 2
 	_PIPE, // 3
 	_AND, // 4
@@ -38,10 +39,9 @@ typedef enum e_tok
 	_PAREN_OPEN, // 9
 	_PAREN_CLOSED, // 10
 	_WILDCARD, // 11
-	_DOUBLE_Q, // 12
-	_Q_CONTENT, // 13
-	_SINGLE_Q, // 14
 	_$ENV, // 15
+	_CMD, // 16
+	_SUBSHELL, // 17
 }	e_tok;
 
 
@@ -85,6 +85,7 @@ typedef	struct s_minishell
 	size_t	double_quote_count;
 	size_t	open_paren_count;
 	size_t	closed_paren_count;
+	size_t	pipe_count;
 	t_env	*env_list;
 	int		exit_status;
 	int		is_add;
@@ -92,14 +93,28 @@ typedef	struct s_minishell
 
 extern	t_minishell g_shell;
 
-typedef struct	s_tree
+typedef struct s_redir
 {
 	e_tok	type;
-	t_slice	*value;
 	int		fds[2];
-	struct s_tree *left;
-	struct s_tree *right;
-}				t_tree;
+	char	*file_name;
+	struct s_redir	*next;
+}	t_redir;
+
+typedef struct s_tree
+{
+    e_tok       type;
+    size_t      pipe_count;
+    int         argc;
+    struct s_tree   *left;
+    struct s_tree   *right;
+    struct s_tree   **pipe_line;
+	struct s_tree	*subtree;
+    t_redir     *redir_list;
+    char        **argv;
+    t_slice     *value;
+}               t_tree;
+
 
 /*	ENV	*/
 
@@ -115,6 +130,13 @@ t_token	*tokenizer(char *input);
 e_tok	decode_type(char c1, char c2);
 void	pop_error(char *error_msg);
 void	catch_syntax_errors(t_token	*token_lst);
+/* AST		*/
+t_tree  *parser(t_token *tokens);
+
+/*		Type Checking		*/
+int		is_redirection(e_tok	type);
+int		is_word(e_tok	type);
+int		is_pipe_or_and(e_tok	type);
 
 /* Export */
 
