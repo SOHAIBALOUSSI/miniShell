@@ -39,9 +39,10 @@ typedef enum e_tok
 	_PAREN_OPEN, // 9
 	_PAREN_CLOSED, // 10
 	_WILDCARD, // 11
-	_$ENV, // 15
-	_CMD, // 16
-	_SUBSHELL, // 17
+	_$ENV, // 12
+	_CMD, // 13
+	_SUBSHELL, // 14
+	_ARGUMENT, // 15
 }	e_tok;
 
 
@@ -89,6 +90,7 @@ typedef	struct s_minishell
 	t_env	*env_list;
 	int		exit_status;
 	int		is_add;
+	int		is_subshell;
 }			t_minishell;
 
 extern	t_minishell g_shell;
@@ -112,7 +114,7 @@ typedef struct s_tree
 	struct s_tree	*subtree;
     t_redir     *redir_list;
     char        **argv;
-    t_slice     *value;
+    char     *value;
 }               t_tree;
 
 

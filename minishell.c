@@ -21,9 +21,14 @@ void	handle_signals(void)
 	signal(SIGTERM, SIG_IGN);
 	signal(SIGINT, handler);
 }
+
+#include <stdio.h>
+#include "minishell.h"
+
 void print_ast(t_tree *root) {
     if (!root)
-        return;
+        exit(1);
+    
 
     switch (root->type) {
         case _PIPE:
@@ -96,8 +101,6 @@ void print_ast(t_tree *root) {
 }
 
 
-
-
 void	read_cmd(void)
 {
 	char	*line;
@@ -118,7 +121,7 @@ void	read_cmd(void)
 	catch_syntax_errors(token_lst);
 
 	root = parser(token_lst);
-	print_ast(root);
+    // print_ast(root);
 	// simplify_tokens(&token_lst);
 	// tmp = token_lst;
 	// while (tmp != NULL)

@@ -1,0 +1,10 @@
+/*
+	program             = sequence ;
+	sequence            = pipeline, { ('&&' | '||'), pipeline } ;
+	pipeline            = command, { '|', command } ;
+	command             = subshell | executable ;
+	subshell            = '(', sequence, ')' ;
+	executable          = argument, { argument | redirection } ;
+	argument            = STRING ;
+	redirection         = '<' STRING | '>' STRING | '>>' STRING | '<<' STRING ;
+*/

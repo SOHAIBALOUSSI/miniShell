@@ -1,19 +1,40 @@
 #include "../minishell.h"
 
-size_t	count_pipes(t_token **tokens);
 t_tree	*parse_cmd_line(t_token **tokens);
-t_tree	*parse_redirection(t_token **tokens, t_tree *cmd);
+t_tree	*parse_pipe(t_token **tokens);
+t_tree	*parse_subshell(t_token **tokens);
+t_tree	*init_pipe_node(t_token **tokens);
+t_tree	*init_cmd_node(void);
+
+size_t	count_pipes(t_token **tokens)
+{
+	t_token	*tmp;
+	size_t	count;
+
+	count = 0;
+	tmp = *tokens;
+	while (tmp)
+	{
+		if (tmp->type == _PIPE)
+			count++;
+		if ((tmp->type == _AND || tmp->type == _OR))
+			break ;
+		tmp = tmp->next;
+	}
+	return (count);
+}
 
 t_tree	*init_pipe_node(t_token **tokens)
 {
 	t_tree	*pipe;
 
 	pipe = m_alloc(sizeof(t_tree), ALLOC);
-	g_shell.pipe_count = count_pipes(tokens);
+	// g_shell.pipe_count = count_pipes(tokens);
+	pipe->pipe_count = 0;
 	pipe->type = _PIPE;
 	pipe->left = NULL;
 	pipe->right = NULL;
-	pipe->pipe_line = m_alloc((sizeof(t_tree *) * (g_shell.pipe_count + 2)), ALLOC);
+	pipe->pipe_line = NULL;
 	return (pipe);
 }
 
@@ -28,43 +49,16 @@ t_tree	*init_cmd_node(void)
 	return (cmd);
 }
 
-size_t	count_pipes(t_token **tokens)
+t_tree *init_subshell_node(t_tree *subshell)
 {
-	t_token	*tmp;
-	size_t	count;
+	t_tree	*cmd;
 
-	count = 0;
-	tmp = *tokens;
-	while (tmp)
-	{
-		if (tmp->type == _PIPE)
-			count++;
-		if (tmp->type == _AND || tmp->type == _OR || tmp->type == _PAREN_CLOSED)
-			break ;
-		tmp = tmp->next;
-	}
-	return (count);
+	cmd = m_alloc(sizeof(t_tree), ALLOC);
+	cmd->type = _SUBSHELL;
+	cmd->subtree = subshell;
+	cmd->redir_list = NULL;
+	return (cmd);
 }
-
-t_tree *parse_subshell(t_token **tokens) {
-    t_tree *subshell;
-    t_tree *cmd;
-
-    if (!(*tokens) || (*tokens)->type != _PAREN_OPEN)
-        return (NULL);
-    *tokens = (*tokens)->next;
-    subshell = m_alloc(sizeof(t_tree), ALLOC);
-    subshell->type = _SUBSHELL;
-	subshell->pipe_line = NULL;
-    subshell->subtree = parse_cmd_line(tokens);
-    if (!(*tokens) || (*tokens)->type != _PAREN_CLOSED)
-        return (NULL);
-    *tokens = (*tokens)->next;
-    while (*tokens && is_redirection((*tokens)->type))
-        subshell = parse_redirection(tokens, subshell);
-    return (subshell);
-}
-
 
 size_t	count_cmds(t_token **tokens)
 {
@@ -162,28 +156,60 @@ t_tree	*parse_cmd(t_token **tokens)
 	return (cmd);
 }
 
-t_tree	*parse_pipe(t_token **tokens)
+t_tree	*parse_subshell(t_token **tokens)
 {
-	int		curr_cmd;
-	t_tree	*pipe;
+	t_tree	*subshell;
 	t_tree	*cmd;
 
-	curr_cmd = 0;
-	pipe = init_pipe_node(tokens);
-	while (*tokens)
+	*tokens = (*tokens)->next;
+	subshell = parse_cmd_line(tokens);
+	*tokens = (*tokens)->next;
+	cmd = init_subshell_node(subshell);
+	while (*tokens && is_redirection((*tokens)->type))
 	{
-		cmd = parse_subshell(tokens);
-		if (!cmd)
-			cmd = parse_cmd(tokens);
-		pipe->pipe_line[curr_cmd++] = cmd;
-		if (!*tokens || (*tokens)->type != _PIPE)
-			break ;
-		*tokens = (*tokens)->next;
+		cmd = parse_redirection(tokens, cmd);
+		if ((*tokens)->next)
+			*tokens = (*tokens)->next;
 	}
-	pipe->pipe_line[curr_cmd] = NULL;
-	if (g_shell.pipe_count == 0)
-		return (cmd);
+	return (cmd);
+}
+
+t_tree	*add_cmd_to_pipe(t_tree *pipe, t_tree *cmd)
+{
+	t_tree *node;
+
+	if (!pipe || !cmd)
+		return (NULL);
+	node = pipe;
+	node->pipe_line = realloc(node->pipe_line, ((node->pipe_count + 1) * sizeof(t_tree *)));
+	node->pipe_line[node->pipe_count] = cmd;
+	node->pipe_count++;
 	return (pipe);
+}
+t_tree *parse_pipe(t_token **tokens)
+{
+    t_tree *pipe;
+    t_tree *cmd;
+
+    pipe = init_pipe_node(tokens);
+	cmd = NULL;
+    while (*tokens)
+    {
+		if ((*tokens)->type == _PAREN_OPEN)
+        	cmd = parse_subshell(tokens);
+        else
+        	cmd = parse_cmd(tokens);
+		if (!cmd)
+			return (NULL);
+        pipe = add_cmd_to_pipe(pipe, cmd);
+        if (*tokens && (*tokens)->type == _PIPE)
+        	*tokens = (*tokens)->next;
+        else
+			break;
+    }
+    if (pipe->pipe_count <= 1)
+        return (cmd);
+    return (pipe);
 }
 
 t_tree	*create_op_node(e_tok type)
@@ -204,12 +230,12 @@ t_tree	*parse_cmd_line(t_token **tokens)
 	t_tree	*op;
 
 	left = parse_pipe(tokens);
-	if (!*tokens)
-		return (left);
+	
 	while (*tokens)
 	{
-		if (!*tokens || (*tokens)->type == _PAREN_CLOSED
-			|| (*tokens)->type != _AND || (*tokens)->type != _OR)
+		if (!*tokens)
+			return (left);
+		if ((*tokens)->type != _AND && (*tokens)->type != _OR)
 			break ;
 		op = create_op_node((*tokens)->type);
 		*tokens = (*tokens)->next;
@@ -226,6 +252,6 @@ t_tree	*parser(t_token *tokens)
 
 	root = parse_cmd_line(&tokens);
 	if (!root)
-		return (NULL);
+		exit(1);
 	return (root);
 }
