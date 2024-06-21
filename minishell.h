@@ -39,10 +39,10 @@ typedef enum e_tok
 	_PAREN_OPEN, // 9
 	_PAREN_CLOSED, // 10
 	_WILDCARD, // 11
-	_$ENV, // 12
-	_CMD, // 13
-	_SUBSHELL, // 14
-	_ARGUMENT, // 15
+	_ENV, // 12
+	_CMD, // 14
+	_SUBSHELL, // 15
+	_ARGUMENT, // 16
 }	e_tok;
 
 
@@ -105,20 +105,24 @@ typedef struct s_redir
 
 typedef struct s_tree
 {
-    e_tok       type;
-    size_t      pipe_count;
-    int         argc;
-    struct s_tree   *left;
-    struct s_tree   *right;
-    struct s_tree   **pipe_line;
+	e_tok			type;
+	size_t			pipe_count;
+	struct s_tree	*left;
+	struct s_tree	*right;
+	struct s_tree	**pipe_line;
 	struct s_tree	*subtree;
-    t_redir     *redir_list;
-    char        **argv;
-    char     *value;
+	t_redir			*redir_list;
+	char			**argv;
+	size_t			argc;
+	char			*value;
 }               t_tree;
 
+/*		Garbage Collector		*/
 
-/*	ENV	*/
+void	*m_alloc(size_t __size, char todo);
+void	*m_realloc(void *ptr, size_t oldsize, size_t newsize);
+
+/*	Env		*/
 
 t_env	*get_env_list(char **env);
 void	search_and_change(t_env *var);
@@ -127,13 +131,20 @@ bool	is_exist(char *s);
 void	append_env(t_env **lst, t_env *new_env);
 char 	*get_key(char *s);
 
-void	*m_alloc(size_t __size, char todo);
 t_token	*tokenizer(char *input);
-e_tok	decode_type(char c1, char c2);
 void	pop_error(char *error_msg);
-void	catch_syntax_errors(t_token	*token_lst);
-/* AST		*/
-t_tree  *parser(t_token *tokens);
+int		catch_syntax_errors(t_token *token_lst);
+/*	AST		*/
+
+t_tree	*parser(t_token *tokens);
+t_tree	*create_op_node(e_tok type);
+t_redir	*create_redir_node(e_tok type, char *file_name, size_t length);
+t_tree	*create_cmd_node(void);
+t_tree	*create_subshell_node(t_tree *subshell);
+t_tree	*create_pipe_node(t_token **tokens);
+void	add_cmd_to_pipeline(t_tree *pipe, t_tree *cmd);
+void	add_arg_to_cmd(t_tree *cmd, char *location, size_t length);
+char	*ft_strndup(char *s1, size_t n);
 
 /*		Type Checking		*/
 int		is_redirection(e_tok	type);

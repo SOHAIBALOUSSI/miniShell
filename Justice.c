@@ -73,3 +73,16 @@ void	*m_alloc(size_t __size, char todo)
 	}
 	return (ptr);
 }
+
+void *m_realloc(void *ptr, size_t oldsize, size_t newsize)
+{
+	void *new_ptr;
+
+	new_ptr = m_alloc(newsize, ALLOC);
+	if (ptr)
+	{
+		ft_memcpy(new_ptr, ptr, oldsize);
+		free(ptr); // y9dr ytra muchkil m3a garbage collector
+	}
+	return (new_ptr);
+}

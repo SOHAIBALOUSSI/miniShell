@@ -12,7 +12,7 @@ e_tok	decode_type(char c1, char c2)
 	e_tok	type;
 
 	type = (c1 == '(') * _PAREN_OPEN + (c1 == ')') * _PAREN_CLOSED
-		+ (c1 == '$') * _$ENV + (c1 == '*') * _WILDCARD + (c1 == '|' && c2 != '|') * _PIPE
+		+ (c1 == '$') * _ENV + (c1 == '*') * _WILDCARD + (c1 == '|' && c2 != '|') * _PIPE
 		+ (c1 == '|' && c2 == '|') * _OR + (c1 == '<' && c2 != '<') * _RED_IN
 		+ (c1 == '<' && c2 == '<') * _HEREDOC + (c1 == '>' && c2 != '>') * _RED_OUT
 		+ (c1 == '>' && c2 == '>') * _APPEND + (c1 == '&' && c2 == '&') * _AND;
@@ -96,14 +96,10 @@ size_t	add_quote_token(t_token **head, char *start)
 	size_t	length;
 
 	p = start;
-	length = 0;
-	if (*p == SQ || *p == DQ)
-	{
-		g_shell.single_quote_count += (*p == SQ) * 1;
-		g_shell.double_quote_count += (*p == DQ) * 1;
-		p++;
-		length++;
-	}
+	length = 1;
+	g_shell.single_quote_count += (*p == SQ) * 1;
+	g_shell.double_quote_count += (*p == DQ) * 1;
+	p++;
 	while (*p && (*p != *start))
 	{
 		p++;
@@ -119,7 +115,7 @@ size_t	add_quote_token(t_token **head, char *start)
 	append_token(head, create_token(_QUOTE, start, length));
 	return (length);
 }
-
+// split the input string into tokens and return a linked list of tokens
 t_token	*tokenizer(char *input)
 {
 	t_token	*head;

@@ -16,7 +16,5 @@ void	ft_putstr_fd(char *s, int fd)
 {
 	if (!s || fd < 0)
 		return ;
-	if (fd == 2)
-		write(2, "\e[0;31m", 8);
 	write(fd, s, ft_strlen(s));
 }

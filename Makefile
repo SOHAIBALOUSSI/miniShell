@@ -14,7 +14,7 @@ ft_strdup.c ft_strrchr.c ft_base16.c get_next_line_utils.c)
 
 SRCS = minishell.c tokenization.c Justice.c syntax_errors.c shell_env.c  \
 	$(addprefix ./built-ins/, export.c export_fts.c env.c unset.c exit.c pwd.c echo.c cd.c) $(LIBFT_SRC) \
-	./AST/build_ast.c 
+	$(addprefix ./AST/, ast_utils.c build_ast.c ast_builders.c)
 
 OBJS = $(SRCS:.c=.o)
 

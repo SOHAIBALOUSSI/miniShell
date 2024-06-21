@@ -1,5 +1,7 @@
 #include "minishell.h"
 #include "libs/libft/libft.h"
+       #include <sys/types.h>
+       #include <sys/wait.h>
 
 t_minishell g_shell = {0};
 
@@ -21,9 +23,6 @@ void	handle_signals(void)
 	signal(SIGTERM, SIG_IGN);
 	signal(SIGINT, handler);
 }
-
-#include <stdio.h>
-#include "minishell.h"
 
 void print_ast(t_tree *root) {
     if (!root)
@@ -100,13 +99,16 @@ void print_ast(t_tree *root) {
     }
 }
 
+void execute_ast(t_tree *root)
+{
+
+}
 
 void	read_cmd(void)
 {
 	char	*line;
 	t_token	*token_lst;
 	t_token *tmp;
-	t_token	*api;
 	t_tree	*root;
 
 	char *type[] = {"_WORD", "_QUOTE","_OR", "_PIPE", "_AND", "_APPEND", "_RED_OUT", "_RED_IN", \
@@ -115,20 +117,25 @@ void	read_cmd(void)
 	line = readline(SHELL_PROMPT);
 	if (!line)
 		return (printf("exit"), exit(-1));
-
 	add_history(line);
 	token_lst = tokenizer(line);
-	catch_syntax_errors(token_lst);
+	
+    if (catch_syntax_errors(token_lst))
+    {
+	    root = parser(token_lst);
+        // if (root)
+        //     execute_ast(root);
+        // print_ast(root);
 
-	root = parser(token_lst);
-    // print_ast(root);
+    }
+
 	// simplify_tokens(&token_lst);
-	// tmp = token_lst;
-	// while (tmp != NULL)
-	// {
-	// 	printf("TYPE = [%s] - LENGHT = [%zu]\n", type[tmp->type], tmp->location.length);
-	// 	tmp = tmp->next;
-	// }
+	tmp = token_lst;
+	while (tmp != NULL)
+	{
+		printf("TYPE = [%s] - LENGHT = [%zu]\n", type[tmp->type], tmp->location.length);
+		tmp = tmp->next;
+	}
 	// free(line);
 }
 
@@ -137,11 +144,11 @@ int	main(int ac, char **av, char **env)
 	g_shell.env_list = get_env_list(env);
 
 	handle_signals();
-	while (1)
+	while (true)
 	{
 		read_cmd();
-		m_alloc(0, FREE);
+		// m_alloc(0, FREE);
 	}
-	rl_clear_history();
+	// rl_clear_history();
 	return (0);
 }
