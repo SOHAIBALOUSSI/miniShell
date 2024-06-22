@@ -101,7 +101,7 @@ void print_ast(t_tree *root) {
 
 void execute_ast(t_tree *root)
 {
-
+   
 }
 
 void	read_cmd(void)
@@ -117,25 +117,28 @@ void	read_cmd(void)
 	line = readline(SHELL_PROMPT);
 	if (!line)
 		return (printf("exit"), exit(-1));
+    if (line[0] == '\0')
+        return ;
 	add_history(line);
 	token_lst = tokenizer(line);
 	
     if (catch_syntax_errors(token_lst))
     {
-	    root = parser(token_lst);
-        // if (root)
-        //     execute_ast(root);
-        // print_ast(root);
+	    root = parse_cmd_line(&token_lst);
+        if (!root)
+            return ;
+        // execute_ast(root);
+        print_ast(root);
 
     }
 
 	// simplify_tokens(&token_lst);
-	tmp = token_lst;
-	while (tmp != NULL)
-	{
-		printf("TYPE = [%s] - LENGHT = [%zu]\n", type[tmp->type], tmp->location.length);
-		tmp = tmp->next;
-	}
+	// tmp = token_lst;
+	// while (tmp != NULL)
+	// {
+	// 	printf("TYPE = [%s] - LENGHT = [%zu]\n", type[tmp->type], tmp->location.length);
+	// 	tmp = tmp->next;
+	// }
 	// free(line);
 }
 
@@ -150,5 +153,5 @@ int	main(int ac, char **av, char **env)
 		// m_alloc(0, FREE);
 	}
 	// rl_clear_history();
-	return (0);
+	return (EXIT_SUCCESS);
 }

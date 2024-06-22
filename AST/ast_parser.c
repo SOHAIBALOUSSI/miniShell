@@ -1,6 +1,5 @@
 #include "../minishell.h"
 
-static t_tree	*parse_cmd_line(t_token **tokens);
 static t_tree	*parse_pipe_line(t_token **tokens);
 static t_tree	*parse_subshell(t_token **tokens);
 
@@ -92,7 +91,7 @@ static t_tree *parse_pipe_line(t_token **tokens)
     return (pipe);
 }
 
-static t_tree	*parse_cmd_line(t_token **tokens)
+t_tree	*parse_cmd_line(t_token **tokens)
 {
 	t_tree	*left;
 	t_tree	*op;
@@ -107,14 +106,4 @@ static t_tree	*parse_cmd_line(t_token **tokens)
 		left = op;
 	}
 	return (left);
-}
-
-t_tree	*parser(t_token *tokens)
-{
-	t_tree	*root;
-
-	root = parse_cmd_line(&tokens);
-	if (!root)
-		return (NULL);
-	return (root);
 }

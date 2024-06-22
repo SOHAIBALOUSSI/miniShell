@@ -12,9 +12,10 @@ ft_lstmap_bonus.c ft_putadress.c ft_split.c ft_strncmp.c ft_isprint.c ft_lstnew_
 ft_putchar.c ft_strchr.c ft_strnstr.c ft_itoa.c ft_lstsize_bonus.c ft_putchar_fd.c \
 ft_strdup.c ft_strrchr.c ft_base16.c get_next_line_utils.c)
 
-SRCS = minishell.c tokenization.c Justice.c syntax_errors.c shell_env.c  \
+SRCS = minishell.c Justice.c syntax_errors.c shell_env.c type_check.c \
 	$(addprefix ./built-ins/, export.c export_fts.c env.c unset.c exit.c pwd.c echo.c cd.c) $(LIBFT_SRC) \
-	$(addprefix ./AST/, ast_utils.c build_ast.c ast_builders.c)
+	$(addprefix ./AST/, ast_utils.c ast_parser.c ast_builders.c) \
+	$(addprefix ./Tokenizer/, token_creation.c token_utils.c tokenizer.c)
 
 OBJS = $(SRCS:.c=.o)
 

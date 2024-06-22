@@ -1,22 +1,5 @@
 #include "minishell.h"
 
-int	is_redirection(e_tok type)
-{
-	return (type == _APPEND || type == _HEREDOC
-		|| type == _RED_IN || type == _RED_OUT);
-}
-
-int	is_pipe_or_and(e_tok type)
-{
-	return (type == _PIPE || type == _OR || type == _AND);
-}
-
-int	is_word(e_tok type)
-{
-	return (type == _WORD || type == _ENV
-		|| type == _WILDCARD || type == _QUOTE);
-}
-
 static void	syntax_err(t_token *current)
 {
 	char	*err;

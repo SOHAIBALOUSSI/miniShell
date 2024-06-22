@@ -24,6 +24,30 @@ t_gc	*m_new_node(void *ptr)
 	return (to_collect);
 }
 
+void	m_free_ptr(void *ptr)
+{
+	t_gc	*tmp;
+	t_gc	*prev;
+
+	tmp = g_shell.arena;
+	prev = NULL;
+	while (tmp)
+	{
+		if (tmp->ptr == ptr)
+		{
+			if (prev)
+				prev->next = tmp->next;
+			else
+				g_shell.arena = tmp->next;
+			free(tmp->ptr);
+			free(tmp);
+			break ;
+		}
+		prev = tmp;
+		tmp = tmp->next;
+	}
+}
+
 int	m_add_back(t_gc **lst, t_gc *new)
 {
 	static t_gc	*last;
@@ -40,35 +64,38 @@ int	m_add_back(t_gc **lst, t_gc *new)
 	last = new;
 	return (EXIT_SUCCESS);
 }
+void	free_arena(t_gc *arena)
+{
+	t_gc	*tmp;
 
-/// @brief Allocate SIZE bytes of memory and save its address
-/// @param __size Size of memory to be allocated
-/// @param todo If set to 'FREE,
-/// all the Memory allocated during execution will be freed
-/// @return The allocated memory block
+	while (arena)
+	{
+		tmp = arena;
+		arena = arena->next;
+		free(tmp->ptr);
+		free(tmp);
+	}
+	arena = NULL;
+}
 void	*m_alloc(size_t __size, char todo)
 {
-	static t_gc	*arena;
 	void		*ptr;
+	t_gc		*arena;
 	t_gc		*del;
 
+	arena = g_shell.arena;
 	if (todo == FREE)
 	{
-		while (arena)
-		{
-			del = arena;
-			arena = arena->next;
-			free(del->ptr);
-			free(del);
-		}
-		arena = NULL;
+		free_arena(arena);
 		return (NULL);
 	}
 	ptr = malloc(__size);
 	if (!ptr || m_add_back(&arena, m_new_node(ptr)))
 	{
-		m_alloc(0, FREE);
-		write(2, "Malloc() Failed!\n", 18);
+		if (ptr)
+			free(ptr);
+		free_arena(arena);
+		write(2, "Memory allocation failed\n", 26);
 		exit(EXIT_FAILURE);
 	}
 	return (ptr);
@@ -82,7 +109,7 @@ void *m_realloc(void *ptr, size_t oldsize, size_t newsize)
 	if (ptr)
 	{
 		ft_memcpy(new_ptr, ptr, oldsize);
-		free(ptr); // y9dr ytra muchkil m3a garbage collector
+		m_free_ptr(ptr);
 	}
 	return (new_ptr);
 }

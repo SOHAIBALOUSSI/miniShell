@@ -82,6 +82,7 @@ typedef struct s_env
 */
 typedef	struct s_minishell
 {
+	t_gc	*arena;
 	size_t	single_quote_count;
 	size_t	double_quote_count;
 	size_t	open_paren_count;
@@ -118,25 +119,35 @@ typedef struct s_tree
 }               t_tree;
 
 /*		Garbage Collector		*/
-
 void	*m_alloc(size_t __size, char todo);
 void	*m_realloc(void *ptr, size_t oldsize, size_t newsize);
 
-/*	Env		*/
-
+/*		Env		*/
 t_env	*get_env_list(char **env);
 void	search_and_change(t_env *var);
 t_env	*create_env(char *env);
 bool	is_exist(char *s);
 void	append_env(t_env **lst, t_env *new_env);
 char 	*get_key(char *s);
+/*		Tokenizer		*/
+t_token		*tokenizer(char *input);
+int			add_op_token(t_token **head, int c1, int c2, char *start);
+size_t		add_quote_token(t_token **head, char *start);
+size_t		add_word_token(t_token **head, char *start);
+t_token		*create_token(e_tok type, char *start, size_t length);
+void		append_token(t_token **head, t_token *new_token);
+void		pop_error(char *error_msg);
+int			catch_syntax_errors(t_token *token_lst);
+e_tok		decode_type(char c1, char c2);
+/*		Type check*/
+int			is_space(char c);
+int			is_op(char c1, char c2);
+int			is_redirection(e_tok type);
+int			is_pipe_or_and(e_tok type);
+int			is_word(e_tok type);
 
-t_token	*tokenizer(char *input);
-void	pop_error(char *error_msg);
-int		catch_syntax_errors(t_token *token_lst);
-/*	AST		*/
-
-t_tree	*parser(t_token *tokens);
+/*		AST		*/
+t_tree	*parse_cmd_line(t_token **tokens);
 t_tree	*create_op_node(e_tok type);
 t_redir	*create_redir_node(e_tok type, char *file_name, size_t length);
 t_tree	*create_cmd_node(void);
@@ -147,9 +158,6 @@ void	add_arg_to_cmd(t_tree *cmd, char *location, size_t length);
 char	*ft_strndup(char *s1, size_t n);
 
 /*		Type Checking		*/
-int		is_redirection(e_tok	type);
-int		is_word(e_tok	type);
-int		is_pipe_or_and(e_tok	type);
 
 /* Export */
 
