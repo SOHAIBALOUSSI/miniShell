@@ -92,6 +92,7 @@ typedef	struct s_minishell
 	int		exit_status;
 	int		is_add;
 	int		is_subshell;
+	char **__environ;
 }			t_minishell;
 
 extern	t_minishell g_shell;
@@ -117,6 +118,8 @@ typedef struct s_tree
 	size_t			argc;
 	char			*value;
 }               t_tree;
+
+char	**lst_to_arr(t_env **env_list);
 
 /*		Garbage Collector		*/
 void	*m_alloc(size_t __size, char todo);
@@ -156,6 +159,10 @@ t_tree	*create_pipe_node(t_token **tokens);
 void	add_cmd_to_pipeline(t_tree *pipe, t_tree *cmd);
 void	add_arg_to_cmd(t_tree *cmd, char *location, size_t length);
 char	*ft_strndup(char *s1, size_t n);
+
+/*		Execution		*/
+void execute_ast(t_tree *root);
+
 
 /*		Type Checking		*/
 

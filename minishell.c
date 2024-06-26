@@ -3,6 +3,7 @@
        #include <sys/types.h>
        #include <sys/wait.h>
 
+char **envp;
 t_minishell g_shell = {0};
 
 void	read_cmd(void);
@@ -99,11 +100,6 @@ void print_ast(t_tree *root) {
     }
 }
 
-void execute_ast(t_tree *root)
-{
-   
-}
-
 void	read_cmd(void)
 {
 	char	*line;
@@ -121,14 +117,13 @@ void	read_cmd(void)
         return ;
 	add_history(line);
 	token_lst = tokenizer(line);
-	
     if (catch_syntax_errors(token_lst))
     {
 	    root = parse_cmd_line(&token_lst);
         if (!root)
             return ;
-        // execute_ast(root);
-        print_ast(root);
+        execute_ast(root);
+        // print_ast(root);
 
     }
 

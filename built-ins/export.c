@@ -38,7 +38,7 @@ static char	**sort_array(char **arr)
 	return (arr);
 }
 
-static char	**lst_to_arr(t_env **env_list)
+char	**lst_to_arr(t_env **env_list)
 {
 	int		i;
 	t_env	*ptr;
