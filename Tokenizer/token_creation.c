@@ -20,18 +20,18 @@ size_t	add_quote_token(t_token **head, char *start)
 
 	p = start;
 	length = 1;
-	g_shell.single_quote_count += (*p == SQ) * 1;
-	g_shell.double_quote_count += (*p == DQ) * 1;
+	g_shell.single_quote_count += (*p == SQUOTE) * 1;
+	g_shell.double_quote_count += (*p == DQUOTE) * 1;
 	p++;
 	while (*p && (*p != *start))
 	{
 		p++;
 		length++;
 	}
-	if (*p == SQ || *p == DQ)
+	if (*p == SQUOTE || *p == DQUOTE)
 	{
-		g_shell.single_quote_count += (*p == SQ) * 1;
-		g_shell.double_quote_count += (*p == DQ) * 1;
+		g_shell.single_quote_count += (*p == SQUOTE) * 1;
+		g_shell.double_quote_count += (*p == DQUOTE) * 1;
 		length++;
 		p++;
 	}
@@ -47,7 +47,7 @@ size_t	add_word_token(t_token **head, char *start)
 	p = start;
 	length = 0;
 	while (*p && (!is_space(*p) && !is_op(*p, *(p + 1)))
-        && *p!= SQ && *p!= DQ)
+        && *p!= SQUOTE && *p!= DQUOTE)
 	{
 		p++;
 		length++;

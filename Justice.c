@@ -24,7 +24,7 @@ t_gc	*m_new_node(void *ptr)
 	return (to_collect);
 }
 
-void	m_free_ptr(void *ptr)
+void	m_free(void *ptr)
 {
 	t_gc	*tmp;
 	t_gc	*prev;
@@ -109,7 +109,7 @@ void *m_realloc(void *ptr, size_t oldsize, size_t newsize)
 	if (ptr)
 	{
 		ft_memcpy(new_ptr, ptr, oldsize);
-		m_free_ptr(ptr);
+		m_free(ptr);
 	}
 	return (new_ptr);
 }

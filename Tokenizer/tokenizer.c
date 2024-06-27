@@ -1,5 +1,11 @@
 #include "../minishell.h"
 
+void	add_space_token(t_token **head, char **start)
+{
+	while (is_space(**start))
+		(*start)++;
+	append_token(head, create_token(_SPACE, *start, 1));
+}
 t_token	*tokenizer(char *input)
 {
 	t_token	*head;
@@ -10,10 +16,10 @@ t_token	*tokenizer(char *input)
 	while (*input)
 	{
 		if (*input && is_space(*input))
-			input++;
+			add_space_token(&head, &input);
 		else if (*input && is_op(*input, *(input + 1)))
 			input += add_op_token(&head, *input, *(input + 1), input);
-		else if (*input && *input == SQ || *input == DQ)
+		else if (*input && *input == SQUOTE || *input == DQUOTE)
 		{
 			start = input;
 			input += add_quote_token(&head, input);

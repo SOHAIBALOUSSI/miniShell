@@ -28,13 +28,14 @@ char *get_cmd_path(char *cmd)
 void execute_cmd(t_tree *root)
 {
     char *cmd_path;
-
+    char			**argv;
+    // expention of the command
     cmd_path = get_cmd_path(root->argv[0]);
     if (fork() == 0)
     {
         if (execve(cmd_path, root->argv, __environ) == -1)
         {
-            perror("execve");
+            pop_error("Command not found\n");
             exit(1);
         }
     }

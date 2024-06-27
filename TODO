@@ -1,9 +1,9 @@
-# IMPLEMENT BUILT-INS
+# TODO to be implemented
 
-- cd
-- exit
-- pwd
-- echo with option '-n'
-- export
-- unset
-- env
+- Expend the variables starting with $ to there values 
+- in case we have $? , it will be replaced by the return code of the last command 
+- handle redirections 
+- handle pipes
+- handle wildcard '*'
+- handle double and single quotes
+- Heredoc !!

@@ -17,8 +17,8 @@
 # define ALLOC 'A'
 # define FREE 'F'
 # define SHELL_PROMPT "\e[0;32m[minishell]$ \e[0;0m"
-# define SQ '\''
-# define DQ '\"'
+# define SQUOTE '\''
+# define DQUOTE '\"'
 
 /*	COLORS*/
 // # define RED "\e[0;31m"
@@ -43,6 +43,7 @@ typedef enum e_tok
 	_CMD, // 14
 	_SUBSHELL, // 15
 	_ARGUMENT, // 16
+	_SPACE, 
 }	e_tok;
 
 
@@ -122,8 +123,10 @@ typedef struct s_tree
 char	**lst_to_arr(t_env **env_list);
 
 /*		Garbage Collector		*/
+
 void	*m_alloc(size_t __size, char todo);
 void	*m_realloc(void *ptr, size_t oldsize, size_t newsize);
+void	m_free(void *ptr);
 
 /*		Env		*/
 t_env	*get_env_list(char **env);

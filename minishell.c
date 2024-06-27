@@ -100,6 +100,34 @@ void print_ast(t_tree *root) {
     }
 }
 
+
+void    join_words(t_token **head)
+{
+    t_token *tmp;
+    t_token *prev;
+
+    tmp = *head;
+    prev = NULL;
+    while (tmp)
+    {
+        if (is_word(tmp->type) && prev && is_word(prev->type))
+        {
+            prev->location.length += tmp->location.length;
+            prev->next = tmp->next;
+            m_free(tmp);
+            tmp = prev;
+        }
+        prev = tmp;
+        tmp = tmp->next;
+    }
+}
+
+void    simplify_tokens(t_token **head)
+{
+    join_words(head);
+    // remove_spaces(head);
+}
+
 void	read_cmd(void)
 {
 	char	*line;
@@ -107,16 +135,17 @@ void	read_cmd(void)
 	t_token *tmp;
 	t_tree	*root;
 
-	char *type[] = {"_WORD", "_QUOTE","_OR", "_PIPE", "_AND", "_APPEND", "_RED_OUT", "_RED_IN", \
-	 "_HEREDOC", "_PAREN_OPEN", "_PAREN_CLOSED", "_WILDCARD", "$ENV", "_CMD"};
+	char *type[] = {"_WORD", "_QUOTE", "_OR", "PIPE", "AND", "APPEND", "RED_OUT", \
+        "RED_IN", "HEREDOC", "PARENT_OPEN", "PARENT_CLISED", "WILDCARD", "ENV", "CMD", "SUBSHELL", "ARG", "SPACE"};
 
 	line = readline(SHELL_PROMPT);
 	if (!line)
 		return (printf("exit"), exit(-1));
     if (line[0] == '\0')
         return ;
-	add_history(line);
+	add_history(line); // dont add empty line to history
 	token_lst = tokenizer(line);
+	simplify_tokens(&token_lst);
     if (catch_syntax_errors(token_lst))
     {
 	    root = parse_cmd_line(&token_lst);
@@ -126,8 +155,6 @@ void	read_cmd(void)
         // print_ast(root);
 
     }
-
-	// simplify_tokens(&token_lst);
 	// tmp = token_lst;
 	// while (tmp != NULL)
 	// {
