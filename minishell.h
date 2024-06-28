@@ -6,8 +6,10 @@
 #include <stdbool.h>
 #include <signal.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 
 #include <linux/limits.h>
 #include <readline/readline.h>
@@ -164,6 +166,11 @@ t_tree	*create_pipe_node(t_token **tokens);
 void	add_cmd_to_pipeline(t_tree *pipe, t_tree *cmd);
 void	add_arg_to_cmd(t_tree *cmd, char *location, size_t length);
 char	*ft_strndup(char *s1, size_t n);
+
+/*		Execution helpers		*/
+void    handle_redirections(t_redir *redir_list);
+void    here_doc(t_redir *redir_list);
+void    handle_here_doc(t_redir *redir_list);
 
 /*		Execution		*/
 void execute_ast(t_tree *root);
