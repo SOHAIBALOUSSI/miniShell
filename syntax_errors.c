@@ -12,7 +12,7 @@ static void	syntax_err(t_token *current)
 	ft_putstr_fd(err, 2);
 	ft_putstr_fd("\'\n", 2);
 	free(err);
-	g_shell = (t_minishell){0};
+	g_shell = (t_minishell){0}; // kadir muchkil fach kaytra syntax error , next cmd kat segv why ? idk
 }
 
 static int	check_pipe_and(t_token *current)
@@ -99,8 +99,16 @@ int	catch_syntax_errors(t_token *token_lst)
 	{
 		if (!check_pipe_and(current) || !check_redirection(current)
 			|| !check_parentheses(current) || !check_word(current))
-			return (0);
+		{
+			g_shell.exit_status = 2;
+			return (EXIT_FAILURE);
+		}
 		current = current->next;
 	}
-	return (check_quotes_and_parens());
+	if (!check_quotes_and_parens())
+	{
+		g_shell.exit_status = 2;
+		return (EXIT_FAILURE);
+	}
+	return (EXIT_SUCCESS);
 }

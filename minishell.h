@@ -143,7 +143,7 @@ size_t		add_word_token(t_token **head, char *start);
 t_token		*create_token(e_tok type, char *start, size_t length);
 void		append_token(t_token **head, t_token *new_token);
 void		pop_error(char *error_msg);
-int			catch_syntax_errors(t_token *token_lst);
+int		catch_syntax_errors(t_token *token_lst);
 e_tok		decode_type(char c1, char c2);
 void    	refine_tokens(t_token **head);
 
