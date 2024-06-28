@@ -135,6 +135,7 @@ t_env	*create_env(char *env);
 bool	is_exist(char *s);
 void	append_env(t_env **lst, t_env *new_env);
 char 	*get_key(char *s);
+
 /*		Tokenizer		*/
 t_token		*tokenizer(char *input);
 int			add_op_token(t_token **head, int c1, int c2, char *start);
@@ -145,6 +146,8 @@ void		append_token(t_token **head, t_token *new_token);
 void		pop_error(char *error_msg);
 int			catch_syntax_errors(t_token *token_lst);
 e_tok		decode_type(char c1, char c2);
+void    	refine_tokens(t_token **head);
+
 /*		Type check*/
 int			is_space(char c);
 int			is_op(char c1, char c2);

@@ -42,4 +42,5 @@ int	builtin_echo(char **args)
 	}
 	if (!flag)
 		printf("\n");
+	return (0);
 }

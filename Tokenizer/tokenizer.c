@@ -30,5 +30,5 @@ t_token	*tokenizer(char *input)
 			input += add_word_token(&head, start);
 		}
 	}
-	return (head);
+	return (refine_tokens(&head), head);
 }

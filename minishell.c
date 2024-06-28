@@ -101,33 +101,6 @@ void print_ast(t_tree *root) {
 }
 
 
-void    join_words(t_token **head)
-{
-    t_token *tmp;
-    t_token *prev;
-
-    tmp = *head;
-    prev = NULL;
-    while (tmp)
-    {
-        if (is_word(tmp->type) && prev && is_word(prev->type))
-        {
-            prev->location.length += tmp->location.length;
-            prev->next = tmp->next;
-            m_free(tmp);
-            tmp = prev;
-        }
-        prev = tmp;
-        tmp = tmp->next;
-    }
-}
-
-void    simplify_tokens(t_token **head)
-{
-    join_words(head);
-    // remove_spaces(head);
-}
-
 void	read_cmd(void)
 {
 	char	*line;
@@ -143,24 +116,24 @@ void	read_cmd(void)
 		return (printf("exit"), exit(-1));
     if (line[0] == '\0')
         return ;
-	add_history(line); // dont add empty line to history
+	add_history(line); // dont add empty lines to history
 	token_lst = tokenizer(line);
-	simplify_tokens(&token_lst);
-    if (catch_syntax_errors(token_lst))
-    {
-	    root = parse_cmd_line(&token_lst);
-        if (!root)
-            return ;
-        execute_ast(root);
-        // print_ast(root);
+	
+    // if (catch_syntax_errors(token_lst))
+    // {
+	//     root = parse_cmd_line(&token_lst);
+    //     if (!root)
+    //         return ;
+    //     execute_ast(root);
+    //     // print_ast(root);
 
-    }
-	// tmp = token_lst;
-	// while (tmp != NULL)
-	// {
-	// 	printf("TYPE = [%s] - LENGHT = [%zu]\n", type[tmp->type], tmp->location.length);
-	// 	tmp = tmp->next;
-	// }
+    // }
+	tmp = token_lst;
+	while (tmp != NULL)
+	{
+		printf("TYPE = [%s] - LENGHT = [%zu]\n", type[tmp->type], tmp->location.length);
+		tmp = tmp->next;
+	}
 	// free(line);
 }
 
