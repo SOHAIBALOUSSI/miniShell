@@ -3,7 +3,7 @@
 void	pop_error(char *error_msg)
 {
 	ft_putstr_fd(error_msg, 2);
-	g_shell = (t_minishell){0};
+	// g_shell = (t_minishell){0};
 }
 
 e_tok	decode_type(char c1, char c2)

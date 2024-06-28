@@ -35,7 +35,6 @@ void execute_cmd(t_tree *root)
     {
         if (execve(cmd_path, root->argv, __environ) == -1)
         {
-            pop_error("Command not found\n");
             exit(1);
         }
     }

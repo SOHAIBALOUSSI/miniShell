@@ -1,9 +1,9 @@
-# TODO to be implemented
+# TODO, to be implemented
 
 - Expend the variables starting with $ to there values 
 - in case we have $? , it will be replaced by the return code of the last command 
+- handle wildcard '*'
 - handle redirections 
 - handle pipes
-- handle wildcard '*'
 - handle double and single quotes
 - Heredoc !!

@@ -93,7 +93,6 @@ typedef	struct s_minishell
 	int		exit_status;
 	int		is_add;
 	int		is_subshell;
-	char **__environ;
 }			t_minishell;
 
 extern	t_minishell g_shell;
@@ -169,8 +168,6 @@ char	*ft_strndup(char *s1, size_t n);
 /*		Execution		*/
 void execute_ast(t_tree *root);
 
-
-/*		Type Checking		*/
 
 /* Export */
 
