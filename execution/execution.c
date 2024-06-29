@@ -93,9 +93,9 @@ int execute_cmd(t_tree *root)
     else
     {
         waitpid(pid, &status, 0);
-        return (g_shell.exit_status = WEXITSTATUS(status));
+        g_shell.exit_status = WEXITSTATUS(status);
     }
-    return (EXIT_SUCCESS);
+    return (g_shell.exit_status);
 }
 
 int execute_pipeline(t_tree **pipeline)
@@ -122,8 +122,8 @@ void execute_ast(t_tree *root)
     // if the node is an Operator, execute the left and right nodes
     // the right node is a command node or pipe_line node
     // if the node is a command node, expend and execute the command
-    if (root->type == _CMD)
-        execute_cmd(root);
-    else if (root->type == _PIPE)
+    if (root->type == _PIPE)
         execute_pipeline(root->pipe_line);
+    else if (root->type == _CMD)
+        execute_cmd(root);
 }

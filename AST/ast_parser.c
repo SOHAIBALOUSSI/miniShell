@@ -40,7 +40,7 @@ static t_tree	*parse_cmd(t_token **tokens)
 			add_arg_to_cmd(cmd, tmp->location.location, tmp->location.length);
 		else if (is_redirection(tmp->type))
 			cmd = parse_redirection(&tmp, cmd);
-		else
+		else 
 			break ;
 		tmp = tmp->next;
 	}
