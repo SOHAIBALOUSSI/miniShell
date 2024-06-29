@@ -93,9 +93,27 @@ int execute_cmd(t_tree *root)
     else
     {
         waitpid(pid, &status, 0);
-        return (WEXITSTATUS(status));
+        return (g_shell.exit_status = WEXITSTATUS(status));
     }
     return (EXIT_SUCCESS);
+}
+
+int execute_pipeline(t_tree **pipeline)
+{
+    int saved_output;
+    int saved_input;
+    int result;
+
+    if (!pipeline || !(*pipeline))
+        return (-1);
+    saved_output = dup(STDOUT_FILENO);
+    saved_input = dup(STDIN_FILENO);
+    result = actual_pipeline(pipeline, g_shell.pipe_count);
+    dup2(saved_input, STDIN_FILENO);
+    close(saved_input);
+    dup2(saved_output, STDOUT_FILENO);
+    close(saved_output);
+    return (g_shell.exit_status);   
 }
 
 void execute_ast(t_tree *root)
@@ -105,7 +123,7 @@ void execute_ast(t_tree *root)
     // the right node is a command node or pipe_line node
     // if the node is a command node, expend and execute the command
     if (root->type == _CMD)
-    {
         execute_cmd(root);
-    }
+    else if (root->type == _PIPE)
+        execute_pipeline(root->pipe_line);
 }

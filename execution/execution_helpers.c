@@ -20,7 +20,7 @@ void    handle_redirections(t_redir *redir_list)
         }
         else if (current->type == _RED_OUT)
         {
-            current->fds[1] = open(current->file_name, O_WRONLY | O_CREAT | O_TRUNC);
+            current->fds[1] = open(current->file_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
             if (current->fds[1] < 0)
             {
                 pop_error("Open failed for output redirection\n");
@@ -44,16 +44,6 @@ void    handle_redirections(t_redir *redir_list)
             handle_here_doc(redir_list);
         current = current->next;
     }
-}
-
-void handle_pipes(t_tree *root)
-{
-
-}
-
-void handle_wildcards(char ***argv)
-{
-
 }
 
 void    here_doc(t_redir *redir_list)
