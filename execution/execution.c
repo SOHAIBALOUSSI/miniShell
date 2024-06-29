@@ -113,7 +113,7 @@ int execute_pipeline(t_tree **pipeline)
     close(saved_input);
     dup2(saved_output, STDOUT_FILENO);
     close(saved_output);
-    return (g_shell.exit_status);   
+    return (result);   
 }
 
 void execute_ast(t_tree *root)
