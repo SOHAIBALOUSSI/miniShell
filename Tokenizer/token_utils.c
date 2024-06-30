@@ -3,7 +3,11 @@
 void	pop_error(char *error_msg)
 {
 	ft_putstr_fd(error_msg, 2);
-	// g_shell = (t_minishell){0};
+	g_shell.closed_paren_count = 0;
+	g_shell.open_paren_count = 0;
+	g_shell.single_quote_count = 0;
+	g_shell.double_quote_count = 0;
+	g_shell.pipe_count = 0;
 }
 
 e_tok	decode_type(char c1, char c2)
@@ -22,26 +26,36 @@ e_tok	decode_type(char c1, char c2)
 	return (type);
 }
 
-static void    remove_spaces(t_token **head)
+static void remove_spaces(t_token **head)
 {
-    t_token *tmp;
-    t_token *del;
+    t_token *current;
+    t_token *prev;
+    t_token *temp;
 
-    tmp = *head;
-    del = NULL;
     if (*head && (*head)->type == _SPACE)
     {
-        del = *head;
+        temp = *head;
         *head = (*head)->next;
-        m_free(del);
+        m_free(temp);
     }
-    tmp = *head;
-    while (tmp && tmp->next && tmp->next->type == _SPACE)
+    if (!*head)
+        return;
+    current = *head;
+    prev = *head;
+    while (current)
     {
-        del = tmp->next;
-        tmp->next = tmp->next->next;
-        m_free(del);
-        tmp = tmp->next;
+        if (current->type == _SPACE)
+        {
+            temp = current;
+            prev->next = current->next;
+            current = current->next;
+            m_free(temp);
+        }
+        else
+        {
+            prev = current;
+            current = current->next;
+        }
     }
 }
 

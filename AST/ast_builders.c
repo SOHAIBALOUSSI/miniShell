@@ -30,8 +30,8 @@ t_tree	*create_cmd_node(void)
 
 	cmd = m_alloc(sizeof(t_tree), ALLOC);
 	cmd->type = _CMD;
-	cmd->argv = NULL;
     cmd->argc = 0;
+	cmd->argv = NULL;
 	cmd->redir_list = NULL;
 	return (cmd);
 }
