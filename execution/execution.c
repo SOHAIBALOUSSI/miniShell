@@ -70,18 +70,18 @@ int execute_cmd(t_tree *root)
     pid_t pid;
     int status;
 
-    if (root->argv && is_builtin(root->argv[0]))
+    if (is_builtin(root->argv[0]))
         return (execute_builtin(root));
     // expansion of the command
-    if (root->argv)
-        cmd_path = get_cmd_path(root->argv[0]);
+    cmd_path = get_cmd_path(root->argv[0]);
     pid = fork();
     if (pid == 0)
     {
         if (root->redir_list)
             handle_redirections(root->redir_list);
-        if (execve(cmd_path, root->argv, __environ) == -1)
+        if (execve(cmd_path, root->argv, __environ) == -1) // environ should be replaced with our env list
         {
+            pop_error("command not found\n");
             exit(EXIT_FAILURE);
         }
     }
@@ -93,9 +93,9 @@ int execute_cmd(t_tree *root)
     else
     {
         waitpid(pid, &status, 0);
-        return (g_shell.exit_status = WEXITSTATUS(status));
+        g_shell.exit_status = WEXITSTATUS(status);
     }
-    return (EXIT_SUCCESS);
+    return (g_shell.exit_status);
 }
 
 int execute_pipeline(t_tree **pipeline)
@@ -113,7 +113,7 @@ int execute_pipeline(t_tree **pipeline)
     close(saved_input);
     dup2(saved_output, STDOUT_FILENO);
     close(saved_output);
-    return (g_shell.exit_status);   
+    return (result);   
 }
 
 void execute_ast(t_tree *root)
@@ -122,8 +122,8 @@ void execute_ast(t_tree *root)
     // if the node is an Operator, execute the left and right nodes
     // the right node is a command node or pipe_line node
     // if the node is a command node, expend and execute the command
-    if (root->type == _CMD)
-        execute_cmd(root);
-    else if (root->type == _PIPE)
+    if (root->type == _PIPE)
         execute_pipeline(root->pipe_line);
+    else if (root->type == _CMD)
+        execute_cmd(root);
 }
