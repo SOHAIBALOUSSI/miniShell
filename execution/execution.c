@@ -2,6 +2,8 @@
 
 static int is_builtin(char *cmd)
 {
+    // if (!cmd)
+    //     return (0);
     return (ft_strcmp(cmd , "cd") == 0 || ft_strcmp(cmd , "echo") == 0
         || ft_strcmp(cmd, "env") == 0 || ft_strcmp(cmd, "pwd") == 0
         || ft_strcmp(cmd, "export") == 0 || ft_strcmp(cmd, "unset") == 0
@@ -37,6 +39,8 @@ int execute_builtin(t_tree *root)
     char **argv;
 
     argv = root->argv;
+    if (root->redir_list)
+        handle_redirections(root->redir_list);
     if (strcmp(argv[0], "cd") == 0) 
         return (builtin_cd(argv + 1));
     else if (strcmp(argv[0], "echo") == 0) 
@@ -69,21 +73,23 @@ int execute_cmd(t_tree *root)
     char *cmd_path;
     pid_t pid;
     int status;
+    cmd_path = NULL;
 
-    if (is_builtin(root->argv[0]))
+    if (root->argv && is_builtin(root->argv[0]))
         return (execute_builtin(root));
+
     // expansion of the command
-    cmd_path = get_cmd_path(root->argv[0]);
+    if (root->argv)
+        cmd_path = get_cmd_path(root->argv[0]);
     pid = fork();
     if (pid == 0)
     {
         if (root->redir_list)
             handle_redirections(root->redir_list);
-        if (execve(cmd_path, root->argv, __environ) == -1)
-        {
-            pop_error("Command not found\n");
+        if (cmd_path && execve(cmd_path, root->argv, __environ) == -1)
             exit(EXIT_FAILURE);
-        }
+        else
+            exit(EXIT_FAILURE);
     }
     else if (pid < 0)
     {

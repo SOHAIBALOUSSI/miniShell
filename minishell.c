@@ -54,9 +54,12 @@ void print_ast(t_tree *root) {
             break;
         case _CMD:
             printf("CMD: ");
-            for (int i = 0; root->argv[i]; i++)
-                printf("%s ", root->argv[i]);
-            printf("\n");
+            if (root->argv[0])
+            {
+                for (int i = 0; root->argv[i]; i++)
+                    printf("%s ", root->argv[i]);
+                printf("\n");
+            }
             if (root->redir_list) {
                 printf("\tRedirections:\n");
                 t_redir *redir = root->redir_list;

@@ -92,7 +92,7 @@ void	builtin_export(char **args)
 	t_env	*var;
 	t_env	*existing_var;
 	
-	if (!args)
+	if (!*args)
 		return (put_sorted_env());
 	while (*args)
 	{
