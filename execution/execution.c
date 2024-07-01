@@ -68,13 +68,14 @@ int execute_builtin(t_tree *root)
 }
 
 
+
 int execute_cmd(t_tree *root)
 {
     char *cmd_path;
     pid_t pid;
     int status;
-    cmd_path = NULL;
 
+    cmd_path = NULL;
     if (root->argv && is_builtin(root->argv[0]))
         return (execute_builtin(root));
 

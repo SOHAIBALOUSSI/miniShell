@@ -60,6 +60,8 @@ typedef struct s_token
 {
 	e_tok			type;
 	t_slice			location;
+	char			*heredoc_file;
+	char 			*delimiter;
 	struct s_token	*next;
 	struct s_token	*prev;
 }   			t_token;
@@ -91,6 +93,7 @@ typedef	struct s_minishell
 	size_t	open_paren_count;
 	size_t	closed_paren_count;
 	size_t	pipe_count;
+	size_t	heredoc_count;
 	t_env	*env_list;
 	int		exit_status;
 	int		is_add;
@@ -103,6 +106,7 @@ typedef struct s_redir
 {
 	e_tok	type;
 	int		fds[2];
+	int		heredoc_fd;
 	char	*file_name;
 	struct s_redir	*next;
 }	t_redir;
@@ -159,7 +163,7 @@ int			is_word(e_tok type);
 /*		AST		*/
 t_tree	*parse_cmd_line(t_token **tokens);
 t_tree	*create_op_node(e_tok type);
-t_redir	*create_redir_node(e_tok type, char *file_name, size_t length);
+t_redir	*create_redir_node(t_token *token);
 t_tree	*create_cmd_node(void);
 t_tree	*create_subshell_node(t_tree *subshell);
 t_tree	*create_pipe_node(t_token **tokens);
@@ -179,6 +183,10 @@ void    handle_here_doc(t_redir *redir_list);
 /*		Execution		*/
 void execute_ast(t_tree *root);
 int execute_cmd(t_tree *root);
+
+/*		Expander		*/
+void    expander(t_tree *root);
+
 
 
 /* Export */

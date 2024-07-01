@@ -1,18 +1,19 @@
 #include "../minishell.h"
 
-int actual_pipeline(t_tree **pipeline, int pc) {
-    pid_t pid;
-    int status;
-    int fd[pc - 1][2];
-    int i;
+int    actual_pipeline(t_tree **pipeline, int pc)
+{
+    pid_t   pid;
+    int     status;
+    int     fd[pc - 1][2];
+    int     i;
 
     i = 0;
-    while (i < pc - 1) 
+    while (i < pc - 1)
     {
-        if (pipe(fd[i]) < 0) 
+        if (pipe(fd[i]) < 0)
         {
             pop_error("Pipe creation failed\n");
-            return -1;
+            return (-1);
         }
         i++;
     }

@@ -11,18 +11,22 @@ t_tree	*create_op_node(e_tok type)
 	return (op);
 }
 
-t_redir	*create_redir_node(e_tok type, char *file_name, size_t length)
+t_redir	*create_redir_node(t_token *token)
 {
 	t_redir	*redir;
 
 	redir = m_alloc(sizeof(t_redir), ALLOC);
-	redir->type = type;
-	redir->file_name = ft_strndup(file_name, length);
+	redir->type = token->type;
+	if (redir->type == _HEREDOC)
+		redir->file_name = token->heredoc_file;
+	else
+		redir->file_name = ft_strndup(token->location.location, token->location.length);
 	redir->next = NULL;
 	redir->fds[0] = -1;
 	redir->fds[1] = -1;
 	return (redir);
 }
+
 
 t_tree	*create_cmd_node(void)
 {
@@ -30,8 +34,8 @@ t_tree	*create_cmd_node(void)
 
 	cmd = m_alloc(sizeof(t_tree), ALLOC);
 	cmd->type = _CMD;
-	cmd->argv = NULL;
     cmd->argc = 0;
+	cmd->argv = NULL;
 	cmd->redir_list = NULL;
 	return (cmd);
 }

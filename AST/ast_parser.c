@@ -11,8 +11,7 @@ static t_tree	*parse_redirection(t_token **tokens, t_tree *cmd)
 
 	redir_type = (*tokens)->type;
 	*tokens = (*tokens)->next;
-	redir = create_redir_node(redir_type, (*tokens)->location.location,
-			(*tokens)->location.length);
+	redir = create_redir_node(*tokens);
 	if (!cmd->redir_list)
 		cmd->redir_list = redir;
 	else

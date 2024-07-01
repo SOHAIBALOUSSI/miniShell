@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "libft.h"
+#include "../../minishell.h"
 
 static int	int_len(long n)
 {
@@ -40,7 +41,7 @@ char	*ft_itoa(int n)
 
 	number = n;
 	len = int_len(number);
-	res = malloc(len + 1 * sizeof(char));
+	res = m_alloc(len + 1 * sizeof(char), ALLOC);
 	if (!res)
 		return (NULL);
 	res[0] = '0';
