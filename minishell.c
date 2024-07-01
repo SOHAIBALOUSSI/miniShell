@@ -3,7 +3,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-char **envp;
 t_minishell g_shell = {0};
 
 void	read_cmd(void);

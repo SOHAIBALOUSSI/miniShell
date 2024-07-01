@@ -1,9 +1,15 @@
 # TODO, to be implemented
 
-- Expend the variables starting with $ to there values 
+- Expend the variables starting with $ to there values
+- do not expend heredoc delimiter
+- single quoted vars does not expend 
 - in case we have $? , it will be replaced by the return code of the last command 
-- handle wildcard '*'
-- handle redirections 
-- handle pipes
+- handle wildcard '*' 
+
+
+
+
+<!-- - handle redirections  -->
+<!-- - handle pipes -->
 - handle double and single quotes
-- Heredoc !!
+- Heredoc must be handled during the syntax error catching

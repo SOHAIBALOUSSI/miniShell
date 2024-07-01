@@ -180,6 +180,10 @@ void    handle_here_doc(t_redir *redir_list);
 void execute_ast(t_tree *root);
 int execute_cmd(t_tree *root);
 
+/*		Expander		*/
+void    expander(t_tree *root);
+
+
 
 /* Export */
 
