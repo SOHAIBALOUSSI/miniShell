@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "libft.h"
+#include "../../minishell.h"
 
 char	*ft_strjoin(const char *s1, const char *s2)
 {
@@ -25,7 +26,7 @@ char	*ft_strjoin(const char *s1, const char *s2)
 		return (ft_strdup(s1));
 	i = 0;
 	j = 0;
-	new = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
+	new = m_alloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char), ALLOC);
 	if (!new)
 		return (NULL);
 	while (s1[i])
