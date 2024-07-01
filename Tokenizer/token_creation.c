@@ -8,6 +8,7 @@ int	add_op_token(t_token **head, int c1, int c2, char *start)
 	type = decode_type(c1, c2);
 	g_shell.open_paren_count += (type == _PAREN_OPEN) * 1;
 	g_shell.closed_paren_count += (type == _PAREN_CLOSED) * 1;
+	g_shell.heredoc_count += (type == _HEREDOC) * 1;
 	length = (type == _HEREDOC || type == _AND ||
 			type == _OR || type == _APPEND) * 1 + 1;
 	append_token(head, create_token(type, start, length));

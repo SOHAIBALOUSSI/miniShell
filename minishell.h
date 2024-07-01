@@ -91,6 +91,7 @@ typedef	struct s_minishell
 	size_t	open_paren_count;
 	size_t	closed_paren_count;
 	size_t	pipe_count;
+	size_t	heredoc_count;
 	t_env	*env_list;
 	int		exit_status;
 	int		is_add;

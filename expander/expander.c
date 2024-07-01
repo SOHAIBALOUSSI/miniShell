@@ -9,6 +9,14 @@ char *expand_arg(char *arg)
 	
 }
 
+/*
+	TODO:
+	expand_cmd()
+		iterate argv and check args for expand
+			if argv[i] has single quote , dont expand anything 
+			if argv[i] has double quote , search for $KEY and expend it and mark it to be splited .
+			if argv[i] has a $, Expand it w sff
+*/
 void    expand_cmd(t_tree *root)
 {
 	int     i;
@@ -18,7 +26,7 @@ void    expand_cmd(t_tree *root)
 	i = 0;
 	expanded_argv = NULL;
 	expanded_argc = 0;
-	while (i < root->argc)
+	while (i < root->argc) 
 	{
 		expanded = expand_arg(root->argv[i]);
 		if (expanded)

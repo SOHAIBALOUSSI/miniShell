@@ -84,10 +84,7 @@ int execute_cmd(t_tree *root)
         if (root->redir_list)
             handle_redirections(root->redir_list);
         if (cmd_path && execve(cmd_path, root->argv, __environ) == -1) // environ should be replaced with our env list
-        {
-            pop_error("command not found\n");
             exit(EXIT_FAILURE);
-        }
         else if (!cmd_path)
             exit(EXIT_FAILURE);
     }
