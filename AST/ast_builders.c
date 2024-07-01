@@ -17,8 +17,8 @@ t_redir	*create_redir_node(t_token *token)
 
 	redir = m_alloc(sizeof(t_redir), ALLOC);
 	redir->type = token->type;
-	if (redir->type == _HEREDOC)
-		redir->file_name = token->heredoc_file;
+	if (redir->type != _HEREDOC)
+		redir->file_name = token->prev->heredoc_file;
 	else
 		redir->file_name = ft_strndup(token->location.location, token->location.length);
 	redir->next = NULL;

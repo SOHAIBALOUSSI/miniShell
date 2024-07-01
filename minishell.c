@@ -133,18 +133,18 @@ void	read_cmd(void)
 	{
 		if (!catch_syntax_errors(token_lst))
 		{
-			root = parse_cmd_line(&token_lst);
+			// root = parse_cmd_line(&token_lst);
 			if (!root)
 				return ;
-			execute_ast(root);
-			// tmp = token_lst;
-			// while (tmp != NULL)
-			// {
-			// 	printf("TYPE = [%s] - LENGHT = [%zu]\n", type[tmp->type], tmp->location.length);
-			// 	tmp = tmp->next;
-			// }
-
+			// execute_ast(root);
+			
 			// print_ast(root);
+			tmp = token_lst;
+			while (tmp != NULL)
+			{
+				printf("TYPE = [%s] - LENGHT = [%zu]\n", type[tmp->type], tmp->location.length);
+				tmp = tmp->next;
+			}
 
 		}
 	}

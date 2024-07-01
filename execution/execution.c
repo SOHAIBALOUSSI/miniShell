@@ -75,14 +75,15 @@ int execute_cmd(t_tree *root)
     cmd_path = NULL;
     if (root->argc && is_builtin(root->argv[0]))
         return (execute_builtin(root));
-    // expansion of the command
     if (root->argc)
         cmd_path = get_cmd_path(root->argv[0]);
     pid = fork();
     if (pid == 0)
     {
         if (root->redir_list)
+        {
             handle_redirections(root->redir_list);
+        }
         if (cmd_path && execve(cmd_path, root->argv, __environ) == -1) // environ should be replaced with our env list
             exit(EXIT_FAILURE);
         else if (!cmd_path)

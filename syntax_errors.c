@@ -101,10 +101,8 @@ void write_to_heredoc(int fd, char *delimiter)
     while (1)
     {
         line = readline("> ");
-        if (!line || !ft_strcmp(line, delimiter))
+        if (!ft_strcmp(line, delimiter))
         {
-            if (line)
-                m_free(line);
             break;
         }
         ft_putendl_fd(line, fd);
@@ -143,6 +141,7 @@ char	*get_heredoc_filename(t_token *current)
 
 static int check_heredoc(t_token *current)
 {
+	
     if (current->type == _HEREDOC)
     {
         if (!current->next || !is_word(current->next->type))
@@ -151,6 +150,7 @@ static int check_heredoc(t_token *current)
             return (0);
         }
 		current->heredoc_file = get_heredoc_filename(current);
+		// printf("%s\n", current->heredoc_file);
     }
     return (1);
 }
@@ -163,8 +163,7 @@ int catch_syntax_errors(t_token *token_lst)
     while (current)
     {
         if (!check_pipe_and(current) || !check_redirection(current)
-            || !check_parentheses(current) || !check_word(current)
-            || !check_heredoc(current))
+            || !check_parentheses(current) || !check_word(current))
         {
             return (EXIT_FAILURE);
         }
