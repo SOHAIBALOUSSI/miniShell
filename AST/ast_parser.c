@@ -81,7 +81,10 @@ static t_tree *parse_pipe_line(t_token **tokens)
         	cmd = parse_cmd(tokens);
         add_cmd_to_pipeline(pipe, cmd);
         if (*tokens && (*tokens)->type == _PIPE)
+		{
+			g_shell.pipe_count++;
         	*tokens = (*tokens)->next;
+		}
         else
 			break;
     }

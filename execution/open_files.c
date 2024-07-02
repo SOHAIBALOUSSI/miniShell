@@ -34,7 +34,7 @@ void    handle_redirections(t_redir *redir_list)
             current->fds[1] = open(current->file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
             if (current->fds[1] < 0)
             {
-                perror("Open failed for append redirection\n");
+                pop_error("Open failed for append redirection\n");
                 exit(EXIT_FAILURE);
             }
             dup2(current->fds[1], STDOUT_FILENO);
@@ -42,15 +42,6 @@ void    handle_redirections(t_redir *redir_list)
         }
         else if (current->type == _HEREDOC)
             handle_here_doc(current);
-            // dir chi 7araka hna
-            // int fd = open(current->file_name, O_RDONLY);
-            // if (fd < 0)
-            // {
-            //     pop_error("Open failed for heredoc\n");
-            //     exit(EXIT_FAILURE);
-            // }
-            // dup2(fd, STDIN_FILENO);
-            // close(fd);
         current = current->next;
     }
 }

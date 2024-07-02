@@ -171,17 +171,21 @@ void	add_cmd_to_pipeline(t_tree *pipe, t_tree *cmd);
 void	add_arg_to_cmd(t_tree *cmd, char *location, size_t length);
 char	*ft_strndup(char *s1, size_t n);
 
-/*		Pipeline helpers		*/
+/*		Execute pipeline		*/
 int    actual_pipeline(t_tree **pipeline, int pc);
 
+/*		Execute Subshell		*/
+int execute_subshell(t_tree *root);
 
-/*		Execution helpers		*/
+
+
+/*		Open files		*/
 void    handle_redirections(t_redir *redir_list);
 void    here_doc(t_redir *redir_list);
 void    handle_here_doc(t_redir *redir_list);
 
 /*		Execution		*/
-void execute_ast(t_tree *root);
+int execute_ast(t_tree *root);
 int execute_cmd(t_tree *root);
 
 /*		Expander		*/

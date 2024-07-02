@@ -122,14 +122,17 @@ int execute_pipeline(t_tree **pipeline)
     return (result);   
 }
 
-void execute_ast(t_tree *root)
+int execute_ast(t_tree *root)
 {
     // traverse the ast and execute based on the node type
     // if the node is an Operator, execute the left and right nodes
     // the right node is a command node or pipe_line node
     // if the node is a command node, expend and execute the command
+    if (root->type == _SUBSHELL)
+        g_shell.exit_status = execute_subshell(root->left);
     if (root->type == _PIPE)
-        execute_pipeline(root->pipe_line);
+        g_shell.exit_status = execute_pipeline(root->pipe_line);
     else if (root->type == _CMD)
-        execute_cmd(root);
+        g_shell.exit_status = execute_cmd(root);
+    return (g_shell.exit_status);
 }

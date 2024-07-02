@@ -34,6 +34,5 @@ void    add_cmd_to_pipeline(t_tree *pipe, t_tree *cmd)
                     sizeof(t_tree *) * (pipe->pipe_count + 1));
 	pipe->pipe_line[pipe->pipe_count] = cmd;
 	pipe->pipe_count++;
-	g_shell.pipe_count++;
 }
 
