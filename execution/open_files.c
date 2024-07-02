@@ -34,7 +34,7 @@ void    handle_redirections(t_redir *redir_list)
             current->fds[1] = open(current->file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
             if (current->fds[1] < 0)
             {
-                perror("Open failed for append redirection\n");
+                pop_error("Open failed for append redirection\n");
                 exit(EXIT_FAILURE);
             }
             dup2(current->fds[1], STDOUT_FILENO);
@@ -42,7 +42,6 @@ void    handle_redirections(t_redir *redir_list)
         }
         else if (current->type == _HEREDOC)
         {
-            // dir chi 7araka hna
             int fd = open(current->file_name, O_RDONLY);
             if (fd < 0)
             {
@@ -56,33 +55,33 @@ void    handle_redirections(t_redir *redir_list)
     }
 }
 
-void    here_doc(t_redir *redir_list)
-{
-    char *line;
+// void    handle_here_doc(t_redir *redir_list)
+// {
+//     pid_t pid;
 
-    while (1)
-    {
-        line = readline("> ");
-        if (ft_strcmp(redir_list->file_name, line) == 0)
-            break;
-        write(redir_list->fds[1], line, ft_strlen(line));
-        write(redir_list->fds[1], "\n", 1);
-        free(line);
-    }
-}
-
-void    handle_here_doc(t_redir *redir_list)
-{
-    pid_t pid;
-
-    if (pipe(redir_list->fds) == -1)
-    {
-        pop_error("Pipe failed\n");
-        exit(EXIT_FAILURE);
-    }
-
-        close(redir_list->fds[1]);
-        waitpid(pid, NULL, 0);
-        dup2(redir_list->fds[0], STDIN_FILENO);
-        close(redir_list->fds[0]);
-}
+//     if (pipe(redir_list->fds) == -1)
+//     {
+//         pop_error("Pipe failed\n");
+//         exit(EXIT_FAILURE);
+//     }
+//     pid = fork(); // 3lach hna katforky ll herdoc ?
+//     if (pid == 0)
+//     {
+//         close(redir_list->fds[0]);
+//         here_doc(redir_list);
+//         close(redir_list->fds[1]);
+//         exit(EXIT_SUCCESS);
+//     }
+//     else if (pid > 0)
+//     {
+//         close(redir_list->fds[1]);
+//         waitpid(pid, NULL, 0);
+//         dup2(redir_list->fds[0], STDIN_FILENO);
+//         close(redir_list->fds[0]);
+//     }
+//     else
+//     {
+//         pop_error("Fork failed\n");
+//         exit(EXIT_FAILURE);
+//     }
+// }

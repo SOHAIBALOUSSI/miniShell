@@ -16,7 +16,7 @@ SRCS = minishell.c Justice.c syntax_errors.c shell_env.c type_check.c \
 	$(addprefix ./built-ins/, export.c export_fts.c env.c unset.c exit.c pwd.c echo.c cd.c) $(LIBFT_SRC) \
 	$(addprefix ./AST/, ast_utils.c ast_parser.c ast_builders.c) \
 	$(addprefix ./Tokenizer/, token_creation.c token_utils.c tokenizer.c) \
-	$(addprefix ./execution/, execution.c execution_helpers.c pipeline_helpers.c) \
+	$(addprefix ./execution/, execution.c open_files.c execute_pipeline.c execute_subshell.c) \
 	$(addprefix ./expander/, expander.c)
 
 OBJS = $(SRCS:.c=.o)
@@ -27,6 +27,7 @@ OBJS = $(SRCS:.c=.o)
 all : $(NAME)
 
 $(NAME) : $(OBJS)
+	stty -echoctl
 	@$(CC) $(CFLAGS)  $^ -o $@ -lreadline
 
 clean :

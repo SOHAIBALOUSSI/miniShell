@@ -2,6 +2,8 @@
 
 static int is_builtin(char *cmd)
 {
+    // if (!cmd)
+    //     return (0);
     return (ft_strcmp(cmd , "cd") == 0 || ft_strcmp(cmd , "echo") == 0
         || ft_strcmp(cmd, "env") == 0 || ft_strcmp(cmd, "pwd") == 0
         || ft_strcmp(cmd, "export") == 0 || ft_strcmp(cmd, "unset") == 0
@@ -37,6 +39,8 @@ int execute_builtin(t_tree *root)
     char **argv;
 
     argv = root->argv;
+    if (root->redir_list)
+        handle_redirections(root->redir_list);
     if (strcmp(argv[0], "cd") == 0) 
         return (builtin_cd(argv + 1));
     else if (strcmp(argv[0], "echo") == 0) 
@@ -71,21 +75,20 @@ int execute_cmd(t_tree *root)
     pid_t pid;
     int status;
 
-    // expander(root);
     cmd_path = NULL;
-    if (root->argc && is_builtin(root->argv[0]))
+    if (root->argv && is_builtin(root->argv[0]))
         return (execute_builtin(root));
     // expansion of the command
-    if (root->argc)
+    if (root->argv)
         cmd_path = get_cmd_path(root->argv[0]);
     pid = fork();
     if (pid == 0)
     {
         if (root->redir_list)
             handle_redirections(root->redir_list);
-        if (cmd_path && execve(cmd_path, root->argv, __environ) == -1) // environ should be replaced with our env list
+        if (cmd_path && execve(cmd_path, root->argv, __environ) == -1)
             exit(EXIT_FAILURE);
-        else if (!cmd_path)
+        else
             exit(EXIT_FAILURE);
     }
     else if (pid < 0)
@@ -111,7 +114,7 @@ int execute_pipeline(t_tree **pipeline)
         return (-1);
     saved_output = dup(STDOUT_FILENO);
     saved_input = dup(STDIN_FILENO);
-    result = actual_pipeline(pipeline, g_shell.pipe_count);
+    result = actual_pipeline(pipeline, g_shell.pipe_count + 1);
     dup2(saved_input, STDIN_FILENO);
     close(saved_input);
     dup2(saved_output, STDOUT_FILENO);
@@ -119,14 +122,17 @@ int execute_pipeline(t_tree **pipeline)
     return (result);   
 }
 
-void execute_ast(t_tree *root)
+int execute_ast(t_tree *root)
 {
     // traverse the ast and execute based on the node type
     // if the node is an Operator, execute the left and right nodes
     // the right node is a command node or pipe_line node
     // if the node is a command node, expend and execute the command
-    // if (root->type == _PIPE)
-    //     execute_pipeline(root->pipe_line);
-    if (root->type == _CMD)
-        execute_cmd(root);
+    if (root->type == _SUBSHELL)
+        g_shell.exit_status = execute_subshell(root->left);
+    else if (root->type == _PIPE)
+        g_shell.exit_status = execute_pipeline(root->pipe_line);
+    else if (root->type == _CMD)
+        g_shell.exit_status = execute_cmd(root);
+    return (g_shell.exit_status);
 }
