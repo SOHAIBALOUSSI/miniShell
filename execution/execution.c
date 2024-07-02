@@ -114,7 +114,7 @@ int execute_pipeline(t_tree **pipeline)
         return (-1);
     saved_output = dup(STDOUT_FILENO);
     saved_input = dup(STDIN_FILENO);
-    result = actual_pipeline(pipeline, g_shell.pipe_count);
+    result = actual_pipeline(pipeline, g_shell.pipe_count + 1);
     dup2(saved_input, STDIN_FILENO);
     close(saved_input);
     dup2(saved_output, STDOUT_FILENO);
@@ -130,7 +130,7 @@ int execute_ast(t_tree *root)
     // if the node is a command node, expend and execute the command
     if (root->type == _SUBSHELL)
         g_shell.exit_status = execute_subshell(root->left);
-    if (root->type == _PIPE)
+    else if (root->type == _PIPE)
         g_shell.exit_status = execute_pipeline(root->pipe_line);
     else if (root->type == _CMD)
         g_shell.exit_status = execute_cmd(root);

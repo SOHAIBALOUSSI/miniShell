@@ -1,16 +1,16 @@
 #include "../minishell.h"
 
-int    actual_pipeline(t_tree **pipeline, int pc)
+int    actual_pipeline(t_tree **pipeline, int n_cmd)
 {
-    pid_t   pid[pc];
+    pid_t   pid[n_cmd];
     int     status;
-    int     fd[pc - 1][2];
+    int     fd[n_cmd - 1][2];
     int     i;
 
-    printf("Executing pipeline with %d commands...\n", pc);
-    fflush(stdout);
+    // printf("Executing pipeline with %d commands...\n", n_cmd);
+    // fflush(stdout);
     i = 0;
-    while (i < pc - 1)
+    while (i < n_cmd - 1)
     {
         if (pipe(fd[i]) < 0)
         {
@@ -20,7 +20,7 @@ int    actual_pipeline(t_tree **pipeline, int pc)
         i++;
     }
     i = 0;
-    while (i < pc) 
+    while (i < n_cmd) 
     {
         pid[i] = fork();
         if (pid[i] < 0) 
@@ -32,10 +32,10 @@ int    actual_pipeline(t_tree **pipeline, int pc)
         {
             if (i > 0) 
                 dup2(fd[i - 1][0], STDIN_FILENO);
-            if (i < pc - 1)
+            if (i < n_cmd - 1)
                 dup2(fd[i][1], STDOUT_FILENO);
             int j = 0;  
-            while (j < pc - 1) 
+            while (j < n_cmd - 1) 
             {
                 close(fd[j][0]);
                 close(fd[j][1]);
@@ -52,21 +52,21 @@ int    actual_pipeline(t_tree **pipeline, int pc)
         i++;
     }
     i = 0;
-    while (i < pc - 1) 
+    while (i < n_cmd - 1) 
     {
         close(fd[i][0]);
         close(fd[i][1]);
         i++;
     }
     i = 0;
-    while (i < pc) 
+    while (i < n_cmd) 
     {
         waitpid(pid[i], &status, 0);
         g_shell.exit_status = WEXITSTATUS(status);
         i++;
     }
-    printf("Pipeline execution finished with status: %d\n", g_shell.exit_status);
-    fflush(stdout);
+    // printf("Pipeline execution finished with status: %d\n", g_shell.exit_status);
+    // fflush(stdout);
     g_shell.pipe_count = 0;
     return (g_shell.exit_status);
 }
