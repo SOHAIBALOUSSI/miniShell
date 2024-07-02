@@ -15,6 +15,10 @@ int execute_subshell(t_tree *root)
     }
     else if (pid == 0)
     {
+        // if (root->redir_list)
+        printf("Executing subshell from the Child Process...\n");
+        fflush(stdout);
+        //     handle_redirections(root->redir_list);
         g_shell.exit_status = execute_ast(root->subtree);
         exit(g_shell.exit_status);
     }
