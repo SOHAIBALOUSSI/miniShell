@@ -2,7 +2,7 @@
 
 int    actual_pipeline(t_tree **pipeline, int pc)
 {
-    pid_t   pid;
+    pid_t   pid[pc];
     int     status;
     int     fd[pc - 1][2];
     int     i;
@@ -20,13 +20,13 @@ int    actual_pipeline(t_tree **pipeline, int pc)
     i = 0;
     while (i < pc) 
     {
-        pid = fork();
-        if (pid < 0) 
+        pid[i] = fork();
+        if (pid[i] < 0) 
         {
             pop_error("Fork failed\n");
             return -1;
         } 
-        else if (pid == 0)
+        else if (pid[i] == 0)
         {
             if (i > 0) 
                 dup2(fd[i - 1][0], STDIN_FILENO);
@@ -39,6 +39,8 @@ int    actual_pipeline(t_tree **pipeline, int pc)
                 close(fd[j][1]);
                 j++;
             }
+            if (pipeline[i]->redir_list)
+                handle_redirections(pipeline[i]->redir_list);
             status = execute_cmd(pipeline[i]);
             exit(status);
         }
@@ -54,7 +56,7 @@ int    actual_pipeline(t_tree **pipeline, int pc)
     i = 0;
     while (i < pc) 
     {
-        waitpid(-1, &status, 0);
+        waitpid(pid[i], &status, 0);
         g_shell.exit_status = WEXITSTATUS(status);
         i++;
     }

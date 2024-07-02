@@ -41,17 +41,16 @@ void    handle_redirections(t_redir *redir_list)
             close(current->fds[1]);
         }
         else if (current->type == _HEREDOC)
-        {
+            handle_here_doc(current);
             // dir chi 7araka hna
-            int fd = open(current->file_name, O_RDONLY);
-            if (fd < 0)
-            {
-                pop_error("Open failed for heredoc\n");
-                exit(EXIT_FAILURE);
-            }
-            dup2(fd, STDIN_FILENO);
-            close(fd);
-        }
+            // int fd = open(current->file_name, O_RDONLY);
+            // if (fd < 0)
+            // {
+            //     pop_error("Open failed for heredoc\n");
+            //     exit(EXIT_FAILURE);
+            // }
+            // dup2(fd, STDIN_FILENO);
+            // close(fd);
         current = current->next;
     }
 }
@@ -80,9 +79,24 @@ void    handle_here_doc(t_redir *redir_list)
         pop_error("Pipe failed\n");
         exit(EXIT_FAILURE);
     }
-
+    pid = fork();
+    if (pid == 0)
+    {
+        close(redir_list->fds[0]);
+        here_doc(redir_list);
+        close(redir_list->fds[1]);
+        exit(EXIT_SUCCESS);
+    }
+    else if (pid > 0)
+    {
         close(redir_list->fds[1]);
         waitpid(pid, NULL, 0);
         dup2(redir_list->fds[0], STDIN_FILENO);
         close(redir_list->fds[0]);
+    }
+    else
+    {
+        pop_error("Fork failed\n");
+        exit(EXIT_FAILURE);
+    }
 }

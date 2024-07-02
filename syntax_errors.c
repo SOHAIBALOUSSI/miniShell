@@ -163,8 +163,7 @@ int catch_syntax_errors(t_token *token_lst)
     while (current)
     {
         if (!check_pipe_and(current) || !check_redirection(current)
-            || !check_parentheses(current) || !check_word(current)
-            || !check_heredoc(current))
+            || !check_parentheses(current) || !check_word(current))
         {
             return (EXIT_FAILURE);
         }

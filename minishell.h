@@ -163,7 +163,7 @@ int			is_word(e_tok type);
 /*		AST		*/
 t_tree	*parse_cmd_line(t_token **tokens);
 t_tree	*create_op_node(e_tok type);
-t_redir	*create_redir_node(t_token *token);
+t_redir	*create_redir_node(e_tok type, char *file_name, size_t length);
 t_tree	*create_cmd_node(void);
 t_tree	*create_subshell_node(t_tree *subshell);
 t_tree	*create_pipe_node(t_token **tokens);
