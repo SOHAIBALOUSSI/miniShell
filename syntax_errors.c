@@ -101,7 +101,7 @@ void write_to_heredoc(int fd, char *delimiter)
     while (1)
     {
         line = readline("> ");
-        if (!line || !ft_strcmp(line, delimiter))
+        if (!ft_strcmp(line, delimiter))
         {
             if (line)
                 m_free(line);
@@ -125,19 +125,10 @@ char *read_heredoc(char *delimiter)
 	fd = open(heredoc_filename, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (fd < 0)
 		return (perror("open"), exit(1), NULL); // TODO: free memory before exit and set exit status to 1
-	signal(SIGINT, SIG_IGN); // signals to handle later
+	// signal(SIGINT, SIG_IGN); // signals to handle later
 	write_to_heredoc(fd, delimiter);
 	close(fd);
 	m_free(delimiter);
-	return (heredoc_filename);
-}
-
-char	*get_heredoc_filename(t_token *current)
-{
-	char	*heredoc_filename;
-
-	current->delimiter = ft_strndup(current->next->location.location, current->next->location.length);
-	heredoc_filename = read_heredoc(current->delimiter);
 	return (heredoc_filename);
 }
 
@@ -150,7 +141,8 @@ static int check_heredoc(t_token *current)
             syntax_err(current->next);
             return (0);
         }
-		current->heredoc_file = get_heredoc_filename(current);
+		current->delimiter = ft_strndup(current->next->location.location, current->next->location.length);
+		current->heredoc_file = read_heredoc(current->delimiter);
     }
     return (1);
 }

@@ -11,14 +11,14 @@ t_tree	*create_op_node(e_tok type)
 	return (op);
 }
 
-t_redir	*create_redir_node(t_token *token)
+t_redir	*create_redir_node(t_token *token, e_tok redir_type, char *heredocfilename)
 {
 	t_redir	*redir;
 
 	redir = m_alloc(sizeof(t_redir), ALLOC);
-	redir->type = token->type;
-	if (redir->type == _HEREDOC)
-		redir->file_name = token->heredoc_file;
+	redir->type = redir_type;
+	if (redir_type == _HEREDOC)
+		redir->file_name = heredocfilename;
 	else
 		redir->file_name = ft_strndup(token->location.location, token->location.length);
 	redir->next = NULL;
