@@ -38,6 +38,7 @@ int execute_builtin(t_tree *root)
 {
     char **argv;
 
+    
     argv = root->argv;
     if (root->redir_list)
         handle_redirections(root->redir_list);
@@ -69,39 +70,37 @@ int execute_builtin(t_tree *root)
 
 
 
-int execute_cmd(t_tree *root)
+int	execute_cmd(t_tree *root)
 {
-    char *cmd_path;
-    pid_t pid;
-    int status;
+	char	*cmd_path;
+	pid_t	pid;
+	int		status;
+	char	**expanded_argv;
 
-    cmd_path = NULL;
-    if (root->argv && is_builtin(root->argv[0]))
-        return (execute_builtin(root));
-    // expansion of the command
-    if (root->argv)
-        cmd_path = get_cmd_path(root->argv[0]);
-    pid = fork();
-    if (pid == 0)
-    {
-        if (root->redir_list)
-            handle_redirections(root->redir_list);
-        if (cmd_path && execve(cmd_path, root->argv, __environ) == -1)
-            exit(EXIT_FAILURE);
-        else
-            exit(EXIT_FAILURE);
-    }
-    else if (pid < 0)
-    {
-        pop_error("Fork failed\n");
-        return (-1);
-    }
-    else
-    {
-        waitpid(pid, &status, 0);
-        g_shell.exit_status = WEXITSTATUS(status);
-    }
-    return (g_shell.exit_status);
+    root->argv = expand_argv(root->argv);
+	if (root->argc && is_builtin(root->argv[0]))
+		return (execute_builtin(root));
+	if (root->argc)
+		cmd_path = get_cmd_path(expanded_argv[0]);
+	pid = fork();
+	if (pid == 0)
+	{
+		if (root->redir_list)
+			handle_redirections(root->redir_list);
+		if (cmd_path && execve(cmd_path, expanded_argv, __environ) == -1)
+			exit(EXIT_FAILURE);
+		else if (!cmd_path)
+			exit(EXIT_FAILURE);
+	}
+	else if (pid < 0)
+		return (pop_error("Fork failed\n"), -1);
+	else
+	{
+		waitpid(pid, &status, 0);
+		g_shell.exit_status = WEXITSTATUS(status);
+	}
+	free_expanded_argv(expanded_argv);
+	return (g_shell.exit_status);
 }
 
 int execute_pipeline(t_tree **pipeline)
@@ -129,7 +128,7 @@ int execute_ast(t_tree *root)
     // the right node is a command node or pipe_line node
     // if the node is a command node, expend and execute the command
     if (root->type == _SUBSHELL)
-        g_shell.exit_status = execute_subshell(root->left);
+        g_shell.exit_status = execute_subshell(root);
     else if (root->type == _PIPE)
         g_shell.exit_status = execute_pipeline(root->pipe_line);
     else if (root->type == _CMD)

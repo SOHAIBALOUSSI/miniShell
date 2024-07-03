@@ -190,7 +190,8 @@ int execute_cmd(t_tree *root);
 
 /*		Expander		*/
 void    expander(t_tree *root);
-
+char	**expand_argv(char **argv);
+void	free_expanded_argv(char **expanded_argv);
 
 
 /* Export */
