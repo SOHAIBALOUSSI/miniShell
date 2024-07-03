@@ -177,7 +177,8 @@ int    actual_pipeline(t_tree **pipeline, int pc);
 /*		Execute Subshell		*/
 int execute_subshell(t_tree *root);
 
-
+/*		Execute Operator		*/
+int execute_operator(t_tree *operator);
 
 /*		Open files		*/
 void    handle_redirections(t_redir *redir_list);
