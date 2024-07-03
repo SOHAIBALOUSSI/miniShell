@@ -65,7 +65,7 @@ void    handle_redirections(t_redir *redir_list)
 //         exit(EXIT_FAILURE);
 //     }
 //     pid = fork(); // 3lach hna katforky ll herdoc ?
-//     if (pid == 0)
+//     if (pid == 0) 
 //     {
 //         close(redir_list->fds[0]);
 //         here_doc(redir_list);

@@ -29,8 +29,8 @@
 /* The Struct used in the Tokenizer */
 typedef enum e_tok
 {
-	_WORD, // 1
-	_QUOTE, // 2
+	_WORD, // 0
+	_QUOTE, // 1
 	_OR, // 2
 	_PIPE, // 3
 	_AND, // 4
@@ -42,10 +42,10 @@ typedef enum e_tok
 	_PAREN_CLOSED, // 10
 	_WILDCARD, // 11
 	_ENV, // 12
-	_CMD, // 14
-	_SUBSHELL, // 15
-	_ARGUMENT, // 16
-	_SPACE, 
+	_CMD, // 13
+	_SUBSHELL, // 14
+	_ARGUMENT, // 15
+	_SPACE,  //16
 }	e_tok;
 
 
@@ -177,7 +177,8 @@ int    actual_pipeline(t_tree **pipeline, int pc);
 /*		Execute Subshell		*/
 int execute_subshell(t_tree *root);
 
-
+/*		Execute Operator		*/
+int execute_operator(t_tree *operator);
 
 /*		Open files		*/
 void    handle_redirections(t_redir *redir_list);
@@ -190,8 +191,7 @@ int execute_cmd(t_tree *root);
 
 /*		Expander		*/
 void    expander(t_tree *root);
-char	**expand_argv(char **argv);
-void	free_expanded_argv(char **expanded_argv);
+
 
 
 /* Export */

@@ -156,17 +156,13 @@ int catch_syntax_errors(t_token *token_lst)
     {
         if (!check_pipe_and(current) || !check_redirection(current)
             || !check_parentheses(current) || !check_word(current)
-            || !check_heredoc(current))
+			|| !check_heredoc(current))
         {
-			g_shell.exit_status = 2;
             return (EXIT_FAILURE);
         }
         current = current->next;
     }
     if (!check_quotes_and_parens())
-	{
-		g_shell.exit_status = 2;
         return (EXIT_FAILURE);
-	}
     return (EXIT_SUCCESS);
 }
