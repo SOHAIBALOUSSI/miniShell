@@ -3,16 +3,19 @@
 static t_tree	*parse_pipe_line(t_token **tokens);
 static t_tree	*parse_subshell(t_token **tokens);
 
+
 static t_tree	*parse_redirection(t_token **tokens, t_tree *cmd)
 {
+	char	*heredocfilename;
 	e_tok	redir_type;
 	t_redir	*redir;
 	t_redir	*last_redir;
 
+	heredocfilename = NULL;
 	redir_type = (*tokens)->type;
+	heredocfilename = (*tokens)->heredoc_file;
 	*tokens = (*tokens)->next;
-	redir = create_redir_node(redir_type, (*tokens)->location.location,
-			(*tokens)->location.length);
+	redir = create_redir_node(*tokens ,redir_type, heredocfilename);
 	if (!cmd->redir_list)
 		cmd->redir_list = redir;
 	else

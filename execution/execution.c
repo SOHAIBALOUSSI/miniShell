@@ -75,8 +75,6 @@ int execute_cmd(t_tree *root)
     pid_t pid;
     int status;
 
-    printf("Executing subshell(command)...\n");
-    fflush(stdout);
     cmd_path = NULL;
     if (root->argv && is_builtin(root->argv[0]))
         return (execute_builtin(root));
@@ -130,14 +128,11 @@ int execute_ast(t_tree *root)
     // if the node is an Operator, execute the left and right nodes
     // the right node is a command node or pipe_line node
     // if the node is a command node, expend and execute the command
-    // printf("Executing...\n");
-    // fflush(stdout);
     if (root->type == _SUBSHELL)
-        g_shell.exit_status = execute_subshell(root->left);
+        g_shell.exit_status = execute_subshell(root->subtree);
     else if (root->type == _PIPE)
         g_shell.exit_status = execute_pipeline(root->pipe_line);
     else if (root->type == _CMD)
         g_shell.exit_status = execute_cmd(root);
-    
     return (g_shell.exit_status);
 }

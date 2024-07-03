@@ -1,12 +1,12 @@
 #include "../minishell.h"
 
-int execute_subshell(t_tree *root)
+int execute_subshell(t_tree *subshell)
 {
     pid_t pid;
     int status;
 
-    printf("Executing subshell...\n");
-    fflush(stdout);
+    // printf("Executing subshell...\n");
+    // fflush(stdout);
     pid = fork();
     if (pid < 0)
     {
@@ -15,11 +15,7 @@ int execute_subshell(t_tree *root)
     }
     else if (pid == 0)
     {
-        // if (root->redir_list)
-        printf("Executing subshell from the Child Process...\n");
-        fflush(stdout);
-        //     handle_redirections(root->redir_list);
-        g_shell.exit_status = execute_ast(root->subtree);
+        g_shell.exit_status = execute_ast(subshell);
         exit(g_shell.exit_status);
     }
     else
@@ -27,7 +23,7 @@ int execute_subshell(t_tree *root)
         waitpid(pid, &status, 0);
         g_shell.exit_status = WEXITSTATUS(status);
     }
-    printf("Subshell execution finished with status: %d\n", g_shell.exit_status);
-    fflush(stdout);
+    // printf("Subshell execution finished with status: %d\n", g_shell.exit_status);
+    // fflush(stdout);
     return (g_shell.exit_status);
 }
