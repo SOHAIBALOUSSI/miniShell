@@ -55,7 +55,7 @@ char	*handle_dollar_sign(char *arg, int *i, char *result, int in_dquote)
 	(*i)++;
 	if (arg[*i] == '?') // ( && (!arg[*i + 1] || arg[*i + 1] == ' ' || (in_dquote && arg[*i + 1] == '\"')) || arg[*i] == '?' )
 	{
-		var_value = ft_itoa(mshell()->exit_status = 2);
+		var_value = ft_itoa(mshell()->exit_status);
 		result = ft_strjoin(result, var_value);
 		m_free(var_value);
 	}
@@ -170,16 +170,4 @@ void    expander(t_tree *root)
 		expand_argv(root);
 	// else if (root->redir_list)
 			   
-}
-void	free_expanded_argv(char **expanded_argv)
-{
-	int	i;
-
-	i = 0;
-	while (expanded_argv[i])
-	{
-		m_free(expanded_argv[i]);
-		i++;
-	}
-	m_free(expanded_argv);
 }

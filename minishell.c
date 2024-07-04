@@ -3,8 +3,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-// t_minishell g_shell = {0};
-
 t_minishell	*mshell(void)
 {
 	static t_minishell	shell;
@@ -144,14 +142,6 @@ void	read_cmd(void)
 				return ;
 			if (!execute_ast(root))
 				return ;
-			// tmp = token_lst;
-			// while (tmp != NULL)
-			// {
-			// 	printf("TYPE = [%s] - LENGHT = [%zu]\n", type[tmp->type], tmp->location.length);
-			// 	tmp = tmp->next;
-			// }
-
-			// print_ast(root);
 
 		}
 	}

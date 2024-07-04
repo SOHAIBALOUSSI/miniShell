@@ -16,6 +16,8 @@ static void	syntax_err(t_token *current)
 	mshell()->single_quote_count = 0;
 	mshell()->double_quote_count = 0;
 	mshell()->pipe_count = 0;
+	mshell()->heredoc_count = 0;
+	// mshell()->exit_status = 2;
 	m_free(err);
 }
 

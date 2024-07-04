@@ -41,25 +41,25 @@ int execute_builtin(t_tree *root)
     argv = root->argv;
     if (root->redir_list)
         handle_redirections(root->redir_list);
-    if (strcmp(argv[0], "cd") == 0) 
+    if (ft_strcmp(argv[0], "cd") == 0) 
         return (builtin_cd(argv + 1));
-    else if (strcmp(argv[0], "echo") == 0) 
+    else if (ft_strcmp(argv[0], "echo") == 0) 
         return (builtin_echo(argv + 1));
-    else if (strcmp(argv[0], "env") == 0)
+    else if (ft_strcmp(argv[0], "env") == 0)
     {
         builtin_env();
         return (0);
     }
-    else if (strcmp(argv[0], "pwd") == 0) 
+    else if (ft_strcmp(argv[0], "pwd") == 0) 
         return (builtin_pwd());
-    else if (strcmp(argv[0], "export") == 0)
+    else if (ft_strcmp(argv[0], "export") == 0)
     {
         builtin_export(argv + 1);
         return (0);
     }
-    else if (strcmp(argv[0], "unset") == 0) 
+    else if (ft_strcmp(argv[0], "unset") == 0) 
         return (builtin_unset(argv + 1));
-    else if (strcmp(argv[0], "exit") == 0)
+    else if (ft_strcmp(argv[0], "exit") == 0)
     {
         builtin_exit(argv + 1);
         return (0); 
@@ -86,7 +86,7 @@ int execute_cmd(t_tree *root)
     {
         if (root->redir_list)
             handle_redirections(root->redir_list);
-        if (cmd_path && execve(cmd_path, root->argv, __environ) == -1)
+        if (cmd_path && execve(cmd_path, root->argv, __environ) == -1) // envion khasha tbadel b curr env list .
             exit(EXIT_FAILURE);
         else
             exit(EXIT_FAILURE);
