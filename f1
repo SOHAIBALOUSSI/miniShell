@@ -1,0 +1,18 @@
+AST
+built-ins
+execution
+expander
+f1
+Justice.c
+libs
+Makefile
+minishell
+minishell.c
+minishell.h
+minishell.tldr
+New Document.tldr
+shell_env.c
+syntax_errors.c
+TODO
+Tokenizer
+type_check.c

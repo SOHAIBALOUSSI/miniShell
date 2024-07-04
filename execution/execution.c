@@ -41,30 +41,30 @@ int execute_builtin(t_tree *root)
     argv = root->argv;
     if (root->redir_list)
         handle_redirections(root->redir_list);
-    if (ft_strcmp(argv[0], "cd") == 0) 
+    if (strcmp(argv[0], "cd") == 0) 
         return (builtin_cd(argv + 1));
-    else if (ft_strcmp(argv[0], "echo") == 0) 
+    else if (strcmp(argv[0], "echo") == 0) 
         return (builtin_echo(argv + 1));
-    else if (ft_strcmp(argv[0], "env") == 0)
+    else if (strcmp(argv[0], "env") == 0)
     {
         builtin_env();
         return (0);
     }
-    else if (ft_strcmp(argv[0], "pwd") == 0) 
+    else if (strcmp(argv[0], "pwd") == 0) 
         return (builtin_pwd());
-    else if (ft_strcmp(argv[0], "export") == 0)
+    else if (strcmp(argv[0], "export") == 0)
     {
         builtin_export(argv + 1);
         return (0);
     }
-    else if (ft_strcmp(argv[0], "unset") == 0) 
+    else if (strcmp(argv[0], "unset") == 0) 
         return (builtin_unset(argv + 1));
-    else if (ft_strcmp(argv[0], "exit") == 0)
+    else if (strcmp(argv[0], "exit") == 0)
     {
         builtin_exit(argv + 1);
         return (0); 
     }
-    return (-1);
+    return (1);
 }
 
 
@@ -86,7 +86,7 @@ int execute_cmd(t_tree *root)
     {
         if (root->redir_list)
             handle_redirections(root->redir_list);
-        if (cmd_path && execve(cmd_path, root->argv, __environ) == -1) // envion khasha tbadel b curr env list .
+        if (cmd_path && execve(cmd_path, root->argv, __environ) == -1)
             exit(EXIT_FAILURE);
         else
             exit(EXIT_FAILURE);
@@ -94,7 +94,7 @@ int execute_cmd(t_tree *root)
     else if (pid < 0)
     {
         pop_error("Fork failed\n");
-        return (-1);
+        return (1);
     }
     else
     {
@@ -104,17 +104,26 @@ int execute_cmd(t_tree *root)
     return (mshell()->exit_status);
 }
 
-int execute_pipeline(t_tree **pipeline)
+int count_pipes(t_tree **pipe_line)
+{
+    int i;
+
+    i = 0;
+    while (pipe_line[i])
+        i++;
+    return (i);
+}
+int execute_pipeline(t_tree **pipeline, int n_cmd)
 {
     int saved_output;
     int saved_input;
     int result;
 
     if (!pipeline || !(*pipeline))
-        return (-1);
+        return (1);
     saved_output = dup(STDOUT_FILENO);
     saved_input = dup(STDIN_FILENO);
-    result = actual_pipeline(pipeline, mshell()->pipe_count + 1);
+    result = actual_pipeline(pipeline, n_cmd);
     dup2(saved_input, STDIN_FILENO);
     close(saved_input);
     dup2(saved_output, STDOUT_FILENO);
@@ -122,16 +131,17 @@ int execute_pipeline(t_tree **pipeline)
     return (result);   
 }
 
+
 int execute_ast(t_tree *root)
 {
     if (!root)
-        return (-1);
+        return (1);
     else if (root->type == _AND || root->type == _OR)
         mshell()->exit_status = execute_operator(root);
     else if (root->type == _SUBSHELL)
         mshell()->exit_status = execute_subshell(root->subtree);
     else if (root->type == _PIPE)
-        mshell()->exit_status = execute_pipeline(root->pipe_line);
+        mshell()->exit_status = execute_pipeline(root->pipe_line, count_pipes(root->pipe_line));
     else if (root->type == _CMD)
         mshell()->exit_status = execute_cmd(root);
     return (mshell()->exit_status);

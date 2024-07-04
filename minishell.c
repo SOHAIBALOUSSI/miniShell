@@ -8,7 +8,6 @@ t_minishell	*mshell(void)
 	static t_minishell	shell;
 	return (&shell);
 }
-
 void	read_cmd(void);
 void	handle_signals(void);
 
