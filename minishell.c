@@ -5,6 +5,24 @@
 
 t_minishell g_shell = {0};
 
+t_minishell	*g_shell(void)
+{
+	t_minishell	shell;
+	if (!g_shell)
+	{
+		shell = (t_minishell) {
+			.env_list = NULL,
+			.exit_status = 0,
+			.closed_paren_count = 0,
+			.open_paren_count = 0,
+			.single_quote_count = 0,
+			.double_quote_count = 0,
+			.pipe_count = 0,
+		};
+	}
+	return (&shell);
+}
+
 void	read_cmd(void);
 void	handle_signals(void);
 
@@ -121,8 +139,8 @@ void	read_cmd(void)
 	t_token *tmp;
 	t_tree	*root;
 
-	char *type[] = {"_WORD", "_QUOTE", "_OR", "PIPE", "AND", "APPEND", "RED_OUT", \
-		"RED_IN", "HEREDOC", "PARENT_OPEN", "PARENT_CLISED", "WILDCARD", "ENV", "CMD", "SUBSHELL", "ARG", "SPACE"};
+	// char *type[] = {"_WORD", "_QUOTE", "_OR", "PIPE", "AND", "APPEND", "RED_OUT", \
+	// 	"RED_IN", "HEREDOC", "PARENT_OPEN", "PARENT_CLISED", "WILDCARD", "ENV", "CMD", "SUBSHELL", "ARG", "SPACE"};
 	line = readline(SHELL_PROMPT);
 	if (!line)
 		return (printf("exit"), exit(-1));
@@ -136,7 +154,8 @@ void	read_cmd(void)
 			root = parse_cmd_line(&token_lst);
 			if (!root)
 				return ;
-			execute_ast(root);
+			if (!execute_ast(root))
+				return ;
 			// tmp = token_lst;
 			// while (tmp != NULL)
 			// {
@@ -148,8 +167,6 @@ void	read_cmd(void)
 
 		}
 	}
-
-
 	// free(line);
 }
 
