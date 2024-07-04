@@ -7,15 +7,8 @@
 
 t_minishell	*mshell(void)
 {
-	t_minishell	*mshell;
-
-	if (!mshell)
-	{
-		mshell = malloc(sizeof(t_minishell *));
-		return(mshell);
-	}
-	else
-		return (mshell);
+	static t_minishell	shell;
+	return (&shell);
 }
 
 void	read_cmd(void);
@@ -172,8 +165,6 @@ int	main(int ac, char **av, char **env)
 		return (EXIT_FAILURE);
 	if (!isatty(STDIN_FILENO))
 		return (printf("Minishell: not a tty\n"), EXIT_FAILURE);
-	printf("here\n");
-	// exit(1);
 	mshell()->env_list = get_env_list(env);
 	handle_signals();
 	while (true)
