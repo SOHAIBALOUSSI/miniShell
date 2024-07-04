@@ -12,7 +12,7 @@ int is_match(char *pattern, char *str)
 }
 
 
-char **get_matchig_files(char *pattern, char *args[])
+char **get_matching_files(char *pattern)
 {
     char            **matched;
     int             count;
@@ -37,6 +37,37 @@ char **get_matchig_files(char *pattern, char *args[])
             matched[count] = NULL;
         }
     }
+    closedir(dir);
+    if (count == 0)
+    {
+        matched = malloc(sizeof(char *) * 1);
+        matched[0] = NULL;
+    }
     return (matched);
 }
 
+void    wildard(char **args)
+{
+    int i;
+    char **matched;
+    int j;
+
+    while (args[i])
+    {
+        if (ft_strchr(args[i], '*') != NULL)
+        {
+            matched = get_matching_files(args[i], args);
+            if (matched)
+            {
+                j = 0;
+                while (matched[j])
+                {
+                    args[i] = m_realloc(args[i], ft_strlen(args[i]), ft_strle(args[i]) + ft_strlen(matched[j]));
+                    j++;
+                }
+                free_matched(matched);
+            }
+        }
+        i++;
+    }
+}
