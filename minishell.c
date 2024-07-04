@@ -5,23 +5,23 @@
 
 t_minishell g_shell = {0};
 
-t_minishell	*g_shell(void)
-{
-	t_minishell	shell;
-	if (!g_shell)
-	{
-		shell = (t_minishell) {
-			.env_list = NULL,
-			.exit_status = 0,
-			.closed_paren_count = 0,
-			.open_paren_count = 0,
-			.single_quote_count = 0,
-			.double_quote_count = 0,
-			.pipe_count = 0,
-		};
-	}
-	return (&shell);
-}
+// t_minishell	*g_shell(void)
+// {
+// 	t_minishell	shell;
+// 	if (!g_shell)
+// 	{
+// 		shell = (t_minishell) {
+// 			.env_list = NULL,
+// 			.exit_status = 0,
+// 			.closed_paren_count = 0,
+// 			.open_paren_count = 0,
+// 			.single_quote_count = 0,
+// 			.double_quote_count = 0,
+// 			.pipe_count = 0,
+// 		};
+// 	}
+// 	return (&shell);
+// }
 
 void	read_cmd(void);
 void	handle_signals(void);

@@ -64,7 +64,7 @@ int execute_builtin(t_tree *root)
         builtin_exit(argv + 1);
         return (0); 
     }
-    return (-1);
+    return (1);
 }
 
 
@@ -94,7 +94,7 @@ int execute_cmd(t_tree *root)
     else if (pid < 0)
     {
         pop_error("Fork failed\n");
-        return (-1);
+        return (1);
     }
     else
     {
@@ -104,17 +104,26 @@ int execute_cmd(t_tree *root)
     return (g_shell.exit_status);
 }
 
-int execute_pipeline(t_tree **pipeline)
+int count_pipes(t_tree **pipe_line)
+{
+    int i;
+
+    i = 0;
+    while (pipe_line[i])
+        i++;
+    return (i);
+}
+int execute_pipeline(t_tree **pipeline, int n_cmd)
 {
     int saved_output;
     int saved_input;
     int result;
 
     if (!pipeline || !(*pipeline))
-        return (-1);
+        return (1);
     saved_output = dup(STDOUT_FILENO);
     saved_input = dup(STDIN_FILENO);
-    result = actual_pipeline(pipeline, g_shell.pipe_count + 1);
+    result = actual_pipeline(pipeline, n_cmd);
     dup2(saved_input, STDIN_FILENO);
     close(saved_input);
     dup2(saved_output, STDOUT_FILENO);
@@ -122,16 +131,17 @@ int execute_pipeline(t_tree **pipeline)
     return (result);   
 }
 
+
 int execute_ast(t_tree *root)
 {
     if (!root)
-        return (-1);
+        return (1);
     else if (root->type == _AND || root->type == _OR)
         g_shell.exit_status = execute_operator(root);
     else if (root->type == _SUBSHELL)
         g_shell.exit_status = execute_subshell(root->subtree);
     else if (root->type == _PIPE)
-        g_shell.exit_status = execute_pipeline(root->pipe_line);
+        g_shell.exit_status = execute_pipeline(root->pipe_line, count_pipes(root->pipe_line));
     else if (root->type == _CMD)
         g_shell.exit_status = execute_cmd(root);
     return (g_shell.exit_status);
