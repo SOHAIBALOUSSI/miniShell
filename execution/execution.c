@@ -99,9 +99,9 @@ int execute_cmd(t_tree *root)
     else
     {
         waitpid(pid, &status, 0);
-        g_shell.exit_status = WEXITSTATUS(status);
+        mshell()->exit_status = WEXITSTATUS(status);
     }
-    return (g_shell.exit_status);
+    return (mshell()->exit_status);
 }
 
 int execute_pipeline(t_tree **pipeline)
@@ -114,7 +114,7 @@ int execute_pipeline(t_tree **pipeline)
         return (-1);
     saved_output = dup(STDOUT_FILENO);
     saved_input = dup(STDIN_FILENO);
-    result = actual_pipeline(pipeline, g_shell.pipe_count + 1);
+    result = actual_pipeline(pipeline, mshell()->pipe_count + 1);
     dup2(saved_input, STDIN_FILENO);
     close(saved_input);
     dup2(saved_output, STDOUT_FILENO);
@@ -127,12 +127,12 @@ int execute_ast(t_tree *root)
     if (!root)
         return (-1);
     else if (root->type == _AND || root->type == _OR)
-        g_shell.exit_status = execute_operator(root);
+        mshell()->exit_status = execute_operator(root);
     else if (root->type == _SUBSHELL)
-        g_shell.exit_status = execute_subshell(root->subtree);
+        mshell()->exit_status = execute_subshell(root->subtree);
     else if (root->type == _PIPE)
-        g_shell.exit_status = execute_pipeline(root->pipe_line);
+        mshell()->exit_status = execute_pipeline(root->pipe_line);
     else if (root->type == _CMD)
-        g_shell.exit_status = execute_cmd(root);
-    return (g_shell.exit_status);
+        mshell()->exit_status = execute_cmd(root);
+    return (mshell()->exit_status);
 }

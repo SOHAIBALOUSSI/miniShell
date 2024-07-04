@@ -11,11 +11,11 @@ static void	syntax_err(t_token *current)
 	ft_putstr_fd("Minishell: syntax error near unexpected token `", 2);
 	ft_putstr_fd(err, 2);
 	ft_putstr_fd("\'\n", 2);
-	g_shell.closed_paren_count = 0;
-	g_shell.open_paren_count = 0;
-	g_shell.single_quote_count = 0;
-	g_shell.double_quote_count = 0;
-	g_shell.pipe_count = 0;
+	mshell()->closed_paren_count = 0;
+	mshell()->open_paren_count = 0;
+	mshell()->single_quote_count = 0;
+	mshell()->double_quote_count = 0;
+	mshell()->pipe_count = 0;
 	m_free(err);
 }
 
@@ -87,9 +87,9 @@ static int	check_word(t_token *current)
 
 static int	check_quotes_and_parens(void)
 {
-	if (g_shell.single_quote_count % 2 != 0 || g_shell.double_quote_count % 2 != 0)
+	if (mshell()->single_quote_count % 2 != 0 || mshell()->double_quote_count % 2 != 0)
 		return (pop_error("Minishell: syntax error 'unclosed parenthesis'\n"), 0);
-	else if (g_shell.closed_paren_count != g_shell.open_paren_count)
+	else if (mshell()->closed_paren_count != mshell()->open_paren_count)
 		return (pop_error("Minishell: syntax error 'unclosed parenthesis'\n"), 0);
 	return (1);
 }
@@ -158,11 +158,15 @@ int catch_syntax_errors(t_token *token_lst)
             || !check_parentheses(current) || !check_word(current)
 			|| !check_heredoc(current))
         {
+			mshell()->exit_status = 2;
             return (EXIT_FAILURE);
         }
         current = current->next;
     }
     if (!check_quotes_and_parens())
+	{
+		mshell()->exit_status = 2;
         return (EXIT_FAILURE);
+	}
     return (EXIT_SUCCESS);
 }

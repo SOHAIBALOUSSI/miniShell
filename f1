@@ -1,0 +1,23 @@
+total 248
+drwxrwxr-x 10 batman batman  4096 Jul  4 18:18 .
+drwxr-xr-x  6 batman batman  4096 Jul  2 20:26 ..
+drwxrwxr-x  2 batman batman  4096 Jul  2 23:21 AST
+drwxrwxr-x  2 batman batman  4096 Jul  2 23:21 built-ins
+drwxrwxr-x  2 batman batman  4096 Jul  4 18:04 execution
+drwxrwxr-x  2 batman batman  4096 Jul  4 18:04 expander
+-rw-rw-r--  1 batman batman     0 Jul  4 18:18 f1
+drwxrwxr-x  8 batman batman  4096 Jul  4 18:04 .git
+-rw-rw-r--  1 batman batman  2385 Jul  2 22:27 Justice.c
+drwxrwxr-x  3 batman batman  4096 Jul  2 22:27 libs
+-rw-rw-r--  1 batman batman  1568 Jul  4 18:04 Makefile
+-rwxrwxr-x  1 batman batman 58864 Jul  4 18:04 minishell
+-rw-rw-r--  1 batman batman  3753 Jul  4 18:04 minishell.c
+-rw-rw-r--  1 batman batman  4609 Jul  4 18:04 minishell.h
+-rw-rw-r--  1 batman batman 94749 Jul  2 22:27 minishell.tldr
+-rw-rw-r--  1 batman batman 14596 Jul  2 22:27 New Document.tldr
+-rw-rw-r--  1 batman batman   813 Jul  2 22:27 shell_env.c
+-rw-rw-r--  1 batman batman  3866 Jul  4 18:04 syntax_errors.c
+-rw-rw-r--  1 batman batman   412 Jul  2 22:27 TODO
+drwxrwxr-x  2 batman batman  4096 Jul  2 23:21 Tokenizer
+-rw-rw-r--  1 batman batman   578 Jul  2 22:27 type_check.c
+drwxrwxr-x  2 batman batman  4096 Jul  2 20:26 .vscode
