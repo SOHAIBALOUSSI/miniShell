@@ -124,14 +124,6 @@ int execute_pipeline(t_tree **pipeline)
 
 int execute_ast(t_tree *root)
 {
-    // traverse the ast and execute based on the node type
-    // if the node is an Operator, execute the left and right nodes
-    // the right node is a command node or pipe_line node
-    // if the node is a command node, expend and execute the command
-    // if the node is a command node, execute the command
-    // if the node is a pipe_line node, execute the pipe_line
-    // if the node is a subshell node, execute the subshell
-    // if the node is a redirection node, execute the redirection
     if (!root)
         return (-1);
     else if (root->type == _AND || root->type == _OR)
