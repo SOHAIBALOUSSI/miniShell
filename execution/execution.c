@@ -76,9 +76,9 @@ int execute_cmd(t_tree *root)
     int status;
 
     cmd_path = NULL;
+    expander(root);
     if (root->argv && is_builtin(root->argv[0]))
         return (execute_builtin(root));
-    // expansion of the command
     if (root->argv)
         cmd_path = get_cmd_path(root->argv[0]);
     pid = fork();
