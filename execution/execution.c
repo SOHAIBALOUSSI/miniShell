@@ -80,7 +80,10 @@ int execute_cmd(t_tree *root)
     if (root->argv && is_builtin(root->argv[0]))
         return (execute_builtin(root));
     if (root->argv)
+    {
+        expand_wildard(&root->argv);
         cmd_path = get_cmd_path(root->argv[0]);
+    }
     pid = fork();
     if (pid == 0)
     {

@@ -22,7 +22,7 @@ void	add_arg_to_cmd(t_tree *cmd, char *location, size_t length)
 
 	argc = cmd->argc;
 	cmd->argv = m_realloc(cmd->argv, sizeof(char *) * (argc + 1),
-            sizeof(char *) * (argc + 2));
+            sizeof(char *) * (argc + 2));		
 	cmd->argv[argc] = ft_strndup(location, length);
 	cmd->argv[argc + 1] = NULL;
 	cmd->argc++;

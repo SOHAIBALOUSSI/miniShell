@@ -167,7 +167,7 @@ void    expand_argv(t_tree *node)
 
 void    expander(t_tree *root)
 {
-	if (root->type == _CMD)
+	if (root->argv)
 		expand_argv(root);
     // else if (root->redir_list)
                

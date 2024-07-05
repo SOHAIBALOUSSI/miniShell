@@ -192,6 +192,11 @@ int execute_cmd(t_tree *root);
 
 /*		Expander		*/
 void    expander(t_tree *root);
+void    expand_wildard(char ***old_argv);
+void    free_strs(char **strs);
+char	**get_matching_files(char *pattern);
+int		is_match(char *pattern, char *str);
+
 
 
 
