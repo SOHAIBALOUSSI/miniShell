@@ -1,8 +1,9 @@
-
 #include "../minishell.h"
 
-void	add_to_new_argv(char *expanded_arg, char ***expanded_argv, bool to_split);
-static char	*expand_var(char *var_name)
+
+void    add_to_new_argv(char *expanded_arg, char ***expanded_argv, bool to_split);
+
+char	*expand_var(char *var_name)
 {
 	char	*value;
 
@@ -12,7 +13,7 @@ static char	*expand_var(char *var_name)
 	return (ft_strdup(value));
 }
 
-static char	*extract_var_name(char *str)
+char	*extract_var_name(char *str)
 {
 	int	len;
 
@@ -22,7 +23,8 @@ static char	*extract_var_name(char *str)
 	return (ft_strndup(str, len));
 }
 
-static char	*ft_strjoin_char(char *str, char c)
+
+char	*ft_strjoin_char(char *str, char c)
 {
 	char	*result;
 	int		len;
@@ -34,34 +36,35 @@ static char	*ft_strjoin_char(char *str, char c)
 	result = m_alloc(sizeof(char) * (len + 2), ALLOC);
 	if (!result)
 		return (NULL);
-	i = -1;
-	while (str[++i])
+	i = 0;
+	while (str[i])
+	{
 		result[i] = str[i];
+		i++;
+	}
 	result[i] = c;
 	result[i + 1] = '\0';
 	m_free(str);
 	return (result);
 }
-
-static char	*handle_dollar_sign(char *arg, int *i, char *result, int in_dquote)
+char	*handle_dollar_sign(char *arg, int *i, char *result, int in_dquote)
 {
 	char	*var_name;
 	char	*var_value;
 
 	(*i)++;
-	if (arg[*i] == '?')
+	if (arg[*i] == '?') // ( && (!arg[*i + 1] || arg[*i + 1] == ' ' || (in_dquote && arg[*i + 1] == '\"')) || arg[*i] == '?' )
 	{
 		var_value = ft_itoa(mshell()->exit_status);
 		result = ft_strjoin(result, var_value);
 		m_free(var_value);
-		(*i)++;
 	}
 	else if (ft_isalpha(arg[*i]) || arg[*i] == '_')
 	{
 		var_name = extract_var_name(&arg[*i]);
 		var_value = expand_var(var_name);
 		result = ft_strjoin(result, var_value);
-		*i += ft_strlen(var_name);
+		*i += ft_strlen(var_name) - 1;
 		m_free(var_name);
 		m_free(var_value);
 	}
@@ -70,7 +73,7 @@ static char	*handle_dollar_sign(char *arg, int *i, char *result, int in_dquote)
 	return (result);
 }
 
-static char	*expand_arg(char *arg, bool *to_split)
+char *expand_arg(char *arg, bool *to_split)
 {
 	char	*result;
 	int		i;
@@ -83,11 +86,11 @@ static char	*expand_arg(char *arg, bool *to_split)
 	in_dquote = 0;
 	while (arg[i])
 	{
-		if (arg[i] == SQUOTE && !in_dquote)
+		if (arg[i] == '\'' && !in_dquote)
 			in_squote = !in_squote;
-		else if (arg[i] == DQUOTE && !in_squote)
+		else if (arg[i] == '\"' && !in_squote)
 		{
-			*to_split = false;
+			*to_split = 0;
 			in_dquote = !in_dquote;
 		}
 		else if (arg[i] == '$' && !in_squote)
@@ -99,7 +102,7 @@ static char	*expand_arg(char *arg, bool *to_split)
 	return (result);
 }
 
-static void	split_and_add_to_new_argv(char *expanded_arg, char ***expanded_argv)
+void	split_and_add_to_new_argv(char *expanded_arg, char ***expanded_argv)
 {
 	int		i;
 	char	**split;
@@ -108,28 +111,31 @@ static void	split_and_add_to_new_argv(char *expanded_arg, char ***expanded_argv)
 	i = 0;
 	while (split[i])
 	{
-		add_to_new_argv(split[i], expanded_argv, false);
+		add_to_new_argv(split[i], expanded_argv, 0);
 		i++;
 	}
 	m_free(split);
 }
 
-void	add_to_new_argv(char *expanded_arg, char ***expanded_argv, bool to_split)
+void    add_to_new_argv(char *expanded_arg, char ***expanded_argv, bool to_split)
 {
-	int		i;
+ 	int		i;
 	char	**new_argv;
 
+	i = 0;
 	if (to_split == true)
 		split_and_add_to_new_argv(expanded_arg, expanded_argv);
 	else
 	{
-		i = 0;
 		while ((*expanded_argv)[i])
 			i++;
 		new_argv = m_alloc(sizeof(char *) * (i + 2), ALLOC);
-		i = -1;
-		while ((*expanded_argv)[++i])
+		i = 0;
+		while ((*expanded_argv)[i])
+		{
 			new_argv[i] = (*expanded_argv)[i];
+			i++;
+		}
 		new_argv[i] = expanded_arg;
 		new_argv[i + 1] = NULL;
 		m_free(*expanded_argv);
@@ -137,7 +143,7 @@ void	add_to_new_argv(char *expanded_arg, char ***expanded_argv, bool to_split)
 	}
 }
 
-void	expand_argv(t_tree *node)
+void    expand_argv(t_tree *node)
 {
 	int		i;
 	char	**expanded_argv;
@@ -145,7 +151,7 @@ void	expand_argv(t_tree *node)
 	bool	to_split;
 
 	i = 0;
-	expanded_argv = m_alloc(sizeof(char *), ALLOC);
+	expanded_argv = m_alloc(sizeof(char *) * 1, ALLOC);
 	expanded_argv[0] = NULL;
 	to_split = true;
 	while (node->argv[i])
@@ -158,11 +164,10 @@ void	expand_argv(t_tree *node)
 	node->argv = expanded_argv;
 }
 
-void	expander(t_tree *root)
+void    expander(t_tree *root)
 {
 	if (root->type == _CMD)
 		expand_argv(root);
-	// Handle redirection expansion if needed
-	// if (root->redir_list)
-	//     expand_redirection(root->redir_list);
+	// else if (root->redir_list)
+			   
 }
