@@ -3,11 +3,11 @@
 void	pop_error(char *error_msg)
 {
 	ft_putstr_fd(error_msg, 2);
-	g_shell.closed_paren_count = 0;
-	g_shell.open_paren_count = 0;
-	g_shell.single_quote_count = 0;
-	g_shell.double_quote_count = 0;
-	g_shell.pipe_count = 0;
+	mshell()->closed_paren_count = 0;
+	mshell()->open_paren_count = 0;
+	mshell()->single_quote_count = 0;
+	mshell()->double_quote_count = 0;
+	mshell()->pipe_count = 0;
 }
 
 e_tok	decode_type(char c1, char c2)

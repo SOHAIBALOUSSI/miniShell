@@ -5,7 +5,7 @@ void	builtin_env(void)
 {
 	t_env	*tmp;
 
-	tmp = g_shell.env_list;
+	tmp = mshell()->env_list;
 	while (tmp)
 	{
 		if (ft_strcmp(tmp->value, ""))

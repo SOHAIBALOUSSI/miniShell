@@ -62,11 +62,11 @@ int    actual_pipeline(t_tree **pipeline, int n_cmd)
     while (i < n_cmd) 
     {
         waitpid(pid[i], &status, 0);
-        g_shell.exit_status = WEXITSTATUS(status);
+        mshell()->exit_status = WEXITSTATUS(status);
         i++;
     }
-    // printf("Pipeline execution finished with status: %d\n", g_shell.exit_status);
+    // printf("Pipeline execution finished with status: %d\n", mshell()->exit_status);
     // fflush(stdout);
-    g_shell.pipe_count = 0;
-    return (g_shell.exit_status);
+    mshell()->pipe_count = 0;
+    return (mshell()->exit_status);
 }

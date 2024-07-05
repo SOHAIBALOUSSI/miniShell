@@ -1,84 +1,88 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split.c                                         :+:      :+:    :+:   */
+/*   ft_split_set.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sait-alo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 21:21:36 by sait-alo          #+#    #+#             */
-/*   Updated: 2023/12/10 21:21:40 by sait-alo         ###   ########.fr       */
+/*   Updated: 2024/07/05 10:00:00 by sait-alo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "../../minishell.h"
 
-static int	count_words(const char *s, char c)
+static size_t	count_words(const char *s, char *set)
 {
-	unsigned int	i;
-	int				counter;
+	size_t	i;
+	size_t	count;
 
 	i = 0;
-	counter = 0;
+	count = 0;
 	while (s[i])
 	{
-		while (s[i] == c && s[i])
+		while (s[i] && ft_strchr(set, s[i]))
 			i++;
 		if (s[i])
-			counter++;
-		while (s[i] && (s[i] != c))
+			count++;
+		while (s[i] && !ft_strchr(set, s[i]))
 			i++;
 	}
-	return (counter);
+	return (count);
 }
 
-static char	**mem_free(char **arr)
+static char	**mem_free(char **arr, size_t count)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
-	while (arr[i])
+	while (i < count)
 	{
-		free(arr[i]);
+		m_free(arr[i]);
 		i++;
 	}
-	free(arr);
+	m_free(arr);
 	return (NULL);
 }
 
-static char	**split_helper(char **tab, const char *s, char c)
+static char	*get_next_word(const char *s, char *set, size_t *start)
 {
-	int	i;
-	int	j;
-	int	k;
+	size_t	end;
+	char	*word;
 
-	i = 0;
-	k = 0;
-	while (s[i])
-	{
-		while (s[i] == c && s[i])
-			i++;
-		j = i;
-		if (s[i] == '\0')
-			break ;
-		while (s[i] && s[i] != c)
-			i++;
-		tab[k] = ft_substr(s + j, 0, i - j);
-		if (!tab[k])
-			return (mem_free(tab));
-		k++;
-	}
-	tab[k] = NULL;
-	return (tab);
+	while (s[*start] && ft_strchr(set, s[*start]))
+		(*start)++;
+	end = *start;
+	while (s[end] && !ft_strchr(set, s[end]))
+		end++;
+	word = ft_substr(s, *start, end - *start);
+	*start = end;
+	return (word);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_split(char const *s, char *set)
 {
-	char	**tab;
+	char	**result;
+	size_t	word_count;
+	size_t	i;
+	size_t	start;
 
-	if (!s)
+	if (!s || !set)
 		return (NULL);
-	tab = (char **)malloc((count_words(s, c) + 1) * sizeof(char *));
-	if (!tab)
+	word_count = count_words(s, set);
+	result = m_alloc((word_count + 1) * sizeof(char *), ALLOC);
+	if (!result)
 		return (NULL);
-	return (split_helper(tab, s, c));
+	i = 0;
+	start = 0;
+	while (i < word_count)
+	{
+		result[i] = get_next_word(s, set, &start);
+		if (!result[i])
+			return (mem_free(result, i));
+		i++;
+	}
+	result[word_count] = NULL;
+	return (result);
 }

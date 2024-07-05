@@ -55,10 +55,10 @@ void    free_strs(char **strs)
     i = 0;
     while (strs[i])
     {
-        free(strs[i]);
+        m_free(strs[i]);
         i++;
     }
-    free(strs);
+    m_free(strs);
 }
 
 void    realloc_argv(char ***new_argv, int *argc, char *content)

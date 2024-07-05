@@ -101,7 +101,7 @@ typedef	struct s_minishell
 	int		is_subshell;
 }			t_minishell;
 
-extern	t_minishell g_shell;
+t_minishell	*mshell(void);
 
 typedef struct s_redir
 {

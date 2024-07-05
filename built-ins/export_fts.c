@@ -46,7 +46,7 @@ char *get_value(char *key)
 {
 	t_env *found;
 
-	found = find_env_var(key, g_shell.env_list);
+	found = find_env_var(key, mshell()->env_list);
 	if (found)
 		return (found->value);
 	return (NULL);
@@ -65,7 +65,7 @@ bool	is_valid_key(char *s)
 		{
 			if (s[i + 1] == '=')
 			{
-				g_shell.is_add = 1;
+				mshell()->is_add = 1;
 				return (true);
 			}
 			return (false);

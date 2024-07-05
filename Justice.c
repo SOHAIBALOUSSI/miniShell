@@ -29,7 +29,7 @@ void	m_free(void *ptr)
 	t_gc	*tmp;
 	t_gc	*prev;
 
-	tmp = g_shell.arena;
+	tmp = mshell()->arena;
 	prev = NULL;
 	while (tmp)
 	{
@@ -38,7 +38,7 @@ void	m_free(void *ptr)
 			if (prev)
 				prev->next = tmp->next;
 			else
-				g_shell.arena = tmp->next;
+				mshell()->arena = tmp->next;
 			free(tmp->ptr);
 			free(tmp);
 			break ;
@@ -83,7 +83,7 @@ void	*m_alloc(size_t __size, char todo)
 	t_gc		*arena;
 	t_gc		*del;
 
-	arena = g_shell.arena;
+	arena = mshell()->arena;
 	if (todo == FREE)
 	{
 		free_arena(arena);

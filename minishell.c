@@ -3,26 +3,11 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-t_minishell g_shell = {0};
-
-// t_minishell	*g_shell(void)
-// {
-// 	t_minishell	shell;
-// 	if (!g_shell)
-// 	{
-// 		shell = (t_minishell) {
-// 			.env_list = NULL,
-// 			.exit_status = 0,
-// 			.closed_paren_count = 0,
-// 			.open_paren_count = 0,
-// 			.single_quote_count = 0,
-// 			.double_quote_count = 0,
-// 			.pipe_count = 0,
-// 		};
-// 	}
-// 	return (&shell);
-// }
-
+t_minishell	*mshell(void)
+{
+	static t_minishell	shell;
+	return (&shell);
+}
 void	read_cmd(void);
 void	handle_signals(void);
 
@@ -156,14 +141,6 @@ void	read_cmd(void)
 				return ;
 			if (!execute_ast(root))
 				return ;
-			// tmp = token_lst;
-			// while (tmp != NULL)
-			// {
-			// 	printf("TYPE = [%s] - LENGHT = [%zu]\n", type[tmp->type], tmp->location.length);
-			// 	tmp = tmp->next;
-			// }
-
-			// print_ast(root);
 
 		}
 	}
@@ -177,7 +154,7 @@ int	main(int ac, char **av, char **env)
 		return (EXIT_FAILURE);
 	if (!isatty(STDIN_FILENO))
 		return (printf("Minishell: not a tty\n"), EXIT_FAILURE);
-	g_shell.env_list = get_env_list(env);
+	mshell()->env_list = get_env_list(env);
 	handle_signals();
 	while (true)
 	{

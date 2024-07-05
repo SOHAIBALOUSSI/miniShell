@@ -30,7 +30,7 @@ void	builtin_exit(char **args)
 	if (!args || !args[0])
 	{
 		printf("exit\n");
-		exit_clean(g_shell.exit_status);
+		exit_clean(mshell()->exit_status);
 	}
 	else if (args[0] && args[1])
 	{
