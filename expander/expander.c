@@ -62,7 +62,7 @@ static char	*handle_dollar_sign(char *arg, int *i, char *result, int in_dquote)
 		var_name = extract_var_name(&arg[*i]);
 		var_value = expand_var(var_name);
 		result = ft_strjoin(result, var_value);
-		*i += ft_strlen(var_name);
+		*i += ft_strlen(var_name) - 1;
 		m_free(var_name);
 		m_free(var_value);
 	}
@@ -105,7 +105,7 @@ static void	split_and_add_to_new_argv(char *expanded_arg, char ***expanded_argv)
 	int		i;
 	char	**split;
 
-	split = ft_split(expanded_arg, " \n\t\r");
+	split = ft_split(expanded_arg, " \n\t\v\t\r");
 	i = 0;
 	while (split[i])
 	{
