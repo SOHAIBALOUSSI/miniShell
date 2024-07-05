@@ -7,12 +7,12 @@ static void	update_env_var_value(t_env *var, char *new_value, bool is_add)
 	if (is_add)
 	{
 		tmp = ft_strjoin(var->value, new_value);
-		free(var->value);
+		m_free(var->value);
 		var->value = tmp;
 	}
 	else
 	{
-		free(var->value);
+		m_free(var->value);
 		var->value = ft_strdup(new_value);
 	}
 }
@@ -116,29 +116,3 @@ void	builtin_export(char **args)
 	}
 }
 
-
-// void    change_dir(void)
-// {
-// 	char *current_dir;
-
-// 	if (ac != 3)
-// 		return (ft_putstr_fd("Minishell: cd :too many arguments\n", 2), -1);
-// 	if (ft_strcmp(av[1], "cd"))
-// 		return (ft_putstr_fd("Minishell: not cd command!\n", 2), -1);
-// 	current_dir = getcwd(NULL, PATH_MAX);
-// 	if (!current_dir)
-// 		return (-1);
-// 	if (current_dir)
-// 		printf("current dir is : [%s]\n", current_dir);
-// 	if (!chdir(av[2]))
-// 		printf("dir changed to : [%s]\n", av[2]);
-// 	else
-// 		printf("%s, dir not found", av[2]);
-// 	return (-1);
-// }
-
-
-// int main()
-// {
-// 	printf("%s\n", get_key("value+="));
-// }

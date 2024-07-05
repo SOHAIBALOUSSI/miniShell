@@ -2,6 +2,7 @@
 #include "../minishell.h"
 
 void	add_to_new_argv(char *expanded_arg, char ***expanded_argv, bool to_split);
+
 static char	*expand_var(char *var_name)
 {
 	char	*value;
@@ -104,7 +105,7 @@ static void	split_and_add_to_new_argv(char *expanded_arg, char ***expanded_argv)
 	int		i;
 	char	**split;
 
-	split = ft_split(expanded_arg, ' ');
+	split = ft_split(expanded_arg, " \n\t\r");
 	i = 0;
 	while (split[i])
 	{
@@ -160,8 +161,12 @@ void	expand_argv(t_tree *node)
 
 void	expander(t_tree *root)
 {
-	if (root->type == _CMD)
+	if (root->argv)
+	{
 		expand_argv(root);
+		expand_wildard(&root->argv);
+	}
+	// if (root->redir_list)
 	// Handle redirection expansion if needed
 	// if (root->redir_list)
 	//     expand_redirection(root->redir_list);

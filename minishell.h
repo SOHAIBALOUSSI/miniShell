@@ -10,6 +10,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <dirent.h>
 
 #include <linux/limits.h>
 #include <readline/readline.h>
@@ -102,8 +103,6 @@ typedef	struct s_minishell
 
 t_minishell	*mshell(void);
 
-// extern	t_minishell g_shell;
-
 typedef struct s_redir
 {
 	e_tok	type;
@@ -193,6 +192,11 @@ int execute_cmd(t_tree *root);
 
 /*		Expander		*/
 void    expander(t_tree *root);
+void    expand_wildard(char ***old_argv);
+void    free_strs(char **strs);
+char	**get_matching_files(char *pattern);
+int		is_match(char *pattern, char *str);
+
 
 
 

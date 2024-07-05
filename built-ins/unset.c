@@ -4,9 +4,9 @@ void	del_env(t_env *env)
 {
 	if (!env)
 		return ;
-	free(env->key);
-	free(env->value);
-	free(env);
+	m_free(env->key);
+	m_free(env->value);
+	m_free(env);
 }
 
 int    builtin_unset(char **args)
