@@ -55,7 +55,7 @@ static char	*handle_dollar_sign(char *arg, int *i, char *result, int in_dquote)
 		var_value = ft_itoa(mshell()->exit_status);
 		result = ft_strjoin(result, var_value);
 		m_free(var_value);
-		(*i)++;
+		return (result);
 	}
 	else if (ft_isalpha(arg[*i]) || arg[*i] == '_')
 	{
@@ -66,8 +66,6 @@ static char	*handle_dollar_sign(char *arg, int *i, char *result, int in_dquote)
 		m_free(var_name);
 		m_free(var_value);
 	}
-	else
-		result = ft_strjoin_char(result, '$');
 	return (result);
 }
 
@@ -159,6 +157,52 @@ void	expand_argv(t_tree *node)
 	node->argv = expanded_argv;
 }
 
+int	read_expand_write(char *file_name)
+{
+	char	*line;
+	char	*heredoc;
+	int		fd;
+	char	*expandheredoc;
+
+	fd = open(file_name, O_RDONLY);
+	if (fd < 0)
+		return (pop_error("open() failed in read_expand_write\n"), -1);
+	heredoc = ft_strdup("");
+	line = get_next_line(fd);
+	if (!line)
+		return (-1);
+	while (line > 0)
+	{
+		heredoc = ft_strjoin(heredoc, line);
+		m_free(line);
+		line = get_next_line(fd);
+	}
+	expandheredoc = expand_arg(heredoc, false);
+	close(fd);
+	fd = open(file_name, O_WRONLY | O_TRUNC);
+	if (fd < 0)
+		return (-1);
+	return (write(fd, expandheredoc, ft_strlen(expandheredoc)), close(fd), 0);
+}
+
+int	expand_redirection(t_redir *redir_list)
+{
+	t_redir	*redir;
+
+	redir = redir_list;
+	while (redir)
+	{
+		if (redir->type == _HEREDOC)
+		{
+			if (read_expand_write(redir->file_name) == -1)
+				return (-1);
+		}
+		else
+			redir->file_name = expand_arg(redir->file_name, false);
+		redir = redir->next;
+	}
+}
+
 void	expander(t_tree *root)
 {
 	if (root->argv)
@@ -166,8 +210,6 @@ void	expander(t_tree *root)
 		expand_argv(root);
 		expand_wildard(&root->argv);
 	}
-	// if (root->redir_list)
-	// Handle redirection expansion if needed
-	// if (root->redir_list)
-	//     expand_redirection(root->redir_list);
+	if (root->redir_list)
+	    expand_redirection(root->redir_list);
 }

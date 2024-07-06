@@ -8,7 +8,7 @@ static int is_builtin(char *cmd)
 		|| ft_strcmp(cmd, "exit") == 0);
 }
 
-static char *get_cmd_path(char *cmd)
+static char *get_cmd_path(char *cmd) // hadchi khaso t3awd
 {
 	struct stat	file;
 	char 		*path;
@@ -22,7 +22,9 @@ static char *get_cmd_path(char *cmd)
 		return(pop_error("PATH: unseted\n"), NULL);
 	paths = ft_split(path, ":");
 	i = 0;
-	if (!access(cmd, F_OK | X_OK) && !S_ISDIR(file.st_mode))
+    if (S_ISDIR(file.st_mode))
+        return (pop_error("Minishell: that's a directory\n"), NULL); 
+	if (!access(cmd, F_OK | X_OK))
 		return (cmd);
 	while (paths[i])
 	{

@@ -19,7 +19,7 @@
 
 # define ALLOC 'A'
 # define FREE 'F'
-# define SHELL_PROMPT "\e[0;32m[minishell]$ \e[0;0m"
+# define SHELL_PROMPT "\e[0;32m[minishell]\e[0;0m$ "
 # define SQUOTE '\''
 # define DQUOTE '\"'
 
@@ -101,8 +101,6 @@ typedef	struct s_minishell
 	int		is_subshell;
 }			t_minishell;
 
-t_minishell	*mshell(void);
-
 typedef struct s_redir
 {
 	e_tok	type;
@@ -128,8 +126,11 @@ typedef struct s_tree
 
 char	**lst_to_arr(t_env **env_list);
 
-/*		Garbage Collector		*/
 
+/*		Globals		*/
+ t_minishell	*mshell(void);
+ 
+/*		Garbage Collector		*/
 void	*m_alloc(size_t __size, char todo);
 void	*m_realloc(void *ptr, size_t oldsize, size_t newsize);
 void	m_free(void *ptr);

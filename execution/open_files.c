@@ -49,6 +49,7 @@ void    handle_redirections(t_redir *redir_list)
                 exit(EXIT_FAILURE);
             }
             dup2(fd, STDIN_FILENO);
+            unlink(current->file_name);
             close(fd);
         }
         current = current->next;
