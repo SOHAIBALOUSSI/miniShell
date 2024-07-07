@@ -50,6 +50,8 @@ static char	*handle_dollar_sign(char *arg, int *i, char *result, int in_dquote)
 	char	*var_value;
 
 	(*i)++;
+	if (!arg[*i])
+		result = ft_strjoin_char(result, '$');
 	if (arg[*i] == '?')
 	{
 		var_value = ft_itoa(mshell()->exit_status);
@@ -66,8 +68,6 @@ static char	*handle_dollar_sign(char *arg, int *i, char *result, int in_dquote)
 		m_free(var_name);
 		m_free(var_value);
 	}
-	else
-		result = ft_strjoin_char(result, '$');
 	return (result);
 }
 
@@ -91,7 +91,7 @@ static char	*expand_arg(char *arg, bool *to_split)
 			*to_split = false;
 			in_dquote = !in_dquote;
 		}
-		else if (arg[i] == '$' && !in_squote)
+		else if (arg[i] == '$' && !in_squote && arg[i + 1] && (ft_isalnum(arg[i + 1]) || arg[i + 1] == '?'))
 			result = handle_dollar_sign(arg, &i, result, in_dquote);
 		else
 			result = ft_strjoin_char(result, arg[i]);
@@ -115,6 +115,27 @@ static void	split_and_add_to_new_argv(char *expanded_arg, char ***expanded_argv)
 	m_free(split);
 }
 
+char **add_to_argv(char *expanded_arg, char ***expanded_argv)
+{
+	int	i;
+	char **new_argv;
+
+	i = 0;
+	while ((*expanded_argv)[i])
+		i++;
+	new_argv = m_alloc(sizeof(char *) * (i + 2), ALLOC);
+	i = 0;
+	while ((*expanded_argv)[i])
+	{
+		new_argv[i] = (*expanded_argv)[i];
+		i++;
+	}
+	new_argv[i] = expanded_arg;
+	new_argv[i + 1] = NULL;
+	m_free(*expanded_argv);
+	return (new_argv);
+}
+
 void	add_to_new_argv(char *expanded_arg, char ***expanded_argv, bool to_split)
 {
 	int		i;
@@ -123,32 +144,20 @@ void	add_to_new_argv(char *expanded_arg, char ***expanded_argv, bool to_split)
 	if (to_split == true)
 		split_and_add_to_new_argv(expanded_arg, expanded_argv);
 	else
-	{
-		i = 0;
-		while ((*expanded_argv)[i])
-			i++;
-		new_argv = m_alloc(sizeof(char *) * (i + 2), ALLOC);
-		i = -1;
-		while ((*expanded_argv)[++i])
-			new_argv[i] = (*expanded_argv)[i];
-		new_argv[i] = expanded_arg;
-		new_argv[i + 1] = NULL;
-		m_free(*expanded_argv);
-		*expanded_argv = new_argv;
-	}
+		*expanded_argv = add_to_argv(expanded_arg, expanded_argv);
 }
 
 void	expand_argv(t_tree *node)
 {
 	int		i;
+	bool	to_split;
 	char	**expanded_argv;
 	char	*expanded_arg;
-	bool	to_split;
 
 	i = 0;
+	to_split = true;
 	expanded_argv = m_alloc(sizeof(char *), ALLOC);
 	expanded_argv[0] = NULL;
-	to_split = true;
 	while (node->argv[i])
 	{
 		expanded_arg = expand_arg(node->argv[i], &to_split);
@@ -157,6 +166,25 @@ void	expand_argv(t_tree *node)
 	}
 	m_free(node->argv);
 	node->argv = expanded_argv;
+}
+char	*expand_herdoc(char *heredoc_content)
+{
+	char	**content;
+	char	**expanded_content;
+	char	*result;
+	int		i = 0;
+
+	content = ft_split(heredoc_content, '\n');
+	while (content[i])
+		i++;
+	expanded_content = m_alloc(sizeof(char *) * (i + 1), ALLOC);
+	i = 0;
+	while (content[i])
+	{
+		expanded_content = expand_arg(content[i], false);
+	}
+	
+	
 }
 
 int	read_expand_write(char *file_name)
@@ -179,7 +207,7 @@ int	read_expand_write(char *file_name)
 		m_free(line);
 		line = get_next_line(fd);
 	}
-	expandheredoc = expand_arg(heredoc, false);
+	expandheredoc = expand_herdoc(heredoc);
 	close(fd);
 	fd = open(file_name, O_WRONLY | O_TRUNC);
 	if (fd < 0)
@@ -206,6 +234,7 @@ int	expand_redirection(t_redir *redir_list)
 		}
 		redir = redir->next;
 	}
+	return (0);
 }
 
 void	expander(t_tree *root)
@@ -216,5 +245,5 @@ void	expander(t_tree *root)
 		expand_wildard(&root->argv);
 	}
 	if (root->redir_list)
-	    expand_redirection(root->redir_list);
+		expand_redirection(root->redir_list);
 }
