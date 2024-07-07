@@ -7,7 +7,7 @@ static void	update_pwd_env(char *new_dir, char *old_dir)
 
 	pwd = find_env_var("PWD", mshell()->env_list);
 	if (pwd)
-		pwd->value = ft_strdup(getcwd(NULL, PATH_MAX)); // not a leak (m_alloc ghadi tkelef)
+		pwd->value = ft_strdup(getcwd(NULL, PATH_MAX));
 	else
 	{
 		pwd = m_alloc(sizeof(t_env), ALLOC);
@@ -17,7 +17,7 @@ static void	update_pwd_env(char *new_dir, char *old_dir)
 	}	
 	oldpwd = find_env_var("OLDPWD", mshell()->env_list);
 	if (oldpwd)
-		oldpwd->value = ft_strdup(old_dir); // m_alloc has a pointer to the prev address
+		oldpwd->value = ft_strdup(old_dir);
 	else
 	{
 		oldpwd = m_alloc(sizeof(t_env), ALLOC);
@@ -51,10 +51,10 @@ int	builtin_cd(char **args)
 	char		old_dir[PATH_MAX];
 	struct stat	dir_stat;
 
-	if (!getcwd(old_dir, PATH_MAX))
-		return  (perror("Minishell: cd: getcwd: "), EXIT_FAILURE);
 	if (!*args)
 		return (go__home(old_dir));
+	if (!getcwd(old_dir, PATH_MAX))
+		return  (perror("Minishell: cd: getcwd: "), EXIT_FAILURE);
 	if (args[1])
 		return (pop_error("Minishell: cd: too many arguments\n"), EXIT_FAILURE);
 	new_dir = args[0];

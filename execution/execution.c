@@ -21,9 +21,7 @@ static char *get_cmd_path(char *cmd) // hadchi khaso t3awd
 	if (!path)
 		return(pop_error("PATH: unseted\n"), NULL);
 	paths = ft_split(path, ":");
-	i = 0;
-    if (S_ISDIR(file.st_mode))
-        return (pop_error("Minishell: that's a directory\n"), NULL); 
+	i = 0; 
 	if (!access(cmd, F_OK | X_OK))
 		return (cmd);
 	while (paths[i])

@@ -81,11 +81,6 @@ typedef struct s_env
 	struct s_env	*next;
 }				t_env;
 
-/*
-**	Struct for the g_shell global variable,
-** 	You can use it in any file, add a member
-** 	to the struct and enjoy the hack :D
-*/
 typedef	struct s_minishell
 {
 	t_gc	*arena;
@@ -96,6 +91,7 @@ typedef	struct s_minishell
 	size_t	pipe_count;
 	size_t	heredoc_count;
 	t_env	*env_list;
+	char	*pwd;
 	int		exit_status;
 	int		is_add;
 	int		is_subshell;
@@ -151,9 +147,9 @@ size_t		add_word_token(t_token **head, char *start);
 t_token		*create_token(e_tok type, char *start, size_t length);
 void		append_token(t_token **head, t_token *new_token);
 void		pop_error(char *error_msg);
-int		catch_syntax_errors(t_token *token_lst);
+int			catch_syntax_errors(t_token *token_lst);
 e_tok		decode_type(char c1, char c2);
-void    	refine_tokens(t_token **head);
+void		refine_tokens(t_token **head);
 
 /*		Type check*/
 int			is_space(char c);

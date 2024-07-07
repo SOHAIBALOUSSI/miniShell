@@ -24,7 +24,7 @@ int	builtin_echo(char **args)
 	i = 0;
 	flag = 0;
 	ignore_n = 0;
-	if (!args || !*args) 
+	if (!*args) 
 		return (write(1, "\n", 1), EXIT_SUCCESS);
 	while (args[i])
 	{

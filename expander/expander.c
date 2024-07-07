@@ -57,7 +57,7 @@ static char	*handle_dollar_sign(char *arg, int *i, char *result, int in_dquote)
 		m_free(var_value);
 		return (result);
 	}
-	else if (ft_isalpha(arg[*i]) || arg[*i] == '_')
+	else if (ft_isalnum(arg[*i]) || arg[*i] == '_')
 	{
 		var_name = extract_var_name(&arg[*i]);
 		var_value = expand_var(var_name);
@@ -66,20 +66,22 @@ static char	*handle_dollar_sign(char *arg, int *i, char *result, int in_dquote)
 		m_free(var_name);
 		m_free(var_value);
 	}
+	else
+		result = ft_strjoin_char(result, '$');
 	return (result);
 }
 
 static char	*expand_arg(char *arg, bool *to_split)
 {
-	char	*result;
 	int		i;
 	int		in_squote;
 	int		in_dquote;
+	char	*result;
 
-	result = ft_strdup("");
 	i = 0;
 	in_squote = 0;
 	in_dquote = 0;
+	result = ft_strdup("");
 	while (arg[i])
 	{
 		if (arg[i] == SQUOTE && !in_dquote)
@@ -198,7 +200,10 @@ int	expand_redirection(t_redir *redir_list)
 				return (-1);
 		}
 		else
+		if (redir->file_name)
+		{
 			redir->file_name = expand_arg(redir->file_name, false);
+		}
 		redir = redir->next;
 	}
 }
