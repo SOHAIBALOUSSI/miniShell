@@ -91,7 +91,7 @@ static char	*expand_arg(char *arg, bool *to_split)
 			*to_split = false;
 			in_dquote = !in_dquote;
 		}
-		else if (arg[i] == '$' && !in_squote && arg[i + 1] && (ft_isalnum(arg[i + 1]) || arg[i + 1] == '?'))
+		else if (arg[i] == '$' && !in_squote && arg[i + 1] && (ft_isalnum(arg[i + 1]) || arg[i + 1] == '?' || arg[i + 1] == '_'))
 			result = handle_dollar_sign(arg, &i, result, in_dquote);
 		else
 			result = ft_strjoin_char(result, arg[i]);
@@ -167,24 +167,46 @@ void	expand_argv(t_tree *node)
 	m_free(node->argv);
 	node->argv = expanded_argv;
 }
-char	*expand_herdoc(char *heredoc_content)
-{
-	char	**content;
-	char	**expanded_content;
-	char	*result;
-	int		i = 0;
 
-	content = ft_split(heredoc_content, '\n');
-	while (content[i])
-		i++;
-	expanded_content = m_alloc(sizeof(char *) * (i + 1), ALLOC);
+char	*expand_heredoc_line(char *heredoc_line)
+{
+	char *result;
+	int		i;
+
 	i = 0;
+	result = ft_strdup("");
+	while (heredoc_line[i])
+	{
+		if (heredoc_line[i] == '$' && heredoc_line[i + 1] && (ft_isalnum(heredoc_line[i + 1]) || heredoc_line[i + 1] == '?'))
+			result = handle_dollar_sign(heredoc_line, &i, result, false);
+		else
+			result = ft_strjoin_char(result, heredoc_line[i]);
+		i++;
+	}
+	return (result);
+}
+
+char	*expand_heredoc(char *heredoc_content)
+{
+	char	*result;
+	char	*line;
+	char	**content;
+	int		i;
+
+	if (mshell()->expand_oho == 1)
+		return (heredoc_content);
+	i = 0;
+	result = ft_strdup("");
+	content = ft_split(heredoc_content, "\n");
 	while (content[i])
 	{
-		expanded_content = expand_arg(content[i], false);
+		line = expand_heredoc_line(content[i]);
+		result = ft_strjoin(result, line);
+		result = ft_strjoin_char(result, '\n');
+		m_free(line);
+		i++;
 	}
-	
-	
+	return (result);
 }
 
 int	read_expand_write(char *file_name)
@@ -207,7 +229,7 @@ int	read_expand_write(char *file_name)
 		m_free(line);
 		line = get_next_line(fd);
 	}
-	expandheredoc = expand_herdoc(heredoc);
+	expandheredoc = expand_heredoc(heredoc);
 	close(fd);
 	fd = open(file_name, O_WRONLY | O_TRUNC);
 	if (fd < 0)

@@ -94,6 +94,7 @@ typedef	struct s_minishell
 	int		exit_status;
 	int		is_add;
 	int		is_subshell;
+	int		expand_oho;
 }			t_minishell;
 
 typedef struct s_redir
