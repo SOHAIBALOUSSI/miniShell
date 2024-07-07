@@ -8,23 +8,50 @@ static int is_builtin(char *cmd)
 		|| ft_strcmp(cmd, "exit") == 0);
 }
 
+int is_directory(const char *path)
+{
+    struct stat path_stat;
+    if (stat(path, &path_stat) == 0)
+        return (S_ISDIR(path_stat.st_mode));
+    return (0); 
+}
+
+void    print_error(char *cmd, char *err)
+{
+    ft_putstr_fd(cmd, 2);
+    ft_putendl_fd(err, 2);
+}
+
 static char *get_cmd_path(char *cmd)
 {
-	struct stat	file;
 	char 		*path;
 	char 		*tmp;
 	char 		**paths;
 	int			i;
 
-	stat(cmd, &file);
+    paths = NULL;
 	path = get_value("PATH");
-	if (!path)
-		return(pop_error("PATH: unseted\n"), NULL);
-	paths = ft_split(path, ":");
-	i = 0;
-	if (!access(cmd, F_OK | X_OK) && !S_ISDIR(file.st_mode))
-		return (cmd);
-	while (paths[i])
+	if (path)
+    {
+        paths = ft_split(path, ":");
+        i = 0;
+        if (is_directory(cmd) && ft_strchr(cmd, '/'))
+        {
+            mshell()->exit_status = 126;
+            return (print_error(cmd, " :Is a directory"), NULL);
+        }
+        if (!access(cmd, F_OK | X_OK))
+            return (cmd);
+    }
+    else
+    {
+        if (is_directory(cmd))
+        {
+            mshell()->exit_status = 126;
+            return (print_error(cmd, " :Is a directory"), NULL);
+        }
+    }
+	while (paths && paths[i])
 	{
 		tmp = ft_strjoin(paths[i], "/");
 		tmp = ft_strjoin(tmp, cmd);
@@ -32,7 +59,8 @@ static char *get_cmd_path(char *cmd)
 			return (tmp);
 		i++;
 	}
-	pop_error("Command not found\n");
+	print_error(cmd, " :command not found");
+    mshell()->exit_status = 127;
 	return (NULL);
 }
 
@@ -43,9 +71,9 @@ int execute_builtin(t_tree *root)
 	argv = root->argv;
 	if (root->redir_list)
 		handle_redirections(root->redir_list);
-	if (ft_strcmp(argv[0], "cd") == 0) 
+	if (ft_strcmp(argv[0], "cd") == 0)
 		return (builtin_cd(argv + 1));
-	else if (ft_strcmp(argv[0], "echo") == 0) 
+	else if (ft_strcmp(argv[0], "echo") == 0)
 		return (builtin_echo(argv + 1));
 	else if (ft_strcmp(argv[0], "env") == 0)
 	{
@@ -69,8 +97,6 @@ int execute_builtin(t_tree *root)
 	return (1);
 }
 
-
-
 int execute_cmd(t_tree *root)
 {
 	char *cmd_path;
@@ -85,7 +111,12 @@ int execute_cmd(t_tree *root)
 	{
 		cmd_path = get_cmd_path(root->argv[0]);
 		if (!cmd_path)
-			return (127);
+			return (mshell()->exit_status);
+        else if (is_directory(cmd_path))
+        {
+            mshell()->exit_status = 127;
+            return (print_error(cmd_path, " :command not found"), mshell()->exit_status);
+        }
 	}
 	pid = fork();
 	if (pid == 0)
