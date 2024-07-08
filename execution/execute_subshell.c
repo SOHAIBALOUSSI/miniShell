@@ -15,7 +15,7 @@ int execute_subshell(t_tree *root)
     }
     else if (pid == 0)
     {
-        mshell()->exit_status = execute_ast(subshell);
+        mshell()->exit_status = execute_ast(root);
         exit(mshell()->exit_status);
     }
     else
