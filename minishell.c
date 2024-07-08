@@ -132,6 +132,7 @@ void	read_cmd(void)
 	if (mshell()->heredoc_count > 16)
 	{
 		pop_error("Minishell: maximum here-document count exceeded\n");
+		exit(1);
 		return ;
 	}
 	if (token_lst)
