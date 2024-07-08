@@ -22,7 +22,7 @@ void    print_error(char *cmd, char *err)
     ft_putendl_fd(err, 2);
 }
 
-static char *get_cmd_path(char *cmd)
+static char *get_cmd_path(char *cmd) // hadchi khaso t3awd
 {
 	char 		*path;
 	char 		*tmp;
@@ -184,7 +184,7 @@ int execute_ast(t_tree *root)
 	else if (root->type == _AND || root->type == _OR)
 		mshell()->exit_status = execute_operator(root);
 	else if (root->type == _SUBSHELL)
-		mshell()->exit_status = execute_subshell(root);
+		mshell()->exit_status = execute_subshell(root->subtree);
 	else if (root->type == _PIPE)
 		mshell()->exit_status = execute_pipeline(root->pipe_line, count_pipes(root->pipe_line));
 	else if (root->type == _CMD)

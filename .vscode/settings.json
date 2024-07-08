@@ -9,7 +9,8 @@
         "history.h": "c",
         "limits.h": "c",
         "signal-defs.h": "c",
-        "readline.h": "c"
+        "readline.h": "c",
+        "types.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled",
     "Lua.diagnostics.globals": [

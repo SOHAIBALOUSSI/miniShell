@@ -121,11 +121,8 @@ void	read_cmd(void)
 {
 	char	*line;
 	t_token	*token_lst;
-	t_token *tmp;
 	t_tree	*root;
 
-	// char *type[] = {"_WORD", "_QUOTE", "_OR", "PIPE", "AND", "APPEND", "RED_OUT", \
-	// 	"RED_IN", "HEREDOC", "PARENT_OPEN", "PARENT_CLISED", "WILDCARD", "ENV", "CMD", "SUBSHELL", "ARG", "SPACE"};
 	line = readline(SHELL_PROMPT);
 	if (!line)
 		return (printf("exit"), exit(-1));
@@ -141,7 +138,6 @@ void	read_cmd(void)
 				return ;
 			if (!execute_ast(root))
 				return ;
-
 		}
 	}
 	// free(line);

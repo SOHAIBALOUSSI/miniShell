@@ -50,14 +50,16 @@ static char	*handle_dollar_sign(char *arg, int *i, char *result, int in_dquote)
 	char	*var_value;
 
 	(*i)++;
+	if (!arg[*i])
+		result = ft_strjoin_char(result, '$');
 	if (arg[*i] == '?')
 	{
 		var_value = ft_itoa(mshell()->exit_status);
 		result = ft_strjoin(result, var_value);
 		m_free(var_value);
-		(*i)++;
+		return (result);
 	}
-	else if (ft_isalpha(arg[*i]) || arg[*i] == '_')
+	else if (ft_isalnum(arg[*i]) || arg[*i] == '_')
 	{
 		var_name = extract_var_name(&arg[*i]);
 		var_value = expand_var(var_name);
@@ -66,22 +68,20 @@ static char	*handle_dollar_sign(char *arg, int *i, char *result, int in_dquote)
 		m_free(var_name);
 		m_free(var_value);
 	}
-	else
-		result = ft_strjoin_char(result, '$');
 	return (result);
 }
 
 static char	*expand_arg(char *arg, bool *to_split)
 {
-	char	*result;
 	int		i;
 	int		in_squote;
 	int		in_dquote;
+	char	*result;
 
-	result = ft_strdup("");
 	i = 0;
 	in_squote = 0;
 	in_dquote = 0;
+	result = ft_strdup("");
 	while (arg[i])
 	{
 		if (arg[i] == SQUOTE && !in_dquote)
@@ -91,7 +91,7 @@ static char	*expand_arg(char *arg, bool *to_split)
 			*to_split = false;
 			in_dquote = !in_dquote;
 		}
-		else if (arg[i] == '$' && !in_squote)
+		else if (arg[i] == '$' && !in_squote && arg[i + 1] && (ft_isalnum(arg[i + 1]) || arg[i + 1] == '?' || arg[i + 1] == '_'))
 			result = handle_dollar_sign(arg, &i, result, in_dquote);
 		else
 			result = ft_strjoin_char(result, arg[i]);
@@ -115,6 +115,27 @@ static void	split_and_add_to_new_argv(char *expanded_arg, char ***expanded_argv)
 	m_free(split);
 }
 
+char **add_to_argv(char *expanded_arg, char ***expanded_argv)
+{
+	int	i;
+	char **new_argv;
+
+	i = 0;
+	while ((*expanded_argv)[i])
+		i++;
+	new_argv = m_alloc(sizeof(char *) * (i + 2), ALLOC);
+	i = 0;
+	while ((*expanded_argv)[i])
+	{
+		new_argv[i] = (*expanded_argv)[i];
+		i++;
+	}
+	new_argv[i] = expanded_arg;
+	new_argv[i + 1] = NULL;
+	m_free(*expanded_argv);
+	return (new_argv);
+}
+
 void	add_to_new_argv(char *expanded_arg, char ***expanded_argv, bool to_split)
 {
 	int		i;
@@ -123,32 +144,20 @@ void	add_to_new_argv(char *expanded_arg, char ***expanded_argv, bool to_split)
 	if (to_split == true)
 		split_and_add_to_new_argv(expanded_arg, expanded_argv);
 	else
-	{
-		i = 0;
-		while ((*expanded_argv)[i])
-			i++;
-		new_argv = m_alloc(sizeof(char *) * (i + 2), ALLOC);
-		i = -1;
-		while ((*expanded_argv)[++i])
-			new_argv[i] = (*expanded_argv)[i];
-		new_argv[i] = expanded_arg;
-		new_argv[i + 1] = NULL;
-		m_free(*expanded_argv);
-		*expanded_argv = new_argv;
-	}
+		*expanded_argv = add_to_argv(expanded_arg, expanded_argv);
 }
 
 void	expand_argv(t_tree *node)
 {
 	int		i;
+	bool	to_split;
 	char	**expanded_argv;
 	char	*expanded_arg;
-	bool	to_split;
 
 	i = 0;
+	to_split = true;
 	expanded_argv = m_alloc(sizeof(char *), ALLOC);
 	expanded_argv[0] = NULL;
-	to_split = true;
 	while (node->argv[i])
 	{
 		expanded_arg = expand_arg(node->argv[i], &to_split);
@@ -159,6 +168,97 @@ void	expand_argv(t_tree *node)
 	node->argv = expanded_argv;
 }
 
+char	*expand_heredoc_line(char *heredoc_line)
+{
+	char *result;
+	int		i;
+
+	i = 0;
+	result = ft_strdup("");
+	while (heredoc_line[i])
+	{
+		if (heredoc_line[i] == '$' && heredoc_line[i + 1] && (ft_isalnum(heredoc_line[i + 1]) || heredoc_line[i + 1] == '?'))
+			result = handle_dollar_sign(heredoc_line, &i, result, false);
+		else
+			result = ft_strjoin_char(result, heredoc_line[i]);
+		i++;
+	}
+	return (result);
+}
+
+char	*expand_heredoc(char *heredoc_content)
+{
+	char	*result;
+	char	*line;
+	char	**content;
+	int		i;
+
+	if (mshell()->expand_oho == 1)
+		return (heredoc_content);
+	i = 0;
+	result = ft_strdup("");
+	content = ft_split(heredoc_content, "\n");
+	while (content[i])
+	{
+		line = expand_heredoc_line(content[i]);
+		result = ft_strjoin(result, line);
+		result = ft_strjoin_char(result, '\n');
+		m_free(line);
+		i++;
+	}
+	return (result);
+}
+
+int	read_expand_write(char *file_name)
+{
+	char	*line;
+	char	*heredoc;
+	int		fd;
+	char	*expandheredoc;
+
+	fd = open(file_name, O_RDONLY);
+	if (fd < 0)
+		return (pop_error("open() failed in read_expand_write\n"), -1);
+	heredoc = ft_strdup("");
+	line = get_next_line(fd);
+	if (!line)
+		return (-1);
+	while (line > 0)
+	{
+		heredoc = ft_strjoin(heredoc, line);
+		m_free(line);
+		line = get_next_line(fd);
+	}
+	expandheredoc = expand_heredoc(heredoc);
+	close(fd);
+	fd = open(file_name, O_WRONLY | O_TRUNC);
+	if (fd < 0)
+		return (-1);
+	return (write(fd, expandheredoc, ft_strlen(expandheredoc)), close(fd), 0);
+}
+
+int	expand_redirection(t_redir *redir_list)
+{
+	t_redir	*redir;
+
+	redir = redir_list;
+	while (redir)
+	{
+		if (redir->type == _HEREDOC)
+		{
+			if (read_expand_write(redir->file_name) == -1)
+				return (-1);
+		}
+		else
+		if (redir->file_name)
+		{
+			redir->file_name = expand_arg(redir->file_name, false);
+		}
+		redir = redir->next;
+	}
+	return (0);
+}
+
 void	expander(t_tree *root)
 {
 	if (root->argv)
@@ -166,8 +266,6 @@ void	expander(t_tree *root)
 		expand_argv(root);
 		expand_wildard(&root->argv);
 	}
-	// if (root->redir_list)
-	// Handle redirection expansion if needed
-	// if (root->redir_list)
-	//     expand_redirection(root->redir_list);
+	if (root->redir_list)
+		expand_redirection(root->redir_list);
 }

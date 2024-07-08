@@ -133,7 +133,46 @@ char *read_heredoc(char *delimiter)
 	m_free(delimiter);
 	return (heredoc_filename);
 }
+char	*remove_quotes(char *str)
+{
+	int		i;
+	int		j;
+	bool	in_squote;
+	bool	in_dquote;
+	char	*new_str;
 
+	i = 0;
+	j = 0;
+	in_squote = false;
+	in_dquote = false;
+	new_str = m_alloc(ft_strlen(str) + 1 * sizeof(char), ALLOC);
+	mshell()->expand_oho = 1;
+	while (str[i])
+	{
+		if (str[i] == '\'' && !in_dquote)
+			in_squote = !in_squote;
+		else if (str[i] == '\"' && !in_squote)
+			in_dquote = !in_dquote;
+		else
+			new_str[j++] = str[i];
+		i++;
+	}
+	m_free(str);
+	return (new_str);
+}
+bool	has_quotes(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == SQUOTE || str[i] == DQUOTE)
+			return (true);
+		i++;
+	}
+	return (false);
+}
 static int check_heredoc(t_token *current)
 {
     if (current->type == _HEREDOC)
@@ -144,6 +183,8 @@ static int check_heredoc(t_token *current)
             return (0);
         }
 		current->delimiter = ft_strndup(current->next->location.location, current->next->location.length);
+		if (has_quotes(current->delimiter))
+			current->delimiter = remove_quotes(current->delimiter);
 		current->heredoc_file = read_heredoc(current->delimiter);
     }
     return (1);
