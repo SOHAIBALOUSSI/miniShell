@@ -15,7 +15,9 @@ int execute_subshell(t_tree *root)
     }
     else if (pid == 0)
     {
-        mshell()->exit_status = execute_ast(root);
+        if (root->redir_list)
+            handle_redirections(root->redir_list);
+        mshell()->exit_status = execute_ast(root->subtree);
         exit(mshell()->exit_status);
     }
     else

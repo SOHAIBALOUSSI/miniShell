@@ -184,7 +184,7 @@ int execute_ast(t_tree *root)
 	else if (root->type == _AND || root->type == _OR)
 		mshell()->exit_status = execute_operator(root);
 	else if (root->type == _SUBSHELL)
-		mshell()->exit_status = execute_subshell(root->subtree);
+		mshell()->exit_status = execute_subshell(root);
 	else if (root->type == _PIPE)
 		mshell()->exit_status = execute_pipeline(root->pipe_line, count_pipes(root->pipe_line));
 	else if (root->type == _CMD)
