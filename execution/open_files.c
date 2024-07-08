@@ -14,6 +14,16 @@
 //         current = current->next;
 //     }
 // }
+void    files_error(int err_no)
+{
+    if (err_no == 1)
+        printf("Error: No such file or directory\n");
+    else if (err_no == 2)
+        printf("Error: Is a directory\n");
+    else if (err_no == 3)
+        printf("Error: Permission denied\n");
+}
+
 
 void handle_redirections(t_redir *redir_list)
 {
@@ -27,7 +37,7 @@ void handle_redirections(t_redir *redir_list)
             current->fds[0] = open(current->file_name, O_RDONLY);
             if (current->fds[0] < 0)
             {
-                print_error(current->file_name, strerror(errno));
+                print_error(current->file_name, "Open failed");
                 exit(EXIT_FAILURE);
             }
             current->original_in = dup(STDIN_FILENO);
@@ -39,7 +49,7 @@ void handle_redirections(t_redir *redir_list)
             current->fds[1] = open(current->file_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
             if (current->fds[1] < 0)
             {
-                print_error(current->file_name, strerror(errno));
+                print_error(current->file_name, "Open failed");
                 exit(EXIT_FAILURE);
             }
             current->original_out = dup(STDOUT_FILENO);
@@ -51,7 +61,7 @@ void handle_redirections(t_redir *redir_list)
             current->fds[1] = open(current->file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
             if (current->fds[1] < 0)
             {
-                print_error(current->file_name, strerror(errno));
+                print_error(current->file_name, "Open failed");
                 exit(EXIT_FAILURE);
             }
             current->original_out = dup(STDOUT_FILENO);
@@ -63,7 +73,7 @@ void handle_redirections(t_redir *redir_list)
             int fd = open(current->file_name, O_RDONLY);
             if (fd < 0)
             {
-                print_error(current->file_name, strerror(errno));
+                print_error(current->file_name, "Open failed");
                 exit(EXIT_FAILURE);
             }
             current->original_in = dup(STDIN_FILENO);

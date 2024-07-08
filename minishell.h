@@ -11,9 +11,6 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <dirent.h>
-
-#include <errno.h>
-
 #include <linux/limits.h>
 #include <readline/readline.h>
 #include <readline/history.h>
