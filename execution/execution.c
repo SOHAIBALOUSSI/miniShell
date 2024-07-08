@@ -72,7 +72,7 @@ static char *get_cmd_path(char *cmd)
             if (!access(cmd, F_OK | X_OK))
                 return (cmd);
             mshell()->exit_status = 127;
-            return (print_error(cmd, "No such file or directory"), NULL);
+            return (print_error(cmd, "No such file or directory"), NULL); 
         }
     }
 	while (paths && paths[i])
@@ -217,5 +217,7 @@ int execute_ast(t_tree *root)
 		mshell()->exit_status = execute_pipeline(root->pipe_line, count_pipes(root->pipe_line));
 	else if (root->type == _CMD)
 		mshell()->exit_status = execute_cmd(root);
+	// if (root->redir_list)
+	// 	restore_redirections(root->redir_list);
 	return (mshell()->exit_status);
 }

@@ -129,6 +129,12 @@ void	read_cmd(void)
 	if (line[0] && check_spaces(line))
 		add_history(line);
 	token_lst = tokenizer(line);
+	if (mshell()->heredoc_count > 16)
+	{
+		pop_error("Minishell: maximum here-document count exceeded\n");
+		exit(1);
+		return ;
+	}
 	if (token_lst)
 	{
 		if (!catch_syntax_errors(token_lst))

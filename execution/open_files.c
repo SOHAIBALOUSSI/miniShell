@@ -14,16 +14,6 @@
 //         current = current->next;
 //     }
 // }
-void    files_error(int err_no)
-{
-    if (err_no == 1)
-        printf("Error: No such file or directory\n");
-    else if (err_no == 2)
-        printf("Error: Is a directory\n");
-    else if (err_no == 3)
-        printf("Error: Permission denied\n");
-}
-
 
 void handle_redirections(t_redir *redir_list)
 {
