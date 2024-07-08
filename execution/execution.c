@@ -16,13 +16,14 @@ int is_directory(const char *path)
     return (0); 
 }
 
-void    print_error(char *cmd, char *err)
+void print_error(char *cmd, char *str)
 {
     ft_putstr_fd(cmd, 2);
-    ft_putendl_fd(err, 2);
+    ft_putstr_fd(": ", 2);
+    ft_putendl_fd(str, 2);
 }
 
-static char *get_cmd_path(char *cmd) // hadchi khaso t3awd
+static char *get_cmd_path(char *cmd) 
 {
 	char 		*path;
 	char 		*tmp;
@@ -30,6 +31,12 @@ static char *get_cmd_path(char *cmd) // hadchi khaso t3awd
 	int			i;
 
     paths = NULL;
+    if (!ft_strcmp(cmd, "minishell"))
+    {
+        print_error(cmd, "command not found");
+        mshell()->exit_status = 127;
+        return (NULL);
+    }
 	path = get_value("PATH");
 	if (path)
     {
@@ -40,12 +47,14 @@ static char *get_cmd_path(char *cmd) // hadchi khaso t3awd
             if (is_directory(cmd))
             {
                 mshell()->exit_status = 126;
-                return (print_error(cmd, " :Is a directory"), NULL);
+                return (print_error(cmd, "Is a directory"), NULL);
             }
             else
             {
+                if (!access(cmd, F_OK | X_OK))
+                    return (cmd);
                 mshell()->exit_status = 127;
-                return (print_error(cmd, " :No such file or directory"), NULL);
+                return (print_error(cmd, "No such file or directory"), NULL);
             }
         }
         if (!access(cmd, F_OK | X_OK))
@@ -56,7 +65,14 @@ static char *get_cmd_path(char *cmd) // hadchi khaso t3awd
         if (is_directory(cmd))
         {
             mshell()->exit_status = 126;
-            return (print_error(cmd, " :Is a directory"), NULL);
+            return (print_error(cmd, "Is a directory"), NULL);
+        }
+        else
+        {
+            if (!access(cmd, F_OK | X_OK))
+                return (cmd);
+            mshell()->exit_status = 127;
+            return (print_error(cmd, "No such file or directory"), NULL);
         }
     }
 	while (paths && paths[i])
@@ -67,43 +83,48 @@ static char *get_cmd_path(char *cmd) // hadchi khaso t3awd
 			return (tmp);
 		i++;
 	}
-	print_error(cmd, " :command not found");
+	print_error(cmd, "command not found");
     mshell()->exit_status = 127;
 	return (NULL);
 }
 
 int execute_builtin(t_tree *root)
 {
-	char **argv;
+    char **argv;
+    int ret;
 
-	argv = root->argv;
-	if (root->redir_list)
-		handle_redirections(root->redir_list);
-	if (ft_strcmp(argv[0], "cd") == 0)
-		return (builtin_cd(argv + 1));
-	else if (ft_strcmp(argv[0], "echo") == 0)
-		return (builtin_echo(argv + 1));
-	else if (ft_strcmp(argv[0], "env") == 0)
-	{
-		builtin_env();
-		return (0);
-	}
-	else if (ft_strcmp(argv[0], "pwd") == 0) 
-		return (builtin_pwd());
-	else if (ft_strcmp(argv[0], "export") == 0)
-	{
-		builtin_export(argv + 1);
-		return (0);
-	}
-	else if (ft_strcmp(argv[0], "unset") == 0) 
-		return (builtin_unset(argv + 1));
-	else if (ft_strcmp(argv[0], "exit") == 0)
-	{
-		builtin_exit(argv + 1);
-		return (0); 
-	}
-	return (1);
+    ret = EXIT_FAILURE;
+    argv = root->argv;
+    if (root->redir_list)
+        handle_redirections(root->redir_list);
+    if (ft_strcmp(argv[0], "cd") == 0)
+        ret = builtin_cd(argv + 1);
+    else if (ft_strcmp(argv[0], "echo") == 0)
+        ret = builtin_echo(argv + 1);
+    else if (ft_strcmp(argv[0], "env") == 0)
+    {
+        builtin_env();
+        ret = EXIT_SUCCESS;
+    }
+    else if (ft_strcmp(argv[0], "pwd") == 0)
+        ret = builtin_pwd();
+    else if (ft_strcmp(argv[0], "export") == 0)
+    {
+        builtin_export(argv + 1);
+        ret = EXIT_SUCCESS;
+    }
+    else if (ft_strcmp(argv[0], "unset") == 0)
+        ret = builtin_unset(argv + 1);
+    else if (ft_strcmp(argv[0], "exit") == 0)
+    {
+        builtin_exit(argv + 1);
+        ret = EXIT_SUCCESS;
+    }
+    if (root->redir_list)
+        restore_redirections(root->redir_list);
+    return (ret);
 }
+
 
 int execute_cmd(t_tree *root)
 {
@@ -115,17 +136,24 @@ int execute_cmd(t_tree *root)
 	expander(root);
 	if (root->argv && root->argv[0] && is_builtin(root->argv[0]))
 		return (execute_builtin(root));
+    if (root->redir_list)
+        handle_redirections(root->redir_list);
 	if (root->argv)
 	{
 		cmd_path = get_cmd_path(root->argv[0]);
 		if (!cmd_path)
-			return (mshell()->exit_status);
+			return (restore_redirections(root->redir_list),
+                mshell()->exit_status);
         else if (is_directory(cmd_path))
         {
+            print_error(cmd_path, "command not found");
             mshell()->exit_status = 127;
-            return (print_error(cmd_path, " :command not found"), mshell()->exit_status);
+            return (restore_redirections(root->redir_list),
+                mshell()->exit_status);
         }
 	}
+    if (root->redir_list)
+        restore_redirections(root->redir_list);
 	pid = fork();
 	if (pid == 0)
 	{

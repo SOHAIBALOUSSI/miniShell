@@ -11,6 +11,9 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <dirent.h>
+
+#include <errno.h>
+
 #include <linux/limits.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -102,6 +105,8 @@ typedef struct s_redir
 	e_tok	type;
 	int		fds[2];
 	int		heredoc_fd;
+	int		original_out;
+	int		original_in;
 	char	*file_name;
 	struct s_redir	*next;
 }	t_redir;
@@ -169,6 +174,9 @@ void	add_cmd_to_pipeline(t_tree *pipe, t_tree *cmd);
 void	add_arg_to_cmd(t_tree *cmd, char *location, size_t length);
 char	*ft_strndup(char *s1, size_t n);
 
+/*		Error		*/
+void print_error(char *cmd, char *str);
+
 /*		Execute pipeline		*/
 int    actual_pipeline(t_tree **pipeline, int pc);
 
@@ -180,8 +188,7 @@ int execute_operator(t_tree *operator);
 
 /*		Open files		*/
 void    handle_redirections(t_redir *redir_list);
-void    here_doc(t_redir *redir_list);
-void    handle_here_doc(t_redir *redir_list);
+void restore_redirections(t_redir *redir);
 
 /*		Execution		*/
 int execute_ast(t_tree *root);

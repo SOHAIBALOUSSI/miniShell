@@ -114,6 +114,30 @@ void write_to_heredoc(int fd, char *delimiter)
     }
 }
 
+void	here_doc(int fd, char *delimiter)
+{
+	pid_t	pid;
+	int		status;
+
+	pid = fork();
+	if (pid < 0)
+	{
+		pop_error("Fork failed\n");
+		return ;
+	}
+	else if (pid == 0)
+	{
+		write_to_heredoc(fd, delimiter);
+		close(fd);
+		exit(EXIT_SUCCESS);
+	}
+	else
+	{
+		waitpid(pid, &status, 0);
+		mshell()->exit_status = WEXITSTATUS(status);
+	}
+}
+
 char *read_heredoc(char *delimiter)
 {
 	static	int	heredoc = 1;
@@ -128,7 +152,7 @@ char *read_heredoc(char *delimiter)
 	if (fd < 0)
 		return (perror("open"), exit(1), NULL); // TODO: free memory before exit and set exit status to 1
 	// signal(SIGINT, SIG_IGN); // signals to handle later
-	write_to_heredoc(fd, delimiter);
+	here_doc(fd, delimiter);
 	close(fd);
 	m_free(delimiter);
 	return (heredoc_filename);
