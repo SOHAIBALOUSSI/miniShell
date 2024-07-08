@@ -35,10 +35,18 @@ static char *get_cmd_path(char *cmd)
     {
         paths = ft_split(path, ":");
         i = 0;
-        if (is_directory(cmd) && ft_strchr(cmd, '/'))
+        if (ft_strchr(cmd, '/'))
         {
-            mshell()->exit_status = 126;
-            return (print_error(cmd, " :Is a directory"), NULL);
+            if (is_directory(cmd))
+            {
+                mshell()->exit_status = 126;
+                return (print_error(cmd, " :Is a directory"), NULL);
+            }
+            else
+            {
+                mshell()->exit_status = 127;
+                return (print_error(cmd, " :No such file or directory"), NULL);
+            }
         }
         if (!access(cmd, F_OK | X_OK))
             return (cmd);
