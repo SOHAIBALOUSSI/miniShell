@@ -23,6 +23,7 @@ void print_error(char *cmd, char *str)
     ft_putendl_fd(str, 2);
 }
 
+
 static char *get_cmd_path(char *cmd) 
 {
 	char 		*path;
@@ -88,6 +89,8 @@ static char *get_cmd_path(char *cmd)
 	return (NULL);
 }
 
+
+
 int execute_builtin(t_tree *root)
 {
     char **argv;
@@ -150,8 +153,8 @@ int execute_cmd(t_tree *root)
 	pid = fork();
 	if (pid == 0)
 	{
-		if (root->redir_list)
-			handle_redirections(root->redir_list);
+        if (root->redir_list)
+            handle_redirections(root->redir_list);
 		if (cmd_path && execve(cmd_path, root->argv, __environ) == -1)
 			exit(EXIT_FAILURE);
 		else
@@ -210,7 +213,7 @@ int execute_ast(t_tree *root)
 		mshell()->exit_status = execute_pipeline(root->pipe_line, count_pipes(root->pipe_line));
 	else if (root->type == _CMD)
 		mshell()->exit_status = execute_cmd(root);
-	// if (root->redir_list)
-	// 	restore_redirections(root->redir_list);
+	if (root->redir_list)
+		restore_redirections(root->redir_list);
 	return (mshell()->exit_status);
 }
