@@ -69,7 +69,7 @@ static void	put_sorted_env(void)
 	char	**env_array;
 
 	i = 0;
-	env_array = lst_to_arr(&mshell()->env_list);
+	env_array = lst_to_arr(mshell()->env_list);
 	env_array = sort_array(env_array);
 	while (env_array[i])
 	{
@@ -99,7 +99,7 @@ void	builtin_export(char **args)
 		if (is_valid_key(*args))
 		{
 			var = create_env(*args);
-			existing_var = find_env_var(var->key, mshell()->env_list);
+			existing_var = find_env_var(var->key, *mshell()->env_list);
 			if (existing_var)
 			{
 				if (mshell()->is_add)
@@ -108,7 +108,7 @@ void	builtin_export(char **args)
 					update_env_var_value(existing_var, var->value, false);
 			}
 			else
-				append_env(&mshell()->env_list, var);
+				append_env(mshell()->env_list, var);
 		}
 		else
 			built_ins_err(*args);

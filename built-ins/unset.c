@@ -16,11 +16,11 @@ int    builtin_unset(char **args)
 
 	while (*args)
 	{
-		tmp = mshell()->env_list;
+		tmp = *mshell()->env_list;
 		if (tmp && ft_strcmp(tmp->key, *args) == 0) // if the key found in the head  
 		{
 			del = tmp;
-			mshell()->env_list = tmp->next;
+			*mshell()->env_list = tmp->next;
 			del_env(del);
 			continue;
 		}

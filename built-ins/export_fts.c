@@ -46,7 +46,7 @@ char *get_value(char *key)
 {
 	t_env *found;
 
-	found = find_env_var(key, mshell()->env_list);
+	found = find_env_var(key, *mshell()->env_list);
 	if (found)
 		return (found->value);
 	return (NULL);

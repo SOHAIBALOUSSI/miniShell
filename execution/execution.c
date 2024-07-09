@@ -159,7 +159,7 @@ int execute_cmd(t_tree *root)
 	{
 		if (root->redir_list)
 			handle_redirections(root->redir_list);
-		if (cmd_path && execve(cmd_path, root->argv, __environ) == -1)
+		if (cmd_path && execve(cmd_path, root->argv, get_current_env_array()) == -1)
 			exit(EXIT_FAILURE);
 		else
 			exit(EXIT_FAILURE);

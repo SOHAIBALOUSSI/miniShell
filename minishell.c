@@ -3,10 +3,14 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-t_minishell	*mshell(void)
+t_minishell *mshell(void)
 {
-	static t_minishell	shell;
-	return (&shell);
+    static t_minishell shell;
+    static t_env *env_list = NULL;
+    
+    if (!shell.env_list)
+        shell.env_list = &env_list;
+    return (&shell);
 }
 void	read_cmd(void);
 void	handle_signals(void);
@@ -131,7 +135,7 @@ void	read_cmd(void)
 	token_lst = tokenizer(line);
 	if (mshell()->heredoc_count > 16)
 	{
-		pop_error("Minishell: maximum here-document count exceeded\n");
+		pop_error(HEREDOC_MAX_ERROR);
 		exit(1);
 		return ;
 	}
@@ -155,8 +159,8 @@ int	main(int ac, char **av, char **env)
 	if (ac != 1)
 		return (EXIT_FAILURE);
 	if (!isatty(STDIN_FILENO))
-		return (printf("Minishell: not a tty\n"), EXIT_FAILURE);
-	mshell()->env_list = get_env_list(env);
+		return (printf(NOT_TTY), EXIT_FAILURE);
+	get_env_list(env);
 	handle_signals();
 	while (true)
 	{
