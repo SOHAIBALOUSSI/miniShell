@@ -1,10 +1,10 @@
 #include "../minishell.h"
 
-static void	update_env_var_value(t_env *var, char *new_value, bool is_add)
+static void	update_env_var_value(t_env *var, char *new_value, bool has_add_sign)
 {
 	char	*tmp;
 
-	if (is_add)
+	if (has_add_sign)
 	{
 		tmp = ft_strjoin(var->value, new_value);
 		m_free(var->value);
@@ -102,7 +102,7 @@ void	builtin_export(char **args)
 			existing_var = find_env_var(var->key, *mshell()->env_list);
 			if (existing_var)
 			{
-				if (mshell()->is_add)
+				if (has_add_sign(*args))
 					update_env_var_value(existing_var, var->value, true);
 				else
 					update_env_var_value(existing_var, var->value, false);

@@ -41,11 +41,9 @@ int    actual_pipeline(t_tree **pipeline, int n_cmd)
                 close(fd[j][1]);
                 j++;
             }
-            if (pipeline[i]->redir_list)
-                handle_redirections(pipeline[i]->redir_list);
             if (pipeline[i]->type == _SUBSHELL)
-                execute_subshell(pipeline[i]);
-            else 
+                status = execute_subshell(pipeline[i]);
+            else
                 status = execute_cmd(pipeline[i]);
             exit(status);
         }

@@ -133,6 +133,8 @@ void	here_doc(int fd, char *delimiter)
 	else
 	{
 		waitpid(pid, &status, 0);
+		close(fd);
+		m_free(delimiter);
 		mshell()->exit_status = WEXITSTATUS(status);
 	}
 }
@@ -152,8 +154,6 @@ char *read_heredoc(char *delimiter)
 		return (perror("open"), exit(1), NULL); // TODO: free memory before exit and set exit status to 1
 	// signal(SIGINT, SIG_IGN); // signals to handle later
 	here_doc(fd, delimiter);
-	close(fd);
-	m_free(delimiter);
 	return (heredoc_filename);
 }
 char	*remove_quotes(char *str)
@@ -180,6 +180,7 @@ char	*remove_quotes(char *str)
 			new_str[j++] = str[i];
 		i++;
 	}
+	new_str[j] = '\0';
 	m_free(str);
 	return (new_str);
 }

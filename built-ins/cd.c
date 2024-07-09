@@ -37,12 +37,12 @@ int	chdir_and_update_env(char *new_dir, char *old_dir)
 
 int	go__home(char *old_dir)
 {
-	char	*new_dir;
+	t_env	*home;
 
-	new_dir = find_env_var("HOME", *mshell()->env_list)->value;
-	if (!new_dir)
+	home = find_env_var("HOME", *mshell()->env_list);
+	if (!home)
 		return (pop_error("Minishell: cd: HOME not set\n"), EXIT_FAILURE);
-	return (chdir_and_update_env(new_dir, old_dir));
+	return (chdir_and_update_env(home->value, old_dir));
 }
 
 int	builtin_cd(char **args)

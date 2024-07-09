@@ -93,10 +93,7 @@ typedef	struct s_minishell
 	t_env	**env_list;
 	char	*pwd;
 	int		exit_status;
-	int		is_add;
-	int		is_subshell;
 	int		expand_oho;
-	int		*msh_lvl;
 }			t_minishell;
 
 typedef struct s_redir
@@ -211,6 +208,7 @@ char	*get_value(char *key);
 t_env	*find_env_var(char *key, t_env *env_list);
 size_t	lst_size(t_env **lst);
 void	built_ins_err(char *err_key);
+bool	has_add_sign(char *s);
 
 /*	ENV */
 
@@ -220,6 +218,7 @@ void	builtin_exit(char **args);
 int		builtin_pwd(void);
 int		builtin_echo(char **args);
 int		builtin_cd(char **args);
-char **get_current_env_array(void);
+
+char	**get_current_env_array(void);
 
 #endif /*	MINISHELL_H	*/
