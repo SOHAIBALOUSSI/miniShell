@@ -7,8 +7,8 @@ int    actual_pipeline(t_tree **pipeline, int n_cmd)
     int     fd[n_cmd - 1][2];
     int     i;
 
-    // printf("Executing pipeline with %d commands...\n", n_cmd);
-    // fflush(stdout);
+    printf("Executing pipeline with %d commands...\n", n_cmd);
+    fflush(stdout);
     i = 0;
     while (i < n_cmd - 1)
     {
@@ -30,6 +30,7 @@ int    actual_pipeline(t_tree **pipeline, int n_cmd)
         } 
         else if (pid[i] == 0)
         {
+            printf("pipeline[%d] :\n", i);
             if (i > 0) 
                 dup2(fd[i - 1][0], STDIN_FILENO);
             if (i < n_cmd - 1)
@@ -41,10 +42,8 @@ int    actual_pipeline(t_tree **pipeline, int n_cmd)
                 close(fd[j][1]);
                 j++;
             }
-            if (pipeline[i]->redir_list)
-                handle_redirections(pipeline[i]->redir_list);
             if (pipeline[i]->type == _SUBSHELL)
-                execute_subshell(pipeline[i]);
+                status = execute_subshell(pipeline[i]);
             else 
                 status = execute_cmd(pipeline[i]);
             exit(status);
@@ -65,8 +64,14 @@ int    actual_pipeline(t_tree **pipeline, int n_cmd)
         mshell()->exit_status = WEXITSTATUS(status);
         i++;
     }
-    // printf("Pipeline execution finished with status: %d\n", mshell()->exit_status);
-    // fflush(stdout);
+    i = 0;
+    while (i < n_cmd)
+    {
+        restore_redirections(pipeline[i]->redir_list);
+        i++;
+    }
+    printf("Pipeline execution finished with status: %d\n", mshell()->exit_status);
+    fflush(stdout);
     mshell()->pipe_count = 0;
     return (mshell()->exit_status);
 }

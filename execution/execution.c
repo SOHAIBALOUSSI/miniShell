@@ -120,8 +120,7 @@ int execute_builtin(t_tree *root)
         builtin_exit(argv + 1);
         ret = EXIT_SUCCESS;
     }
-    if (root->redir_list)
-        restore_redirections(root->redir_list);
+
     return (ret);
 }
 
@@ -136,24 +135,18 @@ int execute_cmd(t_tree *root)
 	expander(root);
 	if (root->argv && root->argv[0] && is_builtin(root->argv[0]))
 		return (execute_builtin(root));
-    if (root->redir_list)
-        handle_redirections(root->redir_list);
 	if (root->argv)
 	{
 		cmd_path = get_cmd_path(root->argv[0]);
 		if (!cmd_path)
-			return (restore_redirections(root->redir_list),
-                mshell()->exit_status);
+			return (mshell()->exit_status);
         else if (is_directory(cmd_path))
         {
             print_error(cmd_path, "command not found");
             mshell()->exit_status = 127;
-            return (restore_redirections(root->redir_list),
-                mshell()->exit_status);
+            return (mshell()->exit_status);
         }
 	}
-    if (root->redir_list)
-        restore_redirections(root->redir_list);
 	pid = fork();
 	if (pid == 0)
 	{
