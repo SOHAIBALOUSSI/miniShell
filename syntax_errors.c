@@ -180,6 +180,7 @@ char	*remove_quotes(char *str)
 			new_str[j++] = str[i];
 		i++;
 	}
+	new_str[j] = '\0';
 	m_free(str);
 	return (new_str);
 }

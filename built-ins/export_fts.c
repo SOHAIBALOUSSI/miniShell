@@ -2,11 +2,9 @@
 
 void	built_ins_err(char *err_key)
 {
-	// ft_putstr_fd(RED, 2);
 	ft_putstr_fd("Minishell: export: `", 2);
 	ft_putstr_fd(err_key, 2);
 	ft_putstr_fd("\': not a valid identifier\n", 2);
-	// ft_putstr_fd(RESTORE, 2);
 }
 size_t	lst_size(t_env **lst)
 {
@@ -46,10 +44,23 @@ char *get_value(char *key)
 {
 	t_env *found;
 
-	found = find_env_var(key, mshell()->env_list);
+	found = find_env_var(key, *mshell()->env_list);
 	if (found)
 		return (found->value);
 	return (NULL);
+}
+bool	has_add_sign(char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i] && s[i] != '=')
+	{
+		if (s[i] == '+')
+			return (true);
+		i++;
+	}
+	return (false);
 }
 
 bool	is_valid_key(char *s)
@@ -64,10 +75,7 @@ bool	is_valid_key(char *s)
 		if (s[i] == '+')
 		{
 			if (s[i + 1] == '=')
-			{
-				mshell()->is_add = 1;
 				return (true);
-			}
 			return (false);
 		}
 		if (!ft_isalnum(s[i]) && s[i] != '_' )

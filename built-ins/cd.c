@@ -5,7 +5,7 @@ static void	update_pwd_env(char *new_dir, char *old_dir)
 	t_env	*pwd;
 	t_env	*oldpwd;
 
-	pwd = find_env_var("PWD", mshell()->env_list);
+	pwd = find_env_var("PWD", *mshell()->env_list);
 	if (pwd)
 		pwd->value = ft_strdup(getcwd(NULL, PATH_MAX));
 	else
@@ -13,9 +13,9 @@ static void	update_pwd_env(char *new_dir, char *old_dir)
 		pwd = m_alloc(sizeof(t_env), ALLOC);
 		pwd->key = ft_strdup("PWD");
 		pwd->value = ft_strdup(new_dir);
-		append_env(&mshell()->env_list, pwd);
+		append_env(mshell()->env_list, pwd);
 	}	
-	oldpwd = find_env_var("OLDPWD", mshell()->env_list);
+	oldpwd = find_env_var("OLDPWD", *mshell()->env_list);
 	if (oldpwd)
 		oldpwd->value = ft_strdup(old_dir);
 	else
@@ -23,7 +23,7 @@ static void	update_pwd_env(char *new_dir, char *old_dir)
 		oldpwd = m_alloc(sizeof(t_env), ALLOC);
 		oldpwd->key = ft_strdup("OLDPWD");
 		oldpwd->value = ft_strdup(old_dir);
-		append_env(&mshell()->env_list, oldpwd);
+		append_env(mshell()->env_list, oldpwd);
 	}
 }
 
@@ -37,12 +37,12 @@ int	chdir_and_update_env(char *new_dir, char *old_dir)
 
 int	go__home(char *old_dir)
 {
-	char	*new_dir;
+	t_env	*home;
 
-	new_dir = find_env_var("HOME", mshell()->env_list)->value;
-	if (!new_dir)
+	home = find_env_var("HOME", *mshell()->env_list);
+	if (!home)
 		return (pop_error("Minishell: cd: HOME not set\n"), EXIT_FAILURE);
-	return (chdir_and_update_env(new_dir, old_dir));
+	return (chdir_and_update_env(home->value, old_dir));
 }
 
 int	builtin_cd(char **args)

@@ -22,9 +22,10 @@
 # define SQUOTE '\''
 # define DQUOTE '\"'
 
-/*	COLORS*/
-// # define RED "\e[0;31m"
-// # define RESTORE "\e[0;m"
+/*	Errors	*/
+# define HEREDOC_MAX_ERROR	"Minishell: maximum here-document count exceeded\n"
+# define NOT_TTY			"Minishell: not a tty\n"
+# define HIGH_SHLVL			"Minishell: warning: shell level (1000) too high, resetting to 1\n"
 
 /* The Struct used in the Tokenizer */
 typedef enum e_tok
@@ -89,11 +90,9 @@ typedef	struct s_minishell
 	size_t	closed_paren_count;
 	size_t	pipe_count;
 	size_t	heredoc_count;
-	t_env	*env_list;
+	t_env	**env_list;
 	char	*pwd;
 	int		exit_status;
-	int		is_add;
-	int		is_subshell;
 	int		expand_oho;
 }			t_minishell;
 
@@ -134,7 +133,7 @@ void	*m_realloc(void *ptr, size_t oldsize, size_t newsize);
 void	m_free(void *ptr);
 
 /*		Env		*/
-t_env	*get_env_list(char **env);
+void	get_env_list(char **env);
 void	search_and_change(t_env *var);
 t_env	*create_env(char *env);
 bool	is_exist(char *s);
@@ -209,6 +208,7 @@ char	*get_value(char *key);
 t_env	*find_env_var(char *key, t_env *env_list);
 size_t	lst_size(t_env **lst);
 void	built_ins_err(char *err_key);
+bool	has_add_sign(char *s);
 
 /*	ENV */
 
@@ -218,5 +218,7 @@ void	builtin_exit(char **args);
 int		builtin_pwd(void);
 int		builtin_echo(char **args);
 int		builtin_cd(char **args);
+
+char	**get_current_env_array(void);
 
 #endif /*	MINISHELL_H	*/
