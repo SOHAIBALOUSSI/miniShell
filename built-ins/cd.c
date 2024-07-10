@@ -66,7 +66,7 @@ int	builtin_cd(char **args)
 			return (perror("Minishell: cd: stat "), EXIT_FAILURE);
 		if (S_ISDIR(dir_stat.st_mode) == 0)
 			return (pop_error("Minishell: cd : Not a directory\n"), EXIT_FAILURE);
-		if (access(new_dir, X_OK) != 0) // bash can access a file with only execution permition
+		if (access(new_dir, X_OK) != 0)
 			return (perror("Minishell: cd "), EXIT_FAILURE);
 		return (chdir_and_update_env(new_dir, old_dir));
 	}
