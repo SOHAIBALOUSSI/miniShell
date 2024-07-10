@@ -82,7 +82,7 @@ static void	put_sorted_env(void)
 			printf("%s\"\n", put);
 		}
 		else
-			printf("\n");
+			printf("%s\n", env_array[i]);
 		i++;
 	}
 }
@@ -94,6 +94,8 @@ void	builtin_export(char **args)
 	
 	if (!*args)
 		return (put_sorted_env());
+	existing_var = NULL;
+	var = NULL;
 	while (*args)
 	{
 		if (is_valid_key(*args))
@@ -104,7 +106,7 @@ void	builtin_export(char **args)
 			{
 				if (has_add_sign(*args))
 					update_env_var_value(existing_var, var->value, true);
-				else
+				else if (has_only_equal_sign(*args))
 					update_env_var_value(existing_var, var->value, false);
 			}
 			else
