@@ -6,7 +6,7 @@
 t_minishell *mshell(void)
 {
     static t_minishell shell;
-    static t_env *env_list = NULL;
+    static t_env *env_list;
     
     if (!shell.env_list)
         shell.env_list = &env_list;
@@ -121,17 +121,22 @@ int     check_spaces(char *line)
 	}
 	return (0);
 }
-void	read_cmd(void)
+
+void	reset_counters(void)
 {
-	char	*line;
+	mshell()->closed_paren_count = 0;
+	mshell()->open_paren_count = 0;
+	mshell()->single_quote_count = 0;
+	mshell()->double_quote_count = 0;
+	mshell()->pipe_count = 0;
+	mshell()->heredoc_count = 0;
+}
+
+void	process_input(char *line)
+{
 	t_token	*token_lst;
 	t_tree	*root;
 
-	line = readline(SHELL_PROMPT);
-	if (!line)
-		return (printf("exit"), exit(-1));
-	if (line[0] && check_spaces(line))
-		add_history(line);
 	token_lst = tokenizer(line);
 	if (mshell()->heredoc_count > 16)
 	{
@@ -146,18 +151,30 @@ void	read_cmd(void)
 			root = parse_cmd_line(&token_lst);
 			if (!root)
 				return ;
-			if (!execute_ast(root))
-				return ;
+			execute_ast(root);
 		}
 	}
+	reset_counters();
+}
+
+void	read_cmd(void)
+{
+	char	*line;
+
+	line = readline(SHELL_PROMPT);
+	if (!line)
+		return (printf("exit"), exit(-1)); // free mem
+	if (line[0] && check_spaces(line))
+		add_history(line);
+	process_input(line);
 	// free(line);
 }
 
 int	main(int ac, char **av, char **env)
 {
 	(void)av;
-	if (ac != 1)
-		return (EXIT_FAILURE);
+	(void)ac;
+	
 	if (!isatty(STDIN_FILENO))
 		return (printf(NOT_TTY), EXIT_FAILURE);
 	get_env_list(env);
@@ -166,6 +183,7 @@ int	main(int ac, char **av, char **env)
 	{
 		read_cmd();
 		// m_alloc(0, FREE);
+		// printf("counter %ld", mshell()->double_quote_count);
 	}
 	// rl_clear_history();
 	return (EXIT_SUCCESS);

@@ -94,6 +94,7 @@ typedef	struct s_minishell
 	char	*pwd;
 	int		exit_status;
 	int		expand_oho;
+	bool	hd_interrupt;
 }			t_minishell;
 
 typedef struct s_redir
@@ -197,7 +198,9 @@ void    free_strs(char **strs);
 char	**get_matching_files(char *pattern);
 int		is_match(char *pattern, char *str);
 
-
+/*		Signals			*/
+void	handle_signals(void);
+void	handler(int sig);
 
 
 /* Export */

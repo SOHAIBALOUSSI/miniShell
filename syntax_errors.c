@@ -1,5 +1,20 @@
 #include "minishell.h"
 
+void	heredoc_handler(int sig)
+{
+	(void)sig;
+	write(1, "\n", 1);
+	exit(mshell()->exit_status);
+}
+
+void	handle_heredoc_signals(void)
+{
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGTERM, SIG_IGN);
+	signal(SIGINT, heredoc_handler);
+}
+
+
 static void	syntax_err(t_token *current)
 {
 	char	*err;
@@ -126,6 +141,7 @@ void	here_doc(int fd, char *delimiter)
 	}
 	else if (pid == 0)
 	{
+		handle_heredoc_signals();
 		write_to_heredoc(fd, delimiter);
 		close(fd);
 		exit(EXIT_SUCCESS);
@@ -135,7 +151,14 @@ void	here_doc(int fd, char *delimiter)
 		waitpid(pid, &status, 0);
 		close(fd);
 		m_free(delimiter);
-		mshell()->exit_status = WEXITSTATUS(status);
+		if (WIFEXITED(status))
+            mshell()->exit_status = WEXITSTATUS(status);
+        else if (WIFSIGNALED(status))
+        {
+            mshell()->exit_status = 128 + WTERMSIG(status);
+            if (WTERMSIG(status) == SIGINT)
+                mshell()->hd_interrupt = 1;
+        }
 	}
 }
 
@@ -151,8 +174,7 @@ char *read_heredoc(char *delimiter)
 	m_free(heredoc_number);
 	fd = open(heredoc_filename, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (fd < 0)
-		return (perror("open"), exit(1), NULL); // TODO: free memory before exit and set exit status to 1
-	// signal(SIGINT, SIG_IGN); // signals to handle later
+		return (perror("open"), exit(1), NULL);
 	here_doc(fd, delimiter);
 	return (heredoc_filename);
 }

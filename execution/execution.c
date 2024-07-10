@@ -32,7 +32,7 @@ static char *get_cmd_path(char *cmd)
 	int			i;
 
     paths = NULL;
-    if (!ft_strcmp(cmd, "minishell"))
+    if (!ft_strcmp(cmd, "minishell") || !*cmd)
     {
         print_error(cmd, "command not found");
         mshell()->exit_status = 127;
@@ -134,6 +134,11 @@ int execute_cmd(t_tree *root)
 	int status;
 
 	cmd_path = NULL;
+    if (mshell()->hd_interrupt)
+    {
+        mshell()->hd_interrupt = 0;
+        return (mshell()->exit_status);
+    }
 	expander(root);
 	if (root->argv && root->argv[0] && is_builtin(root->argv[0]))
 		return (execute_builtin(root));
