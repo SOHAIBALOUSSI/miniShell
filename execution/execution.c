@@ -55,7 +55,7 @@ static char *get_cmd_path(char *cmd)
                 if (!access(cmd, F_OK | X_OK))
                     return (cmd);
                 mshell()->exit_status = 127;
-                return (print_error(cmd, "No such file or directory"), NULL);
+                return (perror(cmd), NULL);
             }
         }
         if (!access(cmd, F_OK | X_OK))
@@ -73,7 +73,7 @@ static char *get_cmd_path(char *cmd)
             if (!access(cmd, F_OK | X_OK))
                 return (cmd);
             mshell()->exit_status = 127;
-            return (print_error(cmd, "No such file or directory"), NULL); 
+            return (perror(cmd), NULL); 
         }
     }
 	while (paths && paths[i])
@@ -122,7 +122,6 @@ int execute_builtin(t_tree *root)
         builtin_exit(argv + 1);
         ret = EXIT_SUCCESS;
     }
-
     return (ret);
 }
 
@@ -134,11 +133,6 @@ int execute_cmd(t_tree *root)
 	int status;
 
 	cmd_path = NULL;
-    if (mshell()->hd_interrupt)
-    {
-        mshell()->hd_interrupt = 0;
-        return (mshell()->exit_status);
-    }
 	expander(root);
 	if (root->argv && root->argv[0] && is_builtin(root->argv[0]))
 		return (execute_builtin(root));
@@ -146,7 +140,7 @@ int execute_cmd(t_tree *root)
 	{
 		cmd_path = get_cmd_path(root->argv[0]);
 		if (!cmd_path)
-			return (mshell()->exit_status);
+			return ( mshell()->exit_status);
         else if (is_directory(cmd_path))
         {
             print_error(cmd_path, "command not found");

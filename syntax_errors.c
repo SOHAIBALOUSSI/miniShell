@@ -174,7 +174,7 @@ char *read_heredoc(char *delimiter)
 	m_free(heredoc_number);
 	fd = open(heredoc_filename, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (fd < 0)
-		return (perror("open"), exit(1), NULL);
+		return (pop_error("heredoc open failed"), NULL);
 	here_doc(fd, delimiter);
 	return (heredoc_filename);
 }

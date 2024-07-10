@@ -27,7 +27,8 @@ void handle_redirections(t_redir *redir_list)
             current->fds[0] = open(current->file_name, O_RDONLY);
             if (current->fds[0] < 0)
             {
-                print_error(current->file_name, "Open failed");
+                // print_error(current->file_name, "Open failed");
+                perror(current->file_name);
                 exit(EXIT_FAILURE);
             }
             current->original_in = dup(STDIN_FILENO);
@@ -39,7 +40,7 @@ void handle_redirections(t_redir *redir_list)
             current->fds[1] = open(current->file_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
             if (current->fds[1] < 0)
             {
-                print_error(current->file_name, "Open failed");
+                perror(current->file_name);
                 exit(EXIT_FAILURE);
             }
             current->original_out = dup(STDOUT_FILENO);
@@ -51,7 +52,7 @@ void handle_redirections(t_redir *redir_list)
             current->fds[1] = open(current->file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
             if (current->fds[1] < 0)
             {
-                print_error(current->file_name, "Open failed");
+                perror(current->file_name);
                 exit(EXIT_FAILURE);
             }
             current->original_out = dup(STDOUT_FILENO);
@@ -63,7 +64,7 @@ void handle_redirections(t_redir *redir_list)
             int fd = open(current->file_name, O_RDONLY);
             if (fd < 0)
             {
-                print_error(current->file_name, "Open failed");
+                perror(current->file_name);
                 exit(EXIT_FAILURE);
             }
             current->original_in = dup(STDIN_FILENO);

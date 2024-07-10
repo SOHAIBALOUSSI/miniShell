@@ -1,0 +1,78 @@
+
+PWD_CASE :
+    =>
+        "if" pwd doesnt exist should not be modified/created :
+            -> when changing the directory and oldPWD should be modified/created in all cases
+
+
+HEREDOC_CASE: 
+    =>
+        ➜  minia git:(main) ✗ ./minishell 
+        [minishell]$ cat <<eof
+        > $USER
+        > eof
+        msaadidi
+        [minishell]$ cat <<""eof
+        > $USER
+        > eof
+        $USER
+        [minishell]$ cat<<eof
+        > $USER
+        > eof
+        $USER
+        [minishell]$ 
+    =>
+        heredoc command shouldnt be added to history
+
+EXPAND_CASE :
+    =>
+        minishell :
+            [minishell]$ $hd
+            : command not found
+
+        bash :
+            msaadidi@c3r7p2:~/Desktop/minia$ $egoerg
+            msaadidi@c3r7p2:~/Desktop/minia$ 
+
+
+
+EXIT_CASE :
+    =>  
+        bash :
+          + msaadidi@c3r7p2:~/Desktop/minia$ exit | grep hello
+          + msaadidi@c3r7p2:~/Desktop/minia$ echo hello | exit 454ds
+            bash: exit: 454ds: numeric argument required
+          + msaadidi@c3r7p2:~/Desktop/minia$ echo hello | exit 
+        minishell :
+          + [minishell]$ exit | grep hello
+            exit
+          + [minishell]$ echo hello | exit 454ds
+            exit
+            Minishell: exit: : numeric argument required
+          + [minishell]$ echo hello | exit
+            exit
+
+
+
+
+
+AWK_CASE :
+    =>
+        minishell :
+        (with single quotes) :
+            [minishell]$ cat <Makefile | wc -l | awk '{print $1}'
+            awk: cmd. line:1: {print
+            awk: cmd. line:1:       ^ unexpected newline or end of string
+        (without single quotes) :
+            [minishell]$ cat <Makefile | wc -l | awk {print $1}
+            awk: cmd. line:1: {print
+            awk: cmd. line:1:       ^ unexpected newline or end of string
+
+        bash :
+        (with single quotes) :
+            msaadidi@c3r7p2:~/Desktop/minia$ cat <Makefile | wc -l | awk '{print $1}'
+            40
+        (without single quotes) :
+            msaadidi@c3r7p2:~/Desktop/minia$ cat <Makefile | wc -l | awk {print $1}
+            awk: cmd. line:1: {print
+            awk: cmd. line:1:       ^ unexpected newline or end of string
