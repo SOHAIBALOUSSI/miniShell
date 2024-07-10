@@ -32,7 +32,7 @@ static char *get_cmd_path(char *cmd)
 	int			i;
 
     paths = NULL;
-    if (!ft_strcmp(cmd, "minishell"))
+    if (!ft_strcmp(cmd, "minishell") || !*cmd)
     {
         print_error(cmd, "command not found");
         mshell()->exit_status = 127;
