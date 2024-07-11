@@ -9,7 +9,7 @@ static char	*expand_var(char *var_name)
 
 	value = get_value(var_name);
 	if (!value)
-		return (ft_strdup(""));
+		return (NULL);
 	return (ft_strdup(value));
 }
 
@@ -66,7 +66,8 @@ static char	*handle_dollar_sign(char *arg, int *i, char *result, int in_dquote)
 		result = ft_strjoin(result, var_value);
 		*i += ft_strlen(var_name) - 1;
 		m_free(var_name);
-		m_free(var_value);
+		if (var_value)
+			m_free(var_value);
 	}
 	return (result);
 }
