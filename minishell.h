@@ -200,10 +200,11 @@ void	expand_wildard(char ***old_argv);
 char	*expand_arg(char *arg, bool *to_split);
 void	add_to_new_argv(char *expanded_arg, char ***expanded_argv, bool to_split);
 int		read_expand_write(char *file_name);
-char	*handle_dollar_sign(char *arg, int *i, char *result, int *in_dquote, int *in_squote);
+char	*handle_dollar_sign(char *arg, int *i, char *result);
 char	*expand_heredoc(char *heredoc_content);
 char	*ft_strjoin_char(char *str, char c);
 char	*expand_var(char *var_name);
+char	*expand_variable(char *arg, int *i);
 
 void    expand_wildard(char ***old_argv);
 void    free_strs(char **strs);

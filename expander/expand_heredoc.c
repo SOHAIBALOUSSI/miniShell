@@ -38,7 +38,7 @@ static char	*expand_heredoc_line(char *heredoc_line)
 	while (heredoc_line[i])
 	{
 		if (heredoc_line[i] == '$' && heredoc_line[i + 1] && (ft_isalnum(heredoc_line[i + 1]) || heredoc_line[i + 1] == '?'))
-			result = handle_dollar_sign(heredoc_line, &i, result, NULL, NULL);
+			result = handle_dollar_sign(heredoc_line, &i, result);
 		else
 			result = ft_strjoin_char(result, heredoc_line[i]);
 		i++;
