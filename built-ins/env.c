@@ -34,6 +34,11 @@ char **get_current_env_array(void)
     count = 0;
     while (temp)
     {
+        if (!temp->value)
+        {
+            temp = temp->next;
+            continue;
+        }
         env_array[count] = ft_strjoin(temp->key, "=");
         env_array[count] = ft_strjoin(env_array[count], temp->value);
         temp = temp->next;

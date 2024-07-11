@@ -6,25 +6,16 @@ static void	update_pwd_env(char *new_dir, char *old_dir)
 	t_env	*oldpwd;
 
 	pwd = find_env_var("PWD", *mshell()->env_list);
-	if (pwd)
-		pwd->value = ft_strdup(getcwd(NULL, PATH_MAX));
-	else
-	{
-		pwd = m_alloc(sizeof(t_env), ALLOC);
-		pwd->key = ft_strdup("PWD");
-		pwd->value = ft_strdup(new_dir);
-		append_env(mshell()->env_list, pwd);
-	}	
 	oldpwd = find_env_var("OLDPWD", *mshell()->env_list);
 	if (oldpwd)
-		oldpwd->value = ft_strdup(old_dir);
-	else
 	{
-		oldpwd = m_alloc(sizeof(t_env), ALLOC);
-		oldpwd->key = ft_strdup("OLDPWD");
-		oldpwd->value = ft_strdup(old_dir);
-		append_env(mshell()->env_list, oldpwd);
+		if (pwd)
+			oldpwd->value = ft_strdup(pwd->value);
+		else
+			oldpwd->value = ft_strdup(old_dir);
 	}
+	if (pwd)
+		pwd->value = ft_strdup(getcwd(NULL, PATH_MAX));
 }
 
 int	chdir_and_update_env(char *new_dir, char *old_dir)
@@ -53,10 +44,10 @@ int	builtin_cd(char **args)
 
 	if (!*args)
 		return (go__home(old_dir));
-	if (!getcwd(old_dir, PATH_MAX))
-		return  (perror("Minishell: cd: getcwd: "), EXIT_FAILURE);
 	if (args[1])
 		return (pop_error("Minishell: cd: too many arguments\n"), EXIT_FAILURE);
+	if (!getcwd(old_dir, PATH_MAX))
+		return  (perror("Minishell: cd: getcwd: "), EXIT_FAILURE);
 	new_dir = args[0];
 	if (new_dir && *args[0])
 	{

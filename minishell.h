@@ -212,6 +212,7 @@ t_env	*find_env_var(char *key, t_env *env_list);
 size_t	lst_size(t_env **lst);
 void	built_ins_err(char *err_key);
 bool	has_add_sign(char *s);
+bool	has_only_equal_sign(char *s);
 
 /*	ENV */
 

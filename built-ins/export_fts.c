@@ -62,6 +62,19 @@ bool	has_add_sign(char *s)
 	}
 	return (false);
 }
+bool	has_only_equal_sign(char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i] && s[i + 1])
+	{
+		if (s[i] != '+' && s[i + 1] == '=')
+			return (true);
+		i++;
+	}
+	return (false);
+}
 
 bool	is_valid_key(char *s)
 {
