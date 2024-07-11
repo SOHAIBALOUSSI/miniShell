@@ -29,22 +29,22 @@ void	builtin_exit(char **args)
 	// need to handle spaces
 	if (!args || !args[0])
 	{
-		printf("exit\n");
+		ft_putendl_fd("exit", 2);
 		exit_clean(mshell()->exit_status);
 	}
 	else if (args[0] && args[1])
 	{
-		printf("exit\n");
+		ft_putendl_fd("exit", 2);
 		pop_error("Minishell: exit: too many arguments\n");
 	}
 	else if (check_exit_value(args[0]))
 	{
-		printf("exit\n");
+		ft_putendl_fd("exit", 2);
 		exit_clean(ft_atoi(args[0]));
 	}
 	else
 	{
-		printf("exit\n");
+		ft_putendl_fd("exit", 2);
 		ft_putstr_fd("Minishell: exit: ", 2);
 		ft_putstr_fd(args[0], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);

@@ -14,7 +14,7 @@ int    actual_pipeline(t_tree **pipeline, int n_cmd)
     {
         if (pipe(fd[i]) < 0)
         {
-            pop_error("Pipe creation failed\n");
+            perror("Minishell: ");
             return (-1);
         }
         i++;
@@ -25,7 +25,7 @@ int    actual_pipeline(t_tree **pipeline, int n_cmd)
         pid[i] = fork();
         if (pid[i] < 0) 
         {
-            pop_error("Fork failed\n");
+            perror("Minishell: ");
             return -1;
         } 
         else if (pid[i] == 0)

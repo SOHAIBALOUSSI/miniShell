@@ -3,8 +3,7 @@
 void	heredoc_handler(int sig)
 {
 	(void)sig;
-	write(1, "\n", 1);
-	exit(mshell()->exit_status);
+	exit(130);
 }
 
 void	handle_heredoc_signals(void)
@@ -133,32 +132,30 @@ void	here_doc(int fd, char *delimiter)
 	pid_t	pid;
 	int		status;
 
-	pid = fork();
-	if (pid < 0)
+	if (mshell()->hd_interrupt == 0)
 	{
-		pop_error("Fork failed\n");
-		return ;
-	}
-	else if (pid == 0)
-	{
-		handle_heredoc_signals();
-		write_to_heredoc(fd, delimiter);
-		close(fd);
-		exit(EXIT_SUCCESS);
-	}
-	else
-	{
-		waitpid(pid, &status, 0);
-		close(fd);
-		m_free(delimiter);
-		if (WIFEXITED(status))
-            mshell()->exit_status = WEXITSTATUS(status);
-        else if (WIFSIGNALED(status))
-        {
-            mshell()->exit_status = 128 + WTERMSIG(status);
-            if (WTERMSIG(status) == SIGINT)
-                mshell()->hd_interrupt = 1;
-        }
+		pid = fork();
+		if (pid < 0)
+		{
+			pop_error("Fork failed\n");
+			return ;
+		}
+		else if (pid == 0)
+		{
+			handle_heredoc_signals();
+			write_to_heredoc(fd, delimiter);
+			close(fd);
+			exit(EXIT_SUCCESS);
+		}
+		else
+		{
+			waitpid(pid, &status, 0);
+			close(fd);
+			m_free(delimiter);
+			mshell()->exit_status = WEXITSTATUS(status);
+			if (mshell()->exit_status == 130)
+				mshell()->hd_interrupt = 1;
+		}
 	}
 }
 
@@ -174,7 +171,7 @@ char *read_heredoc(char *delimiter)
 	m_free(heredoc_number);
 	fd = open(heredoc_filename, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (fd < 0)
-		return (perror("open"), exit(1), NULL);
+		return (pop_error("heredoc open failed"), NULL);
 	here_doc(fd, delimiter);
 	return (heredoc_filename);
 }
