@@ -134,14 +134,15 @@ int execute_builtin(t_tree *root)
 
         cmd_path = NULL;
         expander(root);
-        // printf("hd_interrupt : %d\n", mshell()->hd_interrupt);
         if (root->argv && root->argv[0] && is_builtin(root->argv[0]))
             return (execute_builtin(root));
         if (root->argv)
         {
+            if (root->redir_list)
+                handle_redirections(root->redir_list); 
             cmd_path = get_cmd_path(root->argv[0]);
             if (!cmd_path)
-                return ( mshell()->exit_status);
+                return (mshell()->exit_status);
             else if (is_directory(cmd_path))
             {
                 print_error(cmd_path, "command not found");

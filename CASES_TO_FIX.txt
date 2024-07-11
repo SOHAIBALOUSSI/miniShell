@@ -30,42 +30,12 @@ TESTS_THAT_FAILED :
                           $USER          
     =>
         minishell :
-            [minishell]$ >">" asd
-            [1]    430232 segmentation fault (core dumped)  ./minishell
-        bash :
-            msaadidi@c3r6p2:~/Desktop/minia$ >">" asd
-            Command 'asd' not found, but there are 21 similar ones.
-            => ('>' file screated)
-    =>
-        minishell :
             [minishell]$ echo '' -n
             [minishell]$ 
         bash :
             msaadidi@c3r6p2:~/Desktop/minia$ echo '' -n
             -n
             msaadidi@c3r6p2:~/Desktop/minia$ 
-    =>
-        minishell:
-            [minishell]$ >> "$H"OM"E"
-            [1]    430463 segmentation fault (core dumped)  ./minishell
-        bash :
-            msaadidi@c3r6p2:~/Desktop/minia$ >> "$H"OM"E"
-            (OME file is created)
-    =>
-        minishell:
-            [minishell]$ >> "$USER'$USER'"
-            [1]    431110 segmentation fault (core dumped)  ./minishell
-        bash :
-            msaadidi@c3r6p2:~/Desktop/minia$ >> "$USER'$USER'"
-            ("$USER'$USER'" file is created)
-
-    =>
-        minishell:
-            [minishell]$ >> "$USER"
-            [1]    431241 segmentation fault (core dumped)  ./minishell
-        bash :
-            msaadidi@c3r6p2:~/Desktop/minia$ >> "$USER"
-            ($USER file is created)
     =>
         minishell:
             [minishell]$ $NOVAR

@@ -40,6 +40,7 @@ void handle_redirections(t_redir *redir_list)
             current->fds[1] = open(current->file_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
             if (current->fds[1] < 0)
             {
+                printf("idk\n");
                 perror(current->file_name);
                 exit(EXIT_FAILURE);
             }

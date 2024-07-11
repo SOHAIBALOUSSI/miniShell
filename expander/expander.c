@@ -90,6 +90,7 @@ static char	*expand_arg(char *arg, bool *to_split)
 		else if (arg[i] == DQUOTE && !in_squote)
 		{
 			*to_split = false;
+
 			in_dquote = !in_dquote;
 		}
 		else if (arg[i] == '$' && !in_squote && arg[i + 1] && (ft_isalnum(arg[i + 1]) || arg[i + 1] == '?' || arg[i + 1] == '_'))
@@ -241,8 +242,10 @@ int	read_expand_write(char *file_name)
 int	expand_redirection(t_redir *redir_list)
 {
 	t_redir	*redir;
+	bool	to_split;
 
 	redir = redir_list;
+	to_split = false;
 	while (redir)
 	{
 		if (redir->type == _HEREDOC)
@@ -252,9 +255,7 @@ int	expand_redirection(t_redir *redir_list)
 		}
 		else
 		if (redir->file_name)
-		{
-			redir->file_name = expand_arg(redir->file_name, false);
-		}
+			redir->file_name = expand_arg(redir->file_name, &to_split);
 		redir = redir->next;
 	}
 	return (0);
