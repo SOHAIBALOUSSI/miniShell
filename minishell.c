@@ -56,6 +56,7 @@ void	reset_counters(void)
 	mshell()->double_quote_count = 0;
 	mshell()->pipe_count = 0;
 	mshell()->heredoc_count = 0;
+	mshell()->expand_oho = 0;
 }
 
 void	process_input(char *line)
