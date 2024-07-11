@@ -191,8 +191,20 @@ void restore_redirections(t_redir *redir);
 int execute_ast(t_tree *root);
 int execute_cmd(t_tree *root);
 
+char *get_value(char *key);
+
+
 /*		Expander		*/
 void    expander(t_tree *root);
+void	expand_wildard(char ***old_argv);
+char	*expand_arg(char *arg, bool *to_split);
+void	add_to_new_argv(char *expanded_arg, char ***expanded_argv, bool to_split);
+int		read_expand_write(char *file_name);
+char	*handle_dollar_sign(char *arg, int *i, char *result, int *in_dquote, int *in_squote);
+char	*expand_heredoc(char *heredoc_content);
+char	*ft_strjoin_char(char *str, char c);
+char	*expand_var(char *var_name);
+
 void    expand_wildard(char ***old_argv);
 void    free_strs(char **strs);
 char	**get_matching_files(char *pattern);
@@ -207,12 +219,13 @@ void	handler(int sig);
 
 void	builtin_export(char **args);
 bool	is_valid_key(char *s);
-char	*get_value(char *key);
 t_env	*find_env_var(char *key, t_env *env_list);
 size_t	lst_size(t_env **lst);
 void	built_ins_err(char *err_key);
 bool	has_add_sign(char *s);
 bool	has_only_equal_sign(char *s);
+char	*get_var_value(char *key);
+char	*get_var_key(char *str);
 
 /*	ENV */
 

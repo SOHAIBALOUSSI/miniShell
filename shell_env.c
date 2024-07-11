@@ -18,15 +18,6 @@ void append_env(t_env **lst, t_env *new_env)
     tail->next = new_env;
 }
 
-char *get_key(char *s)
-{
-	int i;
-
-	i = 0;
-	while (s[i] && s[i] != '=' && s[i] != '+')
-		i++;
-	return(ft_substr(s, 0, i));
-}
 
 void set_shlvl(t_env *node)
 {
@@ -49,7 +40,17 @@ void set_shlvl(t_env *node)
 		append_env(mshell()->env_list, create_env("SHLVL=1"));
 }
 
-char	*_get_value(char *env)
+char *get_env_key(char *s)
+{
+	int i;
+
+	i = 0;
+	while (s[i] && s[i] != '=' && s[i] != '+')
+		i++;
+	return(ft_substr(s, 0, i));
+}
+
+char	*get_env_value(char *env)
 {
 	int i;
 
@@ -73,8 +74,8 @@ t_env	*create_env(char *env)
 	
 	value = NULL;
 	node = m_alloc(sizeof(t_env), ALLOC);
-	node->key = get_key(env);
-	value = _get_value(env);
+	node->key = get_env_key(env);
+	value = get_env_value(env);
 	node->value = value;
 	return (node);
 }

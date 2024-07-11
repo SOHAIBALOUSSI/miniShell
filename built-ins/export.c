@@ -74,7 +74,7 @@ static void	put_sorted_env(void)
 	while (env_array[i])
 	{
 		printf("declare -x ");
-		put = get_value(env_array[i]);
+		put = get_var_value(env_array[i]);
 		if (put)
 		{
 			printf("%s", env_array[i]);
