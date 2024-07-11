@@ -3,6 +3,18 @@ PWD_CASE :
     =>
         "if" pwd doesnt exist should not be modified/created :
             -> when changing the directory and oldPWD should be modified/created in all cases
+    =>
+        [minishell]$ mkdir a
+        [minishell]$ mkdir a/b
+        [minishell]$ cd a/b
+        [minishell]$ rm -rf ../../a/
+        [minishell]$ pwd
+        idi/Desktop/minia <=== this should be (/nfs/homes/msaadidi/Desktop/minia)
+        [minishell]$ cd
+        [minishell]$ pwd
+        /nfs/homes/msaadidi
+        [minishell]$ 
+
 
 
 HEREDOC_CASE: 
@@ -23,6 +35,7 @@ HEREDOC_CASE:
         [minishell]$ 
     =>
         heredoc command shouldnt be added to history
+
 
 EXPAND_CASE :
     =>
@@ -76,3 +89,19 @@ AWK_CASE :
             msaadidi@c3r7p2:~/Desktop/minia$ cat <Makefile | wc -l | awk {print $1}
             awk: cmd. line:1: {print
             awk: cmd. line:1:       ^ unexpected newline or end of string
+
+
+CD_CASE :
+    =>
+        minishell:
+            [minishell]$ export HOME=
+            [minishell]$ cd
+            Minishell: cd: chdir: No such file or directory
+            [minishell]$ 
+        bash :
+            msaadidi@c3r6p2:/nfs/homes/msaadidi/Desktop/minia$ export HOME=
+            msaadidi@c3r6p2:/nfs/homes/msaadidi/Desktop/minia$ cd
+            msaadidi@c3r6p2:/nfs/homes/msaadidi/Desktop/minia$ 
+        (should not print error msg)
+        
+        
