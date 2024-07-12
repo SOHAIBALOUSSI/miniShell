@@ -7,8 +7,6 @@ int    actual_pipeline(t_tree **pipeline, int n_cmd)
     int     fd[n_cmd - 1][2];
     int     i;
 
-    // printf("Executing pipeline with %d commands...\n", n_cmd);
-    // fflush(stdout);
     i = 0;
     while (i < n_cmd - 1)
     {
@@ -63,8 +61,6 @@ int    actual_pipeline(t_tree **pipeline, int n_cmd)
         mshell()->exit_status = WEXITSTATUS(status);
         i++;
     }
-    // printf("Pipeline execution finished with status: %d\n", mshell()->exit_status);
-    // fflush(stdout);
     mshell()->pipe_count = 0;
     return (mshell()->exit_status);
 }

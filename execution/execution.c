@@ -95,10 +95,12 @@ int execute_builtin(t_tree *root)
     char **argv;
     int ret;
 
-    ret = EXIT_FAILURE;
+    ret = -1;
     argv = root->argv;
     if (root->redir_list)
-        handle_redirections(root->redir_list);
+        handle_redirections2(root->redir_list, &ret);
+    if (ret == EXIT_FAILURE)
+        return (ret);
     if (ft_strcmp(argv[0], "cd") == 0)
         ret = builtin_cd(argv + 1);
     else if (ft_strcmp(argv[0], "echo") == 0)
@@ -151,31 +153,28 @@ int execute_cmd(t_tree *root)
     char *cmd_path;
     pid_t pid;
     int status;
+
     cmd_path = NULL;
     expander(root);
-    if (root->argv)
-        set_env_var("_", get_last_arg(root->argv));
     if (root->argv && root->argv[0] && is_builtin(root->argv[0]))
         return (execute_builtin(root));
-    if (root->argv)
-    {
-        if (root->redir_list)
-            handle_redirections(root->redir_list); 
-        cmd_path = get_cmd_path(root->argv[0]);
-        if (!cmd_path)
-            return (mshell()->exit_status);
-        else if (is_directory(cmd_path))
-        {
-            print_error(cmd_path, "command not found");
-            mshell()->exit_status = 127;
-            return (mshell()->exit_status);
-        }
-    }
     pid = fork();
     if (pid == 0)
     {
         if (root->redir_list)
-            handle_redirections(root->redir_list);
+            handle_redirections(root->redir_list); 
+        if (root->argv)
+        {
+            cmd_path = get_cmd_path(root->argv[0]);
+            if (!cmd_path)
+                exit(mshell()->exit_status);
+            else if (is_directory(cmd_path))
+            {
+                print_error(cmd_path, "command not found");
+                mshell()->exit_status = 127;
+                exit(mshell()->exit_status);
+            }
+        }
         if (cmd_path && execve(cmd_path, root->argv, get_current_env_array()) == -1)
             exit(EXIT_FAILURE);
         else

@@ -36,6 +36,7 @@ void	builtin_exit(char **args)
 	{
 		ft_putendl_fd("exit", 2);
 		pop_error("Minishell: exit: too many arguments\n");
+		exit_clean(1);
 	}
 	else if (check_exit_value(args[0]))
 	{
