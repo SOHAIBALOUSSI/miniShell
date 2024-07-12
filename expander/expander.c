@@ -15,8 +15,7 @@ static int	expand_redirection(t_redir *redir_list)
 			if (read_expand_write(redir->file_name) == -1)
 				return (-1);
 		}
-		else
-		if (redir->file_name)
+		else if (redir->file_name)
 			redir->file_name = expand_arg(redir->file_name, &to_split);
 		redir = redir->next;
 	}
@@ -37,7 +36,8 @@ static void	expand_argv(t_tree *node)
 	while (node->argv[i])
 	{
 		expanded_arg = expand_arg(node->argv[i], &to_split);
-		add_to_new_argv(expanded_arg, &expanded_argv, to_split);
+		if (expanded_arg)
+			add_to_new_argv(expanded_arg, &expanded_argv, to_split);
 		i++;
 	}
 	m_free(node->argv);

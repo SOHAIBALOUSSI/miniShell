@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "minishell.h": "c",
-        "cstdlib": "c"
+        "cstdlib": "c",
+        "libft.h": "c"
     }
 }

@@ -49,7 +49,6 @@ typedef enum e_tok
 	_SPACE,  //16
 }	e_tok;
 
-
 typedef struct s_slice
 {
 	char	*location;
@@ -95,6 +94,7 @@ typedef	struct s_minishell
 	int		exit_status;
 	int		expand_oho;
 	bool	hd_interrupt;
+	bool	in_exec;
 }			t_minishell;
 
 typedef struct s_redir

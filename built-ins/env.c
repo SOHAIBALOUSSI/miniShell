@@ -8,7 +8,7 @@ void	builtin_env(void)
 	tmp = *mshell()->env_list;
 	while (tmp)
 	{
-		if (ft_strcmp(tmp->value, ""))
+		if (tmp->value)
 			printf("%s=%s\n", tmp->key, tmp->value);
 		tmp = tmp->next;
 	}
