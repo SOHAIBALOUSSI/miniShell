@@ -28,7 +28,7 @@ TESTS_THAT_FAILED :
         bash :
             msaadidi@c3r6p2:~/Desktop/minia$ /bin/echo '              $USER          '
                           $USER          
-    =>
+    => (echo)
         minishell :
             [minishell]$ echo '' -n
             [minishell]$ 
