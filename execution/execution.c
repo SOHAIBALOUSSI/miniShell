@@ -127,51 +127,71 @@ int execute_builtin(t_tree *root)
     return (ret);
 }
 
+char *get_last_arg(char **args)
+{
+    int i;
 
-    int execute_cmd(t_tree *root)
+    i = 0;
+    while (args[i + 1])
+        i++;
+    return (args[i]);
+}
+
+void    set_env_var(char *key, char *value)
+{
+    t_env *env;
+
+    env = find_env_var(key, *mshell()->env_list);
+    if (env)
+        env->value = ft_strdup(value);
+    else
+        append_env(mshell()->env_list, create_env(ft_strjoin(key, ft_strjoin("=", value))));
+}
+
+int execute_cmd(t_tree *root)
+{
+    char *cmd_path;
+    pid_t pid;
+    int status;
+
+    cmd_path = NULL;
+    expander(root);
+    if (root->argv && root->argv[0] && is_builtin(root->argv[0]))
+        return (execute_builtin(root));
+    pid = fork();
+    if (pid == 0)
     {
-        char *cmd_path;
-        pid_t pid;
-        int status;
-
-        cmd_path = NULL;
-        expander(root);
-        if (root->argv && root->argv[0] && is_builtin(root->argv[0]))
-            return (execute_builtin(root));
-        pid = fork();
-        if (pid == 0)
+        if (root->redir_list)
+            handle_redirections(root->redir_list); 
+        if (root->argv)
         {
-            if (root->redir_list)
-                handle_redirections(root->redir_list); 
-            if (root->argv)
+            cmd_path = get_cmd_path(root->argv[0]);
+            if (!cmd_path)
+                exit(mshell()->exit_status);
+            else if (is_directory(cmd_path))
             {
-                cmd_path = get_cmd_path(root->argv[0]);
-                if (!cmd_path)
-                    exit(mshell()->exit_status);
-                else if (is_directory(cmd_path))
-                {
-                    print_error(cmd_path, "command not found");
-                    mshell()->exit_status = 127;
-                    exit(mshell()->exit_status);
-                }
+                print_error(cmd_path, "command not found");
+                mshell()->exit_status = 127;
+                exit(mshell()->exit_status);
             }
-            if (cmd_path && execve(cmd_path, root->argv, get_current_env_array()) == -1)
-                exit(EXIT_FAILURE);
-            else
-                exit(EXIT_FAILURE);
         }
-        else if (pid < 0)
-        {
-            pop_error("Fork failed\n");
-            return (1);
-        }
+        if (cmd_path && execve(cmd_path, root->argv, get_current_env_array()) == -1)
+            exit(EXIT_FAILURE);
         else
-        {
-            waitpid(pid, &status, 0);
-            mshell()->exit_status = WEXITSTATUS(status);
-        }
-        return (mshell()->exit_status);
+            exit(EXIT_FAILURE);
     }
+    else if (pid < 0)
+    {
+        pop_error("Fork failed\n");
+        return (1);
+    }
+    else
+    {
+        waitpid(pid, &status, 0);
+        mshell()->exit_status = WEXITSTATUS(status);
+    }
+    return (mshell()->exit_status);
+}
 
 int count_pipes(t_tree **pipe_line)
 {

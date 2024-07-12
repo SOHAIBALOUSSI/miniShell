@@ -6,6 +6,8 @@ char	*ft_strndup(char *s1, size_t n)
 	char	*new;
 
 	i = 0;
+	if (!s1)
+		return (NULL);
 	new = m_alloc(sizeof(char) * (n + 1), ALLOC);
 	while (s1[i] && i < n)
 	{
