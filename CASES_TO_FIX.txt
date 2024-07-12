@@ -1,26 +1,26 @@
 TESTS_THAT_FAILED :
-    => (expand)
+=> (expand)
         minishell : 
             [minishell]$ /bin/echo $"HOME"$USER
             $HOMEmsaadidi
         bash :
             msaadidi@c3r6p2:~/Desktop/minia$ /bin/echo $"HOME"$USER
             HOMEmsaadidi
-    => (expand)
+=> (expand)
         minishell :
             [minishell]$ /bin/echo $"HOM"E$USER
             $HOMEmsaadidi
         bash :
             msaadidi@c3r6p2:~/Desktop/minia$ /bin/echo $"HOM"E$USER
             HOMEmsaadidi
-    => (expand)
+=> (expand)
         minishell :
             [minishell]$ /bin/echo $"42$"
             $42$
         bash :
             msaadidi@c3r6p2:~/Desktop/minia$ /bin/echo $"42$"
             42$
-    => (spaces)
+=> (spaces)
         minishell :
             [minishell]$ /bin/echo '              $USER          '
             $USER
@@ -28,7 +28,7 @@ TESTS_THAT_FAILED :
         bash :
             msaadidi@c3r6p2:~/Desktop/minia$ /bin/echo '              $USER          '
                           $USER          
-    => (echo)
+=> (echo)
         minishell :
             [minishell]$ echo '' -n
             [minishell]$ 
@@ -63,7 +63,7 @@ TESTS_THAT_FAILED :
         bash :
             msaadidi@c3r6p2:~/Desktop/minia$ echo '$'$'$'$'$'
             $$$
-    => (exit status is always 1 when export meets an invalid id)
+=> (exit status is always 1 when export meets an invalid id)
         minishell:
             [minishell]$ export 1TEST=
             Minishell: export: `1TEST=': not a valid identifier
@@ -75,7 +75,7 @@ TESTS_THAT_FAILED :
             msaadidi@c3r6p2:~/Desktop/minia$ echo $?
             1
 
-    => EXIT_CASES :
+=> EXIT_CASES :
         minishell:
             ➜  minia git:(main) ✗ ./minishell 
             [minishell]$ exit 99999999999999999999999999999999999999999999999999999999999999999999999999999999
@@ -134,7 +134,7 @@ PWD_CASE :
 
 
 HEREDOC_CASE: 
-    => !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+=> !!!!!!!!!!!!!!!!!!!!!!!!!!!!
         [minishell]$ cat <""eof
         [1]    380705 segmentation fault (core dumped)  ./minishell
 
@@ -170,7 +170,7 @@ EXPAND_CASE :
 
 
 EXIT_CASE :
-    =>  
+=>  
         bash :
           + msaadidi@c3r7p2:~/Desktop/minia$ exit | grep hello
           + msaadidi@c3r7p2:~/Desktop/minia$ echo hello | exit 454ds
@@ -229,142 +229,209 @@ CD_CASE :
 
 this is how bash handles exit with different arguments : 
 ________________________________________________________
+
 msaadidi@c3r6p2:~/Desktop/minia$ exit 9223372036854775807
 exit
-$ bash
-groups: cannot find name for group ID 4219
-msaadidi@c3r6p2:~/Desktop/minia$ exit 09999999999999999999999999999999999999999999999999999999999999999999999999
-exit
-bash: exit: 09999999999999999999999999999999999999999999999999999999999999999999999999: numeric argument required
-$ bash
-groups: cannot find name for group ID 4219
-msaadidi@c3r6p2:~/Desktop/minia$ exit  0 0
-exit
-bash: exit: too many arguments
-msaadidi@c3r6p2:~/Desktop/minia$ exit ""
-exit
-bash: exit: : numeric argument required
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit "+100"
-exit
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit "-100"
-exit
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit -9223372036854775805
-exit
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit 0
-exit
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit 10
-exit
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit 42
-exit
-$ bash
-emsaadidi@c3r6p2:~/Desktop/minia$ exit 1
-exit
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit ++++++
-exit
+    
+=> 
+    $ bash                                                                       (VALID)
+    groups: cannot find name for group ID 4219   
+    msaadidi@c3r6p2:~/Desktop/minia$ exit 09999999999999999999999999999999999999999999999999999999999999999999999999
+    exit
+    bash: exit: 09999999999999999999999999999999999999999999999999999999999999999999999999: numeric argument required
+    
+=> 
+    $ bash                                                                       (VALID)
+    groups: cannot find name for group ID 4219
+    msaadidi@c3r6p2:~/Desktop/minia$ exit  0 0
+    exit
+    bash: exit: too many arguments
+    msaadidi@c3r6p2:~/Desktop/minia$ exit ""
+    exit
+    bash: exit: : numeric argument required
+    
+=> 
+    $ bash                                              
+    msaadidi@c3r6p2:~/Desktop/minia$ exit "+100"                                    (VALID)
+    exit
+    
+=> 
+    $ bash                                                                          (VALID)
+    msaadidi@c3r6p2:~/Desktop/minia$ exit "-100"
+    exit
+    
+=> 
+    $ bash                                                                          (VALID)            
+    msaadidi@c3r6p2:~/Desktop/minia$ exit -9223372036854775805
+    exit
+    
+=> 
+    $ bash                                                                          (VALID)
+    msaadidi@c3r6p2:~/Desktop/minia$ exit 0
+    exit
+    
+=> 
+    $ bash                                                                          (VALID)
+    msaadidi@c3r6p2:~/Desktop/minia$ exit 10
+    exit
+    
+=> 
+    $ bash
+    msaadidi@c3r6p2:~/Desktop/minia$ exit 42
+    exit
+    
+=> 
+    $ bash
+    emsaadidi@c3r6p2:~/Desktop/minia$ exit 1
+    exit
+    
+=> 
+    $ bash
+    msaadidi@c3r6p2:~/Desktop/minia$ exit ++++++
+    exit
 bash: exit: ++++++: numeric argument required
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit +++++++++++
-exit
+    
+=> 
+    $ bash
+    msaadidi@c3r6p2:~/Desktop/minia$ exit +++++++++++
+    exit
 bash: exit: +++++++++++: numeric argument required
 $ exit +!
 sh: 17: exit: Illegal number: +!
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit +1
-exit
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit ++1
-exit
+    
+=> 
+    $ bash
+    msaadidi@c3r6p2:~/Desktop/minia$ exit +1
+    exit
+    
+=> 
+    $ bash
+    msaadidi@c3r6p2:~/Desktop/minia$ exit ++1
+    exit
 bash: exit: ++1: numeric argument required
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit ++12560
-exit
+    
+=> 
+    $ bash
+    msaadidi@c3r6p2:~/Desktop/minia$ exit ++12560
+    exit
 bash: exit: ++12560: numeric argument required
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit -------
-exit
+    
+=> 
+    $ bash
+    msaadidi@c3r6p2:~/Desktop/minia$ exit -------
+    exit
 bash: exit: -------: numeric argument required
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit -------------------
-exit
+    
+=> 
+    $ bash
+    msaadidi@c3r6p2:~/Desktop/minia$ exit -------------------
+    exit
 bash: exit: -------------------: numeric argument required
-$ bash 
-msaadidi@c3r6p2:~/Desktop/minia$ exit -1
-exit
-$ bash 
-msaadidi@c3r6p2:~/Desktop/minia$ exit --1
-exit
+    
+=> 
+    $ bash 
+    msaadidi@c3r6p2:~/Desktop/minia$ exit -1
+    exit
+    
+=> 
+    $ bash 
+    msaadidi@c3r6p2:~/Desktop/minia$ exit --1
+    exit
 bash: exit: --1: numeric argument required
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit -12560
-exit
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit 255
-exit
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit 1 2
-exit
+    
+=> 
+    $ bash
+    msaadidi@c3r6p2:~/Desktop/minia$ exit -12560
+    exit
+    
+=> 
+    $ bash
+    msaadidi@c3r6p2:~/Desktop/minia$ exit 255
+    exit
+    
+=> 
+    $ bash
+    msaadidi@c3r6p2:~/Desktop/minia$ exit 1 2
+    exit
 bash: exit: too many arguments
-msaadidi@c3r6p2:~/Desktop/minia$ exit 1 2 3
-exit
+    msaadidi@c3r6p2:~/Desktop/minia$ exit 1 2 3
+    exit
 bash: exit: too many arguments
-msaadidi@c3r6p2:~/Desktop/minia$ exit A
-exit
+    msaadidi@c3r6p2:~/Desktop/minia$ exit A
+    exit
 bash: exit: A: numeric argument required
-$ bash
-emsaadidi@c3r6p2:~/Desktop/minia$ exit A 2 3 
-exit
+    
+=> 
+    $ bash
+    emsaadidi@c3r6p2:~/Desktop/minia$ exit A 2 3 
+    exit
 bash: exit: A: numeric argument required
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit "A"
-exit
+    
+=> 
+    $ bash
+    msaadidi@c3r6p2:~/Desktop/minia$ exit "A"
+    exit
 bash: exit: A: numeric argument required
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit "+++"
-exit
+    
+=> 
+    $ bash
+    msaadidi@c3r6p2:~/Desktop/minia$ exit "+++"
+    exit
 bash: exit: +++: numeric argument required
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit ++++3193912939
-exit
+    
+=> 
+    $ bash
+    msaadidi@c3r6p2:~/Desktop/minia$ exit ++++3193912939
+    exit
 bash: exit: ++++3193912939: numeric argument required
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit 01
-exit
-$ bash 
-msaadidi@c3r6p2:~/Desktop/minia$ exit 001
-exit
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit 00001
-exit
+    
+=> 
+    $ bash
+    msaadidi@c3r6p2:~/Desktop/minia$ exit 01
+    exit
+    
+=> 
+    $ bash 
+    msaadidi@c3r6p2:~/Desktop/minia$ exit 001
+    exit
+    
+=> 
+    $ bash
+    msaadidi@c3r6p2:~/Desktop/minia$ exit 00001
+    exit
 e$bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit ++++00000
-exit
+    msaadidi@c3r6p2:~/Desktop/minia$ exit ++++00000
+    exit
 bash: exit: ++++00000: numeric argument required
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit ----000
-exit
+    
+=> 
+    $ bash
+    msaadidi@c3r6p2:~/Desktop/minia$ exit ----000
+    exit
 bash: exit: ----000: numeric argument required
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit "omething"
-exit
+    
+=> 
+    $ bash
+    msaadidi@c3r6p2:~/Desktop/minia$ exit "omething"
+    exit
 bash: exit: omething: numeric argument required
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit echo
-exit
+    
+=> 
+    $ bash
+    msaadidi@c3r6p2:~/Desktop/minia$ exit echo
+    exit
 bash: exit: echo: numeric argument required
-$ bash
-emsaadidi@c3r6p2:~/Desktop/minia$ exit exit
-exit
+    
+=> 
+    $ bash
+    emsaadidi@c3r6p2:~/Desktop/minia$ exit exit
+    exit
 bash: exit: exit: numeric argument required
-$ bash
-msaadidi@c3r6p2:~/Desktop/minia$ exit 42 42 42 42 42
-exit
+    
+=> 
+    $ bash
+    msaadidi@c3r6p2:~/Desktop/minia$ exit 42 42 42 42 42
+    exit
 bash: exit: too many arguments
 msaadidi@c3r6p2:~/Desktop/minia$ 
 

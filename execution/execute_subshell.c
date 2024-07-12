@@ -5,8 +5,6 @@ int execute_subshell(t_tree *root)
     pid_t pid;
     int status;
 
-    // printf("Executing root...\n");
-    // fflush(stdout);
     pid = fork();
     if (pid < 0)
     {
@@ -25,7 +23,5 @@ int execute_subshell(t_tree *root)
         waitpid(pid, &status, 0);
         mshell()->exit_status = WEXITSTATUS(status);
     }
-    // printf("Subshell execution finished with status: %d\n", mshell()->exit_status);
-    // fflush(stdout);
     return (mshell()->exit_status);
 }
