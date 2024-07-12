@@ -185,6 +185,7 @@ int execute_operator(t_tree *operator);
 
 /*		Open files		*/
 void    handle_redirections(t_redir *redir_list);
+void handle_redirections2(t_redir *redir_list, int *exit);
 void restore_redirections(t_redir *redir);
 
 /*		Execution		*/

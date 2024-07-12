@@ -95,10 +95,12 @@ int execute_builtin(t_tree *root)
     char **argv;
     int ret;
 
-    ret = EXIT_FAILURE;
+    ret = -1;
     argv = root->argv;
     if (root->redir_list)
-        handle_redirections(root->redir_list);
+        handle_redirections2(root->redir_list, &ret);
+    if (ret == EXIT_FAILURE)
+        return (ret);
     if (ft_strcmp(argv[0], "cd") == 0)
         ret = builtin_cd(argv + 1);
     else if (ft_strcmp(argv[0], "echo") == 0)
