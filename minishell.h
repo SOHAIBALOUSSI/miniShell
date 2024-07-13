@@ -215,6 +215,8 @@ int		is_match(char *pattern, char *str);
 /*		Signals			*/
 void	handle_signals(void);
 void	handler(int sig);
+void	process_handler(int sig);
+void	handle_process_signals(void);
 
 
 /* Export */

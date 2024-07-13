@@ -1,16 +1,16 @@
 #include "minishell.h"
 
-void	heredoc_handler(int sig)
+void	process_handler(int sig)
 {
 	(void)sig;
 	exit(130);
 }
 
-void	handle_heredoc_signals(void)
+void	handle_process_signals(void)
 {
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGTERM, SIG_IGN);
-	signal(SIGINT, heredoc_handler);
+	signal(SIGINT, process_handler);
 }
 
 
@@ -142,7 +142,7 @@ void	here_doc(int fd, char *delimiter)
 		}
 		else if (pid == 0)
 		{
-			handle_heredoc_signals();
+			handle_process_signals();
 			write_to_heredoc(fd, delimiter);
 			close(fd);
 			exit(EXIT_SUCCESS);

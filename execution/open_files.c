@@ -1,19 +1,10 @@
 #include "../minishell.h"
 
-// void    close_redirections(t_redir *redir_list)
-// {
-//     t_redir *current;
-
-//     current = redir_list;
-//     while (current)
-//     {
-//         if (current->fds[0] > 0)
-//             close(current->fds[0]);
-//         if (current->fds[1] > 0)
-//             close(current->fds[1]);
-//         current = current->next;
-//     }
-// }
+void    perror_file(char *file_name)
+{
+    ft_putstr_fd("Minishell: ", 2);
+    perror(file_name);
+}  
 
 void handle_redirections2(t_redir *redir_list, int *exit)
 {
@@ -27,7 +18,7 @@ void handle_redirections2(t_redir *redir_list, int *exit)
             current->fds[0] = open(current->file_name, O_RDONLY);
             if (current->fds[0] < 0)
             {
-                perror(current->file_name);
+                perror_file(current->file_name);
                 *exit = EXIT_FAILURE;
                 return ;
             }
@@ -40,7 +31,7 @@ void handle_redirections2(t_redir *redir_list, int *exit)
             current->fds[1] = open(current->file_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
             if (current->fds[1] < 0)
             {
-                perror(current->file_name);
+                perror_file(current->file_name);
                 *exit = EXIT_FAILURE;
                 return ;
             }
@@ -53,7 +44,7 @@ void handle_redirections2(t_redir *redir_list, int *exit)
             current->fds[1] = open(current->file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
             if (current->fds[1] < 0)
             {
-                perror(current->file_name);
+                perror_file(current->file_name);
                 *exit = EXIT_FAILURE;
                 return ;
             }
@@ -66,7 +57,7 @@ void handle_redirections2(t_redir *redir_list, int *exit)
             int fd = open(current->file_name, O_RDONLY);
             if (fd < 0)
             {
-                perror(current->file_name);
+                perror_file(current->file_name);
                 *exit = EXIT_FAILURE;
                 return ;
             }
@@ -75,6 +66,7 @@ void handle_redirections2(t_redir *redir_list, int *exit)
             close(fd);
         }
         current = current->next;
+        printf("u good bruh\n");
     }
 }
 
@@ -90,7 +82,7 @@ void handle_redirections(t_redir *redir_list)
             current->fds[0] = open(current->file_name, O_RDONLY);
             if (current->fds[0] < 0)
             {
-                perror(current->file_name);
+                perror_file(current->file_name);
                 exit(EXIT_FAILURE);
             }
             current->original_in = dup(STDIN_FILENO);
@@ -102,7 +94,7 @@ void handle_redirections(t_redir *redir_list)
             current->fds[1] = open(current->file_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
             if (current->fds[1] < 0)
             {
-                perror(current->file_name);
+                perror_file(current->file_name);
                 exit(EXIT_FAILURE);
             }
             current->original_out = dup(STDOUT_FILENO);
@@ -114,7 +106,7 @@ void handle_redirections(t_redir *redir_list)
             current->fds[1] = open(current->file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
             if (current->fds[1] < 0)
             {
-                perror(current->file_name);
+                perror_file(current->file_name);
                 exit(EXIT_FAILURE);
             }
             current->original_out = dup(STDOUT_FILENO);
@@ -126,7 +118,7 @@ void handle_redirections(t_redir *redir_list)
             int fd = open(current->file_name, O_RDONLY);
             if (fd < 0)
             {
-                perror(current->file_name);
+                perror_file(current->file_name);
                 exit(EXIT_FAILURE);
             }
             current->original_in = dup(STDIN_FILENO);
