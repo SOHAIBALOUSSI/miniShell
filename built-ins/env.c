@@ -1,7 +1,7 @@
 
 #include "../minishell.h"
 
-void	builtin_env(void)
+int	builtin_env(void)
 {
 	t_env	*tmp;
 
@@ -12,6 +12,7 @@ void	builtin_env(void)
 			printf("%s=%s\n", tmp->key, tmp->value);
 		tmp = tmp->next;
 	}
+    return (0);
 }
 
 char **get_current_env_array(void)

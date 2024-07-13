@@ -1,54 +1,106 @@
 #include "../minishell.h"
+#include <limits.h>
 
-bool	check_exit_value(char *value)
+void	exit_clean(int exit_status)
 {
-	int			i;
-	int			s;
-
-	i = 0;
-	while (value[i] == ' ' && value[i] >= '\t' && value[i] <= '\r')
-		i++;
-	if (value[i] == '+' || value[i] == '-')
-		i++;
-	while (value[i])
-	{
-		if (!(value[i] >= '0' && value[i] <= '9'))
-			return (false);
-		i++;
-	}
-	return (true);
-}
-
-void 	exit_clean(int exit_status)
-{
-	// m_alloc(0, FREE);
+	m_alloc(0, FREE);
 	exit(exit_status);
 }
-void	builtin_exit(char **args)
+
+static int	is_valid_number(char *str)
 {
-	// need to handle spaces
+	int	i;
+
+	i = 0;
+	while (str[i] && is_space(str[i]))
+		i++;
+	if (str[i] == '+' || str[i] == '-')
+		i++;
+	if (!str[i])
+		return (0);
+	while (str[i])
+	{
+		if (str[i] < '0' || str[i] > '9')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+static int	check_overflow(char *str)
+{
+	int		i;
+	int		sign;
+	size_t	num;
+
+	i = 0;
+	sign = 1;
+	num = 0;
+	while (str[i] && is_space(str[i]))
+		i++;
+	if (str[i] == '-')
+		sign = -1;
+	if (str[i] == '+' || str[i] == '-')
+		i++;
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		if ((num > LLONG_MAX / 10) || (num == LLONG_MAX / 10
+				&& (str[i] - '0') > LLONG_MAX % 10))
+			return (1);
+		num = num * 10 + (str[i] - '0');
+		i++;
+	}
+	return (0);
+}
+
+static long long	ft_atoll(char *str)
+{
+	long long	result;
+	int			sign;
+	int			i;
+
+	result = 0;
+	sign = 1;
+	i = 0;
+	while (str[i] && is_space(str[i]))
+		i++;
+	if (str[i] == '-')
+		sign = -1;
+	if (str[i] == '+' || str[i] == '-')
+		i++;
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		result = result * 10 + (str[i] - '0');
+		i++;
+	}
+	return (result * sign);
+}
+
+static void	print_exit_error(char *arg)
+{
+	ft_putstr_fd("Minishell: exit: ", 2);
+	ft_putstr_fd(arg, 2);
+	ft_putendl_fd(": numeric argument required", 2);
+}
+
+int	builtin_exit(char **args)
+{
+	long long	exit_status;
+
+
 	if (!args || !args[0])
-	{
-		ft_putendl_fd("exit", 2);
 		exit_clean(mshell()->exit_status);
-	}
-	else if (args[0] && args[1])
+	if (!is_valid_number(args[0]) || check_overflow(args[0]))
 	{
-		ft_putendl_fd("exit", 2);
-		pop_error("Minishell: exit: too many arguments\n");
-		exit_clean(1);
-	}
-	else if (check_exit_value(args[0]))
-	{
-		ft_putendl_fd("exit", 2);
-		exit_clean(ft_atoi(args[0]));
-	}
-	else
-	{
-		ft_putendl_fd("exit", 2);
-		ft_putstr_fd("Minishell: exit: ", 2);
-		ft_putstr_fd(args[0], 2);
-		ft_putstr_fd(": numeric argument required\n", 2);
+		print_exit_error(args[0]);
 		exit_clean(2);
 	}
+	exit_status = ft_atoll(args[0]);
+	if (args[1])
+	{
+		ft_putendl_fd("Minishell: exit: too many arguments", 2);
+		return (1);
+	}
+	exit_clean((int)exit_status);
+	return (0);
 }

@@ -106,10 +106,7 @@ int execute_builtin(t_tree *root)
     else if (ft_strcmp(argv[0], "echo") == 0)
         ret = builtin_echo(argv + 1);
     else if (ft_strcmp(argv[0], "env") == 0)
-    {
-        builtin_env();
-        ret = EXIT_SUCCESS;
-    }
+        ret = builtin_env();
     else if (ft_strcmp(argv[0], "pwd") == 0)
         ret = builtin_pwd();
     else if (ft_strcmp(argv[0], "export") == 0)
@@ -120,10 +117,7 @@ int execute_builtin(t_tree *root)
     else if (ft_strcmp(argv[0], "unset") == 0)
         ret = builtin_unset(argv + 1);
     else if (ft_strcmp(argv[0], "exit") == 0)
-    {
-        builtin_exit(argv + 1);
-        ret = EXIT_SUCCESS;
-    }
+        ret = builtin_exit(argv + 1);;
     return (ret);
 }
 
