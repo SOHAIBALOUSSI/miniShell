@@ -21,7 +21,6 @@ void	handler(int sig)
 	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
-	rl_redisplay();
 	mshell()->exit_status = 130;
 }
 
@@ -111,7 +110,6 @@ int	main(int ac, char **av, char **env)
 	{
 		read_cmd();
 		// m_alloc(0, FREE);
-		// printf("counter %ld", mshell()->double_quote_count);
 	}
 	// rl_clear_history();
 	return (EXIT_SUCCESS);

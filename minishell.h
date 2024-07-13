@@ -56,7 +56,6 @@ typedef	struct s_quote_state
 	bool	in_squote;
 	bool	in_dquote;
 	bool	got_expansion;
-	bool	to_split;
 }			t_quote_state;
 
 typedef struct s_slice
