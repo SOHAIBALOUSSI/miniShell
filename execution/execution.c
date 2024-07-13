@@ -175,7 +175,7 @@ int execute_cmd(t_tree *root)
         if (cmd_path && execve(cmd_path, root->argv, get_current_env_array()) == -1)
             exit(EXIT_FAILURE);
         else
-            exit(EXIT_FAILURE);
+            exit(EXIT_SUCCESS);
     }
     else if (pid < 0)
     {
@@ -218,24 +218,24 @@ int execute_pipeline(t_tree **pipeline, int n_cmd)
 }
 
 
-    int execute_ast(t_tree *root)
+int execute_ast(t_tree *root)
+{
+    if (mshell()->hd_interrupt)
     {
-        if (mshell()->hd_interrupt)
-        {
-            mshell()->hd_interrupt = 0;
-            return (mshell()->exit_status);
-        }
-        if (!root)
-            return (1);
-        else if (root->type == _AND || root->type == _OR)
-            mshell()->exit_status = execute_operator(root);
-        else if (root->type == _SUBSHELL)
-            mshell()->exit_status = execute_subshell(root);
-        else if (root->type == _PIPE)
-            mshell()->exit_status = execute_pipeline(root->pipe_line, count_pipes(root->pipe_line));
-        else if (root->type == _CMD)
-            mshell()->exit_status = execute_cmd(root);
-        if (root->redir_list)
-            restore_redirections(root->redir_list);
+        mshell()->hd_interrupt = 0;
         return (mshell()->exit_status);
     }
+    if (!root)
+        return (1);
+    else if (root->type == _AND || root->type == _OR)
+        mshell()->exit_status = execute_operator(root);
+    else if (root->type == _SUBSHELL)
+        mshell()->exit_status = execute_subshell(root);
+    else if (root->type == _PIPE)
+        mshell()->exit_status = execute_pipeline(root->pipe_line, count_pipes(root->pipe_line));
+    else if (root->type == _CMD)
+        mshell()->exit_status = execute_cmd(root);
+    if (root->redir_list)
+        restore_redirections(root->redir_list);
+    return (mshell()->exit_status);
+}
