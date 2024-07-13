@@ -87,7 +87,7 @@ int	builtin_exit(char **args)
 {
 	long long	exit_status;
 
-
+	ft_putendl_fd("exit", 1);
 	if (!args || !args[0])
 		exit_clean(mshell()->exit_status);
 	if (!is_valid_number(args[0]) || check_overflow(args[0]))
