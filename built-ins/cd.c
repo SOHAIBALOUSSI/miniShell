@@ -16,6 +16,7 @@ static void	update_pwd_env(char *new_dir, char *old_dir)
 	}
 	if (pwd)
 		pwd->value = ft_strdup(getcwd(NULL, PATH_MAX));
+	mshell()->pwd = pwd->value;
 }
 
 int	chdir_and_update_env(char *new_dir, char *old_dir)
@@ -31,7 +32,7 @@ int	go__home(char *old_dir)
 	t_env	*home;
 
 	home = find_env_var("HOME", *mshell()->env_list);
-	if (!home->key)
+	if (!home)
 		return (pop_error("Minishell: cd: HOME not set\n"), EXIT_FAILURE);
 	if (ft_strcmp(home->value, "") != 0)
 		return (chdir_and_update_env(home->value, old_dir));

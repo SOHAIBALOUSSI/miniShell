@@ -1,5 +1,4 @@
 #include "../minishell.h"
-#include <limits.h>
 
 void	exit_clean(int exit_status)
 {

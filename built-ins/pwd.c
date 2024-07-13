@@ -7,7 +7,6 @@ int    builtin_pwd(void)
 
 	if (!getcwd(pwd, PATH_MAX))
 		return (printf("%s\n", mshell()->pwd), EXIT_SUCCESS);
-	mshell()->pwd = ft_strdup(pwd);
 	printf("%s\n", pwd);
 	return (EXIT_SUCCESS);
 }
