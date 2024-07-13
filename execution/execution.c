@@ -95,7 +95,7 @@ int execute_builtin(t_tree *root)
     char **argv;
     int ret;
 
-    handle_process_signals();
+    // handle_process_signals();
     ret = -1;
     argv = root->argv;
     if (root->redir_list)
@@ -120,7 +120,7 @@ int execute_builtin(t_tree *root)
     else if (ft_strcmp(argv[0], "exit") == 0)
         ret = builtin_exit(argv + 1);
     restore_redirections(root->redir_list);
-    handle_signals();
+    // handle_signals();
     return (ret);
 }
 

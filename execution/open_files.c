@@ -6,27 +6,36 @@ void    perror_file(char *file_name)
     perror(file_name);
 }  
 
-int handle_input_redirection(t_redir *current, int *exit)
+int    perror_ambiguous(char *file_name)
+{
+    ft_putstr_fd("Minishell : ", 2);
+    ft_putstr_fd(file_name, 2);
+    ft_putendl_fd(": ambiguous redirect", 2);
+    return (EXIT_FAILURE);
+}
+
+int handle_input_redirection(t_redir *current)
 {
     int fd;
 
+    if (current->is_ambiguous)
+        return (perror_ambiguous(current->file_name));
     fd = open(current->file_name, O_RDONLY);
     if (fd < 0)
-    {
-        perror_file(current->file_name);
-        return (1);
-    }
+        return (perror_file(current->file_name), 1);
     current->original_in = dup(STDIN_FILENO);
     if (!current->next)
         dup2(fd, STDIN_FILENO);
     close(fd);
     return (0);
 }
-int handle_output_redirection(t_redir *current, int *exit)
+int handle_output_redirection(t_redir *current)
 {
     int fd;
     int flags;
 
+    if (current->is_ambiguous)
+        return (perror_ambiguous(current->file_name));
     flags = O_WRONLY | O_CREAT;
     if (current->type == _RED_OUT)
         flags |= O_TRUNC;
@@ -34,10 +43,7 @@ int handle_output_redirection(t_redir *current, int *exit)
         flags |= O_APPEND;
     fd = open(current->file_name, flags, 0644);
     if (fd < 0)
-    {
-        perror_file(current->file_name);
-        return (1);
-    }
+        return (perror_file(current->file_name), 1);
     current->original_out = dup(STDOUT_FILENO);
     if (!current->next)
         dup2(fd, STDOUT_FILENO);
@@ -45,16 +51,13 @@ int handle_output_redirection(t_redir *current, int *exit)
     return (0);
 }
 
-int handle_heredoc(t_redir *current, int *exit)
+int handle_heredoc(t_redir *current)
 {
     int fd;
 
     fd = open(current->file_name, O_RDONLY);
     if (fd < 0)
-    {
-        perror_file(current->file_name);
-        return (1);
-    }
+        return (perror_file(current->file_name), 1);
     current->original_in = dup(STDIN_FILENO);
     dup2(fd, STDIN_FILENO);
     close(fd);
@@ -70,18 +73,27 @@ void handle_redirections2(t_redir *redir_list, int *exit)
     {
         if (current->type == _RED_IN)
         {
-            if (handle_input_redirection(current, exit))
+            if (handle_input_redirection(current))
+            {
                 errors++;
+                break ;
+            }
         }
         else if (current->type == _RED_OUT || current->type == _APPEND)
         {
-            if (handle_output_redirection(current, exit))
+            if (handle_output_redirection(current))
+            {
                 errors++;
+                break ;
+            }
         }
         else if (current->type == _HEREDOC)
         {
-            if (handle_heredoc(current, exit))
+            if (handle_heredoc(current))
+            {
                 errors++;
+                break ;
+            }
         }
         current = current->next;
     }
@@ -100,6 +112,11 @@ void handle_redirections(t_redir *redir_list)
     {
         if (current->type == _RED_IN)
         {
+            if (current->is_ambiguous)
+            {
+                perror_ambiguous(current->file_name);
+                exit(EXIT_FAILURE);
+            }
             current->fds[0] = open(current->file_name, O_RDONLY);
             if (current->fds[0] < 0)
             {
@@ -112,6 +129,11 @@ void handle_redirections(t_redir *redir_list)
         }
         else if (current->type == _RED_OUT)
         {
+            if (current->is_ambiguous)
+            {
+                perror_ambiguous(current->file_name);
+                exit(EXIT_FAILURE);
+            }
             current->fds[1] = open(current->file_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
             if (current->fds[1] < 0)
             {
@@ -124,6 +146,11 @@ void handle_redirections(t_redir *redir_list)
         }
         else if (current->type == _APPEND)
         {
+            if (current->is_ambiguous)
+            {
+                perror_ambiguous(current->file_name);
+                exit(EXIT_FAILURE);
+            }
             current->fds[1] = open(current->file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
             if (current->fds[1] < 0)
             {

@@ -105,6 +105,7 @@ typedef struct s_redir
 	int		original_out;
 	int		original_in;
 	char	*file_name;
+	bool	is_ambiguous;
 	struct s_redir	*next;
 }	t_redir;
 

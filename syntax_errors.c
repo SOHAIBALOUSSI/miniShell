@@ -153,6 +153,7 @@ void	here_doc(int fd, char *delimiter)
 			close(fd);
 			m_free(delimiter);
 			mshell()->exit_status = WEXITSTATUS(status);
+			printf("%d\n", mshell()->exit_status);
 			if (mshell()->exit_status == 130)
 				mshell()->hd_interrupt = 1;
 		}

@@ -26,6 +26,7 @@ t_redir	*create_redir_node(t_token *token, e_tok redir_type, char *heredocfilena
 	redir->fds[1] = -1;
 	redir->original_in = -1;
 	redir->original_out = -1;
+	redir->is_ambiguous = 0;
 	return (redir);
 }
 
