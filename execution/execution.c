@@ -95,6 +95,7 @@ int execute_builtin(t_tree *root)
     char **argv;
     int ret;
 
+    handle_process_signals();
     ret = -1;
     argv = root->argv;
     if (root->redir_list)
@@ -117,7 +118,9 @@ int execute_builtin(t_tree *root)
     else if (ft_strcmp(argv[0], "unset") == 0)
         ret = builtin_unset(argv + 1);
     else if (ft_strcmp(argv[0], "exit") == 0)
-        ret = builtin_exit(argv + 1);;
+        ret = builtin_exit(argv + 1);
+    restore_redirections(root->redir_list);
+    handle_signals();
     return (ret);
 }
 
@@ -215,24 +218,24 @@ int execute_pipeline(t_tree **pipeline, int n_cmd)
 }
 
 
-int execute_ast(t_tree *root)
-{
-    if (mshell()->hd_interrupt)
+    int execute_ast(t_tree *root)
     {
-        mshell()->hd_interrupt = 0;
+        if (mshell()->hd_interrupt)
+        {
+            mshell()->hd_interrupt = 0;
+            return (mshell()->exit_status);
+        }
+        if (!root)
+            return (1);
+        else if (root->type == _AND || root->type == _OR)
+            mshell()->exit_status = execute_operator(root);
+        else if (root->type == _SUBSHELL)
+            mshell()->exit_status = execute_subshell(root);
+        else if (root->type == _PIPE)
+            mshell()->exit_status = execute_pipeline(root->pipe_line, count_pipes(root->pipe_line));
+        else if (root->type == _CMD)
+            mshell()->exit_status = execute_cmd(root);
+        if (root->redir_list)
+            restore_redirections(root->redir_list);
         return (mshell()->exit_status);
     }
-	if (!root)
-		return (1);
-	else if (root->type == _AND || root->type == _OR)
-		mshell()->exit_status = execute_operator(root);
-	else if (root->type == _SUBSHELL)
-		mshell()->exit_status = execute_subshell(root);
-	else if (root->type == _PIPE)
-		mshell()->exit_status = execute_pipeline(root->pipe_line, count_pipes(root->pipe_line));
-	else if (root->type == _CMD)
-		mshell()->exit_status = execute_cmd(root);
-	if (root->redir_list)
-		restore_redirections(root->redir_list);
-	return (mshell()->exit_status);
-}

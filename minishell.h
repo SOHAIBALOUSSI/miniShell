@@ -11,7 +11,6 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <dirent.h>
-#include <limits.h>
 #include <linux/limits.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -27,7 +26,6 @@
 # define HEREDOC_MAX_ERROR	"Minishell: maximum here-document count exceeded\n"
 # define NOT_TTY			"Minishell: not a tty\n"
 # define HIGH_SHLVL			"Minishell: warning: shell level (1000) too high, resetting to 1\n"
-# define EXIT_NAR		"exit\nMinishell: exit: numeric argument required"
 
 /* The Struct used in the Tokenizer */
 typedef enum e_tok
@@ -223,6 +221,7 @@ void	handle_process_signals(void);
 
 /* Export */
 
+void	builtin_export(char **args);
 bool	is_valid_key(char *s);
 t_env	*find_env_var(char *key, t_env *env_list);
 size_t	lst_size(t_env **lst);
@@ -233,8 +232,6 @@ char	*get_var_value(char *key);
 char	*get_var_key(char *str);
 
 /*	ENV */
-
-void	builtin_export(char **args);
 int		builtin_env(void);
 int		builtin_unset(char **args);
 int		builtin_exit(char **args);
