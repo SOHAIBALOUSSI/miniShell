@@ -2,7 +2,7 @@
 
 int	is_space(char c)
 {
-	return (c == ' ' || c == '\t');
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r');
 }
 
 int	is_op(char c, char c1)

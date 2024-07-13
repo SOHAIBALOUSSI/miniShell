@@ -62,13 +62,10 @@ void	split_and_add_to_new_argv(char *expanded_arg, char ***expanded_argv)
 
 void	add_to_new_argv(char *expanded_arg, char ***expanded_argv, bool to_split)
 {
-	if (expanded_arg[0] != '\0')
-	{
-		if (to_split == true)
-			split_and_add_to_new_argv(expanded_arg, expanded_argv);
-		else
-			*expanded_argv = add_to_argv(expanded_arg, expanded_argv);
-	}
+	if (to_split == true)
+		split_and_add_to_new_argv(expanded_arg, expanded_argv);
+	else
+		*expanded_argv = add_to_argv(expanded_arg, expanded_argv);
 }
 
 
