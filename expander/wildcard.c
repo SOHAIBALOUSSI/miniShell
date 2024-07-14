@@ -155,6 +155,7 @@ void    expnd_redir_wildcard(t_redir **redir)
     {
         if (ft_strchr(current->file_name, '*') != NULL)
         {
+            printf("here?\n");
             matched = get_matching_file(current->file_name, &count);
             if (count > 1)
             {
