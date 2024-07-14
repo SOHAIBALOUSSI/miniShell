@@ -117,7 +117,7 @@ typedef struct s_tree
 	struct s_tree	*right;
 	struct s_tree	**pipe_line;
 	struct s_tree	*subtree;
-	t_redir			*redir_list;
+	t_redir			*redir_list;	
 	char			**argv;
 	size_t			argc;
 	char			*value;
@@ -207,6 +207,7 @@ char	*expand_heredoc(char *heredoc_content);
 char	*ft_strjoin_char(char *str, char c);
 char	*expand_var(char *var_name);
 char	*expand_variable(char *arg, int *i);
+void    expnd_redir_wildcard(t_redir **redir);
 
 void    expand_wildard(char ***old_argv);
 void    free_strs(char **strs);

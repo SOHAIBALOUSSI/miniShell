@@ -107,3 +107,66 @@ void    expand_wildard(char ***old_argv)
     free_strs((*old_argv));
     (*old_argv) = new_argv;
 }
+
+char   *get_matching_file(char *filename, int *count)
+{
+    char            *matched;
+    DIR             *dir;
+    struct dirent   *entry;
+
+    matched = NULL;
+    *count = 0;
+    dir = opendir(".");
+    if (!dir)
+    {
+        perror("opendir");
+        return (NULL);
+    }
+    while ((entry = readdir(dir)) != NULL)
+    {
+        if (entry->d_name[0] == '.')
+            continue;
+        if (is_match(filename, entry->d_name))
+        {
+            if (*count == 0)
+                matched = ft_strdup(entry->d_name);
+            else
+            {
+                if (matched)
+                    m_free(matched);
+            }
+            (*count)++;
+        }
+    }
+    closedir(dir);
+    if (*count == 0)
+        return (NULL);
+    return (matched);
+}
+
+void    expnd_redir_wildcard(t_redir **redir)
+{
+    t_redir *current;
+    char *matched;
+    int count;
+
+    current = (*redir);
+    while (current)
+    {
+        if (ft_strchr(current->file_name, '*') != NULL)
+        {
+            matched = get_matching_file(current->file_name, &count);
+            if (count > 1)
+            {
+                current->is_ambiguous = 1;
+                break ;
+            }
+            else if (matched)
+            {
+                m_free(current->file_name);
+                current->file_name = matched;
+            }
+        }
+        current = current->next;
+    }
+}

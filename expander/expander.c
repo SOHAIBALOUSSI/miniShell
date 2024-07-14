@@ -76,5 +76,8 @@ void	expander(t_tree *root)
 		expand_wildard(&root->argv);
 	}
 	if (root->redir_list)
+	{
 		expand_redirection(root->redir_list);
+		expnd_redir_wildcard(&root->redir_list);
+	}
 }
