@@ -13,7 +13,7 @@
 #include "libft.h"
 #include "../../minishell.h"
 
-static size_t	count_words(const char *s, char *set)
+static size_t	_count_words(const char *s, char *set)
 {
 	size_t	i;
 	size_t	count;
@@ -70,7 +70,7 @@ char	**ft_split(char const *s, char *set)
 
 	if (!s || !set)
 		return (NULL);
-	word_count = count_words(s, set);
+	word_count = _count_words(s, set);
 	result = m_alloc((word_count + 1) * sizeof(char *), ALLOC);
 	if (!result)
 		return (NULL);

@@ -27,28 +27,28 @@
 # define HEREDOC_MAX_ERROR	"Minishell: maximum here-document count exceeded\n"
 # define NOT_TTY			"Minishell: not a tty\n"
 # define HIGH_SHLVL			"Minishell: warning: shell level (1000) too high, resetting to 1\n"
-# define EXIT_NAR		"exit\nMinishell: exit: numeric argument required"
+# define EXIT_NAR			"exit\nMinishell: exit: numeric argument required"
 
-/* The Struct used in the Tokenizer */
+/* Enums for tokenizer && parser */
 typedef enum e_tok
 {
-	_WORD, // 0
-	_QUOTE, // 1
-	_OR, // 2
-	_PIPE, // 3
-	_AND, // 4
-	_APPEND, // 5
-	_RED_OUT, // 6
-	_RED_IN, // 7
-	_HEREDOC, // 8
-	_PAREN_OPEN, // 9
-	_PAREN_CLOSED, // 10
-	_WILDCARD, // 11
-	_ENV, // 12
-	_CMD, // 13
-	_SUBSHELL, // 14
-	_ARGUMENT, // 15
-	_SPACE,  //16
+	_WORD,
+	_QUOTE,
+	_OR,
+	_PIPE,
+	_AND,
+	_APPEND,
+	_RED_OUT,
+	_RED_IN,
+	_HEREDOC,
+	_PAREN_OPEN,
+	_PAREN_CLOSED,
+	_WILDCARD,
+	_ENV,
+	_CMD,
+	_SUBSHELL,
+	_ARGUMENT,
+	_SPACE,
 }	e_tok;
 
 typedef	struct s_quote_state
@@ -103,7 +103,6 @@ typedef	struct s_minishell
 	int		exit_status;
 	int		expand_oho;
 	bool	hd_interrupt;
-	bool	in_exec;
 }			t_minishell;
 
 typedef struct s_redir
@@ -114,6 +113,7 @@ typedef struct s_redir
 	int		original_out;
 	int		original_in;
 	char	*file_name;
+	bool	is_ambiguous;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -158,7 +158,6 @@ size_t		add_word_token(t_token **head, char *start);
 t_token		*create_token(e_tok type, char *start, size_t length);
 void		append_token(t_token **head, t_token *new_token);
 void		pop_error(char *error_msg);
-int			catch_syntax_errors(t_token *token_lst);
 e_tok		decode_type(char c1, char c2);
 void		refine_tokens(t_token **head);
 
@@ -181,27 +180,28 @@ void	add_arg_to_cmd(t_tree *cmd, char *location, size_t length);
 char	*ft_strndup(char *s1, size_t n);
 
 /*		Error		*/
-void print_error(char *cmd, char *str);
+void 	print_error(char *cmd, char *str);
+void	exit_clean(int exit_status);
 
 /*		Execute pipeline		*/
-int    actual_pipeline(t_tree **pipeline, int pc);
+int		actual_pipeline(t_tree **pipeline, int pc);
 
 /*		Execute Subshell		*/
-int execute_subshell(t_tree *root);
+int 	execute_subshell(t_tree *root);
 
 /*		Execute Operator		*/
-int execute_operator(t_tree *operator);
+int 	execute_operator(t_tree *operator);
 
 /*		Open files		*/
 void    handle_redirections(t_redir *redir_list);
-void handle_redirections2(t_redir *redir_list, int *exit);
-void restore_redirections(t_redir *redir);
+void 	handle_redirections2(t_redir *redir_list, int *exit);
+void 	restore_redirections(t_redir *redir);
 
 /*		Execution		*/
-int execute_ast(t_tree *root);
-int execute_cmd(t_tree *root);
+int 	execute_ast(t_tree *root);
+int 	execute_cmd(t_tree *root);
 
-char *get_value(char *key);
+char 	*get_value(char *key);
 
 
 /*		Expander		*/
@@ -215,6 +215,8 @@ char	*expand_heredoc(char *heredoc_content);
 char	*ft_strjoin_char(char *str, char c);
 char	*expand_var(char *var_name);
 char	*expand_variable(char *arg, int *i);
+bool    is_expandable(char c);
+
 
 void    expand_wildard(char ***old_argv);
 void    free_strs(char **strs);
@@ -224,10 +226,13 @@ int		is_match(char *pattern, char *str);
 /*		Signals			*/
 void	handle_signals(void);
 void	handler(int sig);
+void	process_handler(int sig);
+void	handle_process_signals(void);
 
 
 /* Export */
 
+void	builtin_export(char **args);
 bool	is_valid_key(char *s);
 t_env	*find_env_var(char *key, t_env *env_list);
 size_t	lst_size(t_env **lst);
@@ -239,14 +244,39 @@ char	*get_var_key(char *str);
 
 /*	ENV */
 
-void	builtin_export(char **args);
 int		builtin_env(void);
 int		builtin_unset(char **args);
-int		builtin_exit(char **args);
 int		builtin_pwd(void);
 int		builtin_echo(char **args);
 int		builtin_cd(char **args);
+int		builtin_exit(char **args);
+
+void	exit_clean(int exit_status);
+void	built_ins_err(char *err_key);
+size_t	lst_size(t_env **lst);
 
 char	**get_current_env_array(void);
+
+/*		Syntax Error		*/
+int		catch_syntax_errors(t_token *token_lst);
+void	syntax_err(t_token *current);
+char	*remove_quotes(char *str);
+int		check_quotes_and_parens(void);
+int		check_heredoc(t_token *current);
+
+/*		Utils		*/
+char	*remove_quotes(char *str);
+bool	has_quotes(char *str);
+
+/*		Here-doc	*/
+char	*read_heredoc(char *delimiter);
+
+/*		helpers		*/
+int		check_spaces(char *line);
+int		is_space(char c);
+void	reset_counters(void);
+void	handle_signals(void);
+void	handler(int sig);
+int		count_words(char *str);
 
 #endif /*	MINISHELL_H	*/

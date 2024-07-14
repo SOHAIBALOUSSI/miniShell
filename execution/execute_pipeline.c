@@ -1,5 +1,18 @@
 #include "../minishell.h"
 
+void    close_pipes(int fd[][2], int n_cmd)
+{
+    int i;
+
+    i = 0;
+    while (i < n_cmd)
+    {
+        close(fd[i][0]);
+        close(fd[i][1]);
+        i++;
+    }
+}
+
 int    actual_pipeline(t_tree **pipeline, int n_cmd)
 {
     pid_t   pid[n_cmd];
@@ -13,7 +26,7 @@ int    actual_pipeline(t_tree **pipeline, int n_cmd)
         if (pipe(fd[i]) < 0)
         {
             perror("Minishell: ");
-            return (-1);
+            return (close_pipes(fd, i) ,-1);
         }
         i++;
     }
@@ -24,7 +37,7 @@ int    actual_pipeline(t_tree **pipeline, int n_cmd)
         if (pid[i] < 0) 
         {
             perror("Minishell: ");
-            return -1;
+            return (close_pipes(fd, n_cmd) ,-1);
         } 
         else if (pid[i] == 0)
         {

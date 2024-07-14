@@ -9,6 +9,17 @@ void	del_env(t_env *env)
 	m_free(env);
 }
 
+void	del_head_env(void)
+{
+	t_env	*tmp;
+
+	if (!*mshell()->env_list)
+		return ;
+	tmp = *mshell()->env_list;
+	*mshell()->env_list = (*mshell()->env_list)->next;
+	del_env(tmp);
+}
+
 int    builtin_unset(char **args)
 {
 	t_env   *tmp;
@@ -17,11 +28,9 @@ int    builtin_unset(char **args)
 	while (*args)
 	{
 		tmp = *mshell()->env_list;
-		if (tmp && ft_strcmp(tmp->key, *args) == 0) // if the key found in the head  
+		if (tmp && ft_strcmp(tmp->key, *args) == 0)
 		{
-			del = tmp;
-			*mshell()->env_list = tmp->next;
-			del_env(del);
+			del_head_env();
 			continue;
 		}
 		while (tmp && tmp->next)

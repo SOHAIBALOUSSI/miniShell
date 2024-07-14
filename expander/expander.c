@@ -1,4 +1,3 @@
-
 #include "../minishell.h"
 
 static int	expand_redirection(t_redir *redir_list)
@@ -16,7 +15,11 @@ static int	expand_redirection(t_redir *redir_list)
 				return (-1);
 		}
 		else if (redir->file_name)
+		{
 			redir->file_name = expand_arg(redir->file_name, &to_split);
+			if (count_words(redir->file_name) == 0 || count_words(redir->file_name) > 1)
+				redir->is_ambiguous = 1;
+		}
 		redir = redir->next;
 	}
 	return (0);
