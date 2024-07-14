@@ -11,12 +11,13 @@
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "../../minishell.h"
 
 t_list	*ft_lstnew(void *content)
 {
 	t_list	*node;
 
-	node = malloc(sizeof(t_list));
+	node = m_alloc(sizeof(t_list), ALLOC);
 	if (!node)
 		return (NULL);
 	node->content = content;

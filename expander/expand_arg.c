@@ -36,6 +36,8 @@ char	*expand_arg(char *arg, bool *to_split)
 	result = ft_strdup("");
 	while (arg[i])
 	{
+		if (arg[i] == '=' && arg[i + 1] && arg[i + 1] == '$')
+			*to_split = false;
 		if (arg[i] == SQUOTE || arg[i] == DQUOTE)
 			*to_split = false;
 		if (arg[i] == SQUOTE && !qs.in_dquote)

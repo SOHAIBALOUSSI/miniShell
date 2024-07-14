@@ -8,7 +8,7 @@ void    perror_file(char *file_name)
 
 int    perror_ambiguous(char *file_name)
 {
-    ft_putstr_fd("Minishell : ", 2);
+    ft_putstr_fd("Minishell: ", 2);
     ft_putstr_fd(file_name, 2);
     ft_putendl_fd(": ambiguous redirect", 2);
     return (EXIT_FAILURE);
@@ -16,22 +16,19 @@ int    perror_ambiguous(char *file_name)
 
 int handle_input_redirection(t_redir *current)
 {
-    int fd;
-
     if (current->is_ambiguous)
         return (perror_ambiguous(current->file_name));
-    fd = open(current->file_name, O_RDONLY);
-    if (fd < 0)
+    current->fds[0] = open(current->file_name, O_RDONLY);
+    if (current->fds[0] < 0)
         return (perror_file(current->file_name), 1);
     current->original_in = dup(STDIN_FILENO);
     if (!current->next)
-        dup2(fd, STDIN_FILENO);
-    close(fd);
+        dup2(current->fds[0], STDIN_FILENO);
+    close(current->fds[0]);
     return (0);
 }
 int handle_output_redirection(t_redir *current)
 {
-    int fd;
     int flags;
 
     if (current->is_ambiguous)
@@ -41,13 +38,13 @@ int handle_output_redirection(t_redir *current)
         flags |= O_TRUNC;
     else
         flags |= O_APPEND;
-    fd = open(current->file_name, flags, 0644);
-    if (fd < 0)
+    current->fds[1] = open(current->file_name, flags, 0644);
+    if (current->fds[1] < 0)
         return (perror_file(current->file_name), 1);
     current->original_out = dup(STDOUT_FILENO);
     if (!current->next)
-        dup2(fd, STDOUT_FILENO);
-    close(fd);
+        dup2(current->fds[1], STDOUT_FILENO);
+    close(current->fds[1]);
     return (0);
 }
 

@@ -31,61 +31,61 @@ static char *get_cmd_path(char *cmd)
 	char 		**paths;
 	int			i;
 
-	paths = NULL;
-	if (!ft_strcmp(cmd, "minishell") || !*cmd)
-	{
-		print_error(cmd, "command not found");
-		mshell()->exit_status = 127;
-		return (NULL);
-	}
+    paths = NULL;
+    if (!ft_strcmp(cmd, "minishell") || !*cmd)
+    {
+        print_error(cmd, "command not found");
+        mshell()->exit_status = 127;
+        return (NULL);
+    }
 	path = get_value("PATH");
 	if (path)
-	{
-		paths = ft_split(path, ":");
-		i = 0;
-		if (ft_strchr(cmd, '/'))
-		{
-			if (is_directory(cmd))
-			{
-				mshell()->exit_status = 126;
-				return (print_error(cmd, "Is a directory"), NULL);
-			}
-			else
-			{
-				if (!access(cmd, F_OK | X_OK))
-					return (cmd);
-				mshell()->exit_status = 127;
-				return (perror(cmd), NULL);
-			}
-		}
-		if (!access(cmd, F_OK | X_OK))
-			return (cmd);
-	}
-	else
-	{
-		if (is_directory(cmd))
-		{
-			mshell()->exit_status = 126;
-			return (print_error(cmd, "Is a directory"), NULL);
-		}
-		else
-		{
-			if (!access(cmd, F_OK | X_OK))
-				return (cmd);
-			mshell()->exit_status = 127;
-			return (perror(cmd), NULL); 
-		}
-	}
-	while (paths && paths[i])
-	{
-		tmp = ft_strjoin(paths[i], "/");
-		tmp = ft_strjoin(tmp, cmd);
-		if (access(tmp, F_OK | X_OK) == 0)
-			return (tmp);
-		i++;
-	}
+    {
+        paths = ft_split(path, ":");
+        if (ft_strchr(cmd, '/'))
+        {
+            if (is_directory(cmd))
+            {
+                mshell()->exit_status = 126;
+                return (print_error(cmd, "Is a directory"), NULL);
+            }
+            else
+            {
+                if (!access(cmd, F_OK | X_OK))
+                    return (cmd);
+                mshell()->exit_status = 127;
+                return (perror(cmd), NULL);
+            }
+        }
+        i = 0;
+        while (paths && paths[i])
+        {
+            tmp = ft_strjoin(paths[i], "/");
+            tmp = ft_strjoin(tmp, cmd);
+            if (access(tmp, F_OK | X_OK) == 0)
+                return (tmp);
+            i++;
+        }
+        if (!access(cmd, F_OK | X_OK))
+            return (cmd);
+    }
+    else
+    {
+        if (is_directory(cmd))
+        {
+            mshell()->exit_status = 126;
+            return (print_error(cmd, "Is a directory"), NULL);
+        }
+        else
+        {
+            if (!access(cmd, F_OK | X_OK))
+                return (cmd);
+            mshell()->exit_status = 127;
+            return (perror(cmd), NULL); 
+        }
+    }
 	print_error(cmd, "command not found");
-	mshell()->exit_status = 127;
+    mshell()->exit_status = 127;
 	return (NULL);
 }
 

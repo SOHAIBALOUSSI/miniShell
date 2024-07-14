@@ -22,7 +22,7 @@ void	process_input(char *line)
 	{
 		if (catch_syntax_errors(token_lst))
 			return ;
-		root = parse_cmd_line(&token_lst);
+		 root = parse_cmd_line(&token_lst);
 		execute_ast(root);
 	}
 }
