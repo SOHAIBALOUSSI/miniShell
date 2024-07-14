@@ -42,7 +42,6 @@ static char *get_cmd_path(char *cmd)
 	if (path)
     {
         paths = ft_split(path, ":");
-        i = 0;
         if (ft_strchr(cmd, '/'))
         {
             if (is_directory(cmd))
@@ -57,6 +56,15 @@ static char *get_cmd_path(char *cmd)
                 mshell()->exit_status = 127;
                 return (perror(cmd), NULL);
             }
+        }
+        i = 0;
+        while (paths && paths[i])
+        {
+            tmp = ft_strjoin(paths[i], "/");
+            tmp = ft_strjoin(tmp, cmd);
+            if (access(tmp, F_OK | X_OK) == 0)
+                return (tmp);
+            i++;
         }
         if (!access(cmd, F_OK | X_OK))
             return (cmd);
@@ -76,14 +84,6 @@ static char *get_cmd_path(char *cmd)
             return (perror(cmd), NULL); 
         }
     }
-	while (paths && paths[i])
-	{
-		tmp = ft_strjoin(paths[i], "/");
-		tmp = ft_strjoin(tmp, cmd);
-		if (access(tmp, F_OK | X_OK) == 0)
-			return (tmp);
-		i++;
-	}
 	print_error(cmd, "command not found");
     mshell()->exit_status = 127;
 	return (NULL);
