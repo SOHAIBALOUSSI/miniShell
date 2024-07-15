@@ -45,11 +45,13 @@ void *m_realloc(void *ptr, size_t oldsize, size_t newsize)
 {
 	void *new_ptr;
 
+	new_ptr = NULL;
 	new_ptr = m_alloc(newsize, ALLOC);
-	if (ptr)
+	if (ptr && new_ptr)
 	{
 		ft_memcpy(new_ptr, ptr, oldsize);
 		m_free(ptr);
+		ptr = NULL;
 	}
 	return (new_ptr);
 }

@@ -90,6 +90,7 @@ void	*m_alloc(size_t __size, char todo)
 		free_arena();
 		return (NULL);
 	}
+	ptr = NULL;
 	ptr = malloc(__size);
 	if (!ptr || m_add_back(arena, m_new_node(ptr)))
 	{
@@ -99,6 +100,7 @@ void	*m_alloc(size_t __size, char todo)
 		write(2, "Memory allocation failed\n", 26);
 		exit(EXIT_FAILURE);
 	}
+	ft_memset(ptr, 0, __size);
 	return (ptr);
 }
 

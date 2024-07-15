@@ -24,8 +24,8 @@ void set_shlvl(t_env *node)
 	int old_lvl;
 	if (node)
 	{
-		m_free(node->value);
 		old_lvl = ft_atoi(node->value);
+		m_free(node->value);
 		if (old_lvl < 0)
 			node->value = ft_itoa(0);
 		else if (old_lvl >= 999)

@@ -3,12 +3,6 @@
 void	pop_error(char *error_msg)
 {
 	ft_putstr_fd(error_msg, 2);
-	// mshell()->closed_paren_count = 0;
-	// mshell()->open_paren_count = 0;
-	// mshell()->single_quote_count = 0;
-	// mshell()->double_quote_count = 0;
-	// mshell()->pipe_count = 0;
-	// mshell()->heredoc_count = 0;
 }
 
 e_tok	decode_type(char c1, char c2)
