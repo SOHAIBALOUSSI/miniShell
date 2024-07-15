@@ -63,10 +63,10 @@ void    free_strs(char **strs)
 
 void    realloc_argv(char ***new_argv, int *argc, char *content)
 {
-    (*new_argv) = m_realloc((*new_argv), sizeof(char *) * (*argc), sizeof(char *) * (*argc) + 2);
+    (*new_argv) = m_realloc((*new_argv), sizeof(char *) * (*argc), sizeof(char *) * ((*argc) + 2));
     (*new_argv)[(*argc)] = ft_strdup(content);
+    (*new_argv)[(*argc) + 1] = NULL;
     (*argc)++;
-    (*new_argv)[(*argc)] = NULL;
 }
 
 void    expand_wildard(char ***old_argv)
@@ -79,6 +79,8 @@ void    expand_wildard(char ***old_argv)
 
     i = 0;
     new_argc = 0;
+    new_argv = NULL;
+    matched = NULL;
     while ((*old_argv)[i])
     {
         if (ft_strchr((*old_argv)[i], '*') != NULL)
@@ -125,7 +127,7 @@ char   *get_matching_file(char *filename, int *count)
     while ((entry = readdir(dir)) != NULL)
     {
         if (entry->d_name[0] == '.')
-            continue;
+            continue ;
         if (is_match(filename, entry->d_name))
         {
             if (*count == 0)
@@ -163,7 +165,8 @@ void    expnd_redir_wildcard(t_redir **redir)
             }
             else if (matched)
             {
-                m_free(current->file_name);
+                if (current->file_name)
+                    m_free(current->file_name);
                 current->file_name = matched;
             }
         }

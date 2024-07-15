@@ -13,7 +13,7 @@ int is_directory(const char *path)
 	struct stat path_stat;
 	if (stat(path, &path_stat) == 0)
 		return (S_ISDIR(path_stat.st_mode));
-	return (0); 
+	return (0);
 }
 
 void print_error(char *cmd, char *str)
@@ -41,7 +41,6 @@ static char *get_cmd_path(char *cmd)
 	path = get_value("PATH");
 	if (path)
     {
-        paths = ft_split(path, ":");
         if (ft_strchr(cmd, '/'))
         {
             if (is_directory(cmd))
@@ -57,12 +56,21 @@ static char *get_cmd_path(char *cmd)
                 return (perror(cmd), NULL);
             }
         }
+		else
+		{
+			if (is_directory(cmd))
+            {
+                mshell()->exit_status = 127;
+                return (print_error(cmd, "command not found"), NULL);
+            }
+		}
+        paths = ft_split(path, ":");
         i = 0;
         while (paths && paths[i])
         {
             tmp = ft_strjoin(paths[i], "/");
             tmp = ft_strjoin(tmp, cmd);
-            if (access(tmp, F_OK | X_OK) == 0)
+            if (!access(tmp, F_OK | X_OK))
                 return (tmp);
             i++;
         }
@@ -95,33 +103,31 @@ int execute_builtin(t_tree *root)
 	char **argv;
 	int ret;
 
-	// handle_process_signals();
-	ret = -1;
-	argv = root->argv;
-	if (root->redir_list)
-		handle_redirections2(root->redir_list, &ret);
-	if (ret == EXIT_FAILURE)
-		return (ret);
-	if (ft_strcmp(argv[0], "cd") == 0)
-		ret = builtin_cd(argv + 1);
-	else if (ft_strcmp(argv[0], "echo") == 0)
-		ret = builtin_echo(argv + 1);
-	else if (ft_strcmp(argv[0], "env") == 0)
-		ret = builtin_env();
-	else if (ft_strcmp(argv[0], "pwd") == 0)
-		ret = builtin_pwd();
-	else if (ft_strcmp(argv[0], "export") == 0)
-	{
-		builtin_export(argv + 1);
-		ret = EXIT_SUCCESS;
-	}
-	else if (ft_strcmp(argv[0], "unset") == 0)
-		ret = builtin_unset(argv + 1);
-	else if (ft_strcmp(argv[0], "exit") == 0)
-		ret = builtin_exit(argv + 1);
-	restore_redirections(root->redir_list);
-	// handle_signals();
-	return (ret);
+    ret = -1;
+    argv = root->argv;
+    if (root->redir_list)
+        handle_redirections2(root->redir_list, &ret);
+    if (ret == EXIT_FAILURE)
+        return (ret);
+    if (ft_strcmp(argv[0], "cd") == 0)
+        ret = builtin_cd(argv + 1);
+    else if (ft_strcmp(argv[0], "echo") == 0)
+        ret = builtin_echo(argv + 1);
+    else if (ft_strcmp(argv[0], "env") == 0)
+        ret = builtin_env();
+    else if (ft_strcmp(argv[0], "pwd") == 0)
+        ret = builtin_pwd();
+    else if (ft_strcmp(argv[0], "export") == 0)
+    {
+        builtin_export(argv + 1);
+        ret = EXIT_SUCCESS;
+    }
+    else if (ft_strcmp(argv[0], "unset") == 0)
+        ret = builtin_unset(argv + 1);
+    else if (ft_strcmp(argv[0], "exit") == 0)
+        ret = builtin_exit(argv + 1);
+    restore_redirections(root->redir_list);
+    return (ret);
 }
 
 char *get_last_arg(char **args)
@@ -151,45 +157,45 @@ int execute_cmd(t_tree *root)
 	pid_t pid;
 	int status;
 
-	cmd_path = NULL;
-	expander(root);
+    cmd_path = NULL;
+    expander(root);
 	if (root->argv)
 		set$_("_", get_last_arg(root->argv));
-	if (root->argv && root->argv[0] && is_builtin(root->argv[0]))
-		return (execute_builtin(root));
-	pid = fork();
-	if (pid == 0)
-	{
-		if (root->redir_list)
-			handle_redirections(root->redir_list); 
-		if (root->argv)
-		{
-			cmd_path = get_cmd_path(root->argv[0]);
-			if (!cmd_path)
-				exit(mshell()->exit_status);
-			else if (is_directory(cmd_path))
-			{
-				print_error(cmd_path, "command not found");
-				mshell()->exit_status = 127;
-				exit(mshell()->exit_status);
-			}
-		}
-		if (cmd_path && execve(cmd_path, root->argv, get_current_env_array()) == -1)
-			exit(EXIT_FAILURE);
-		else
-			exit(EXIT_SUCCESS);
-	}
-	else if (pid < 0)
-	{
-		pop_error("Fork failed\n");
-		return (1);
-	}
-	else
-	{
-		waitpid(pid, &status, 0);
-		mshell()->exit_status = WEXITSTATUS(status);
-	}
-	return (mshell()->exit_status);
+    if (root->argv && root->argv[0] && is_builtin(root->argv[0]))
+        return (execute_builtin(root));
+    pid = fork();
+    if (pid == 0)
+    {
+        if (root->redir_list)
+            handle_redirections(root->redir_list); 
+        if (root->argv)
+        {
+            cmd_path = get_cmd_path(root->argv[0]);
+            if (!cmd_path)
+                exit(mshell()->exit_status);
+            else if (is_directory(cmd_path))
+            {
+                print_error(cmd_path, "command not found");
+                mshell()->exit_status = 127;
+                exit(mshell()->exit_status);
+            }
+        }
+        if (cmd_path && execve(cmd_path, root->argv, get_current_env_array()) == -1)
+            exit(EXIT_FAILURE);
+        else
+            exit(EXIT_SUCCESS);
+    }
+    else if (pid < 0)
+    {
+        pop_error("Fork failed\n");
+        return (1);
+    }
+    else
+    {
+        waitpid(pid, &status, 0);
+        mshell()->exit_status = WEXITSTATUS(status);
+    }
+    return (mshell()->exit_status);
 }
 
 int count_pipes(t_tree **pipe_line)
@@ -222,22 +228,22 @@ int execute_pipeline(t_tree **pipeline, int n_cmd)
 
 int	execute_ast(t_tree *root)
 {
-	if (mshell()->hd_interrupt)
-	{
-		mshell()->hd_interrupt = 0;
-		return (mshell()->exit_status);
-	}
-	if (!root)
-		return (1);
-	else if (root->type == _AND || root->type == _OR)
-		mshell()->exit_status = execute_operator(root);
-	else if (root->type == _SUBSHELL)
-		mshell()->exit_status = execute_subshell(root);
-	else if (root->type == _PIPE)
-		mshell()->exit_status = execute_pipeline(root->pipe_line, count_pipes(root->pipe_line));
-	else if (root->type == _CMD)
-		mshell()->exit_status = execute_cmd(root);
-	if (root->redir_list)
-		restore_redirections(root->redir_list);
-	return (mshell()->exit_status);
+    if (mshell()->hd_interrupt)
+    {
+        mshell()->hd_interrupt = 0;
+        return (mshell()->exit_status);
+    }
+    if (!root)
+        return (1);
+    else if (root->type == _AND || root->type == _OR)
+        mshell()->exit_status = execute_operator(root);
+    else if (root->type == _SUBSHELL)
+        mshell()->exit_status = execute_subshell(root);
+    else if (root->type == _PIPE)
+        mshell()->exit_status = execute_pipeline(root->pipe_line, count_pipes(root->pipe_line));
+    else if (root->type == _CMD)
+        mshell()->exit_status = execute_cmd(root);
+    if (root->redir_list)
+        restore_redirections(root->redir_list);
+    return (mshell()->exit_status);
 }

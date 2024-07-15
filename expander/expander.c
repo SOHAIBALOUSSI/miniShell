@@ -1,24 +1,5 @@
 #include "../minishell.h"
 
-static int	count_words(char *str)
-{
-	int	count;
-	int	i;
-
-	i = 0;
-	count = 0;
-	while (str && str[i])
-	{
-		while (str[i] && is_space(str[i]))
-			i++;
-		if (str[i] && !is_space(str[i]))
-			count++;
-		while (str[i] && !is_space(str[i]))
-			i++;
-	}
-	return (count);
-}
-
 
 static int	expand_redirection(t_redir *redir_list)
 {

@@ -103,6 +103,8 @@ t_tree	*parse_cmd_line(t_token **tokens)
 	t_tree	*left;
 	t_tree	*op;
 
+	left = NULL;
+	op = NULL;
 	left = parse_pipe_line(tokens);
 	while (*tokens && ((*tokens)->type == _AND || (*tokens)->type == _OR))
 	{

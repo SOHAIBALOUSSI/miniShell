@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putnbr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: m3ayz00 <m3ayz00@student.42.fr>            +#+  +:+       +#+        */
+/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 22:30:05 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/14 18:53:49 by m3ayz00          ###   ########.fr       */
+/*   Updated: 2024/07/15 16:19:50 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
+#include "libft.h"
 int	ft_putnbr(long n)
 {
 	int	printed;

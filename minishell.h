@@ -7,6 +7,7 @@
 #include <signal.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
@@ -91,6 +92,7 @@ typedef struct s_env
 typedef	struct s_minishell
 {
 	t_gc	*arena;
+	t_gc	*last;
 	size_t	single_quote_count;
 	size_t	double_quote_count;
 	size_t	open_paren_count;

@@ -22,7 +22,7 @@ void	process_input(char *line)
 	{
 		if (catch_syntax_errors(token_lst))
 			return ;
-		 root = parse_cmd_line(&token_lst);
+		root = parse_cmd_line(&token_lst);
 		execute_ast(root);
 	}
 }
@@ -33,7 +33,7 @@ void	read_cmd(void)
 
 	line = readline(SHELL_PROMPT);
 	if (!line)
-		return (write(2, "exit\n", 6), free(line), exit_clean(0));
+		return (write(2, "exit\n", 6), exit_clean(0));
 	if (line[0] && check_spaces(line))
 		add_history(line);
 	process_input(line);
@@ -53,8 +53,8 @@ int	main(int ac, char **av, char **env)
 	while (true)
 	{
 		read_cmd();
-		m_alloc(0, FREE);
 	}
+	m_alloc(0, FREE);
 	exit_clean(mshell()->exit_status);
 	return (EXIT_SUCCESS);
 }

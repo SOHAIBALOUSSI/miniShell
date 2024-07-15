@@ -22,10 +22,11 @@ void	append_env(t_env **lst, t_env *new_env)
 void set_shlvl(t_env *node)
 {
 	int old_lvl;
+	
 	if (node)
 	{
-		m_free(node->value);
 		old_lvl = ft_atoi(node->value);
+		m_free(node->value);
 		if (old_lvl < 0)
 			node->value = ft_itoa(0);
 		else if (old_lvl >= 999)
@@ -101,6 +102,7 @@ void get_env_list(char **env)
 	t_env	*shlvl;
 
 	i = -1;
+	shlvl = NULL;
 	env_list = mshell()->env_list;
 	if (!*env)
 		*env_list = setup_clean_env();

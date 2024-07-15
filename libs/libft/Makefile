@@ -1,4 +1,4 @@
-CFLAGS =	-Wall -Wextra -Werror
+CFLAGS =	-fsanitize=address  #-Wall -Wextra -Werror
 
 NAME =	libft.a
 

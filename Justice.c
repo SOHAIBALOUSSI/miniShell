@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Justice.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sait-alo <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: m3ayz00 <m3ayz00@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 16:29:30 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/05/11 16:29:34 by sait-alo         ###   ########.fr       */
+/*   Updated: 2024/07/15 22:50:38 by m3ayz00          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	m_free(void *ptr)
 				prev->next = tmp->next;
 			else
 				mshell()->arena = tmp->next;
+			if (mshell()->last == tmp)
+				mshell()->last = prev;
 			free(tmp->ptr);
 			free(tmp);
 			break ;
@@ -50,20 +52,20 @@ void	m_free(void *ptr)
 
 int	m_add_back(t_gc **lst, t_gc *new)
 {
-	static t_gc	*last;
-
 	if (!lst || !new)
 		return (EXIT_FAILURE);
+	new->next = NULL;
 	if (*lst == NULL)
 	{
 		*lst = new;
-		last = new;
+		mshell()->last = new;
 		return (EXIT_SUCCESS);
 	}
-	last->next = new;
-	last = new;
+	mshell()->last->next = new;
+	mshell()->last = new;
 	return (EXIT_SUCCESS);
 }
+
 void	free_arena(void)
 {
 	t_gc	**arena;
@@ -78,6 +80,7 @@ void	free_arena(void)
 		free(tmp);
 	}
 	*arena = NULL;
+	mshell()->last = NULL;
 }
 void	*m_alloc(size_t __size, char todo)
 {
@@ -90,6 +93,7 @@ void	*m_alloc(size_t __size, char todo)
 		free_arena();
 		return (NULL);
 	}
+	ptr = NULL;
 	ptr = malloc(__size);
 	if (!ptr || m_add_back(arena, m_new_node(ptr)))
 	{
@@ -99,6 +103,7 @@ void	*m_alloc(size_t __size, char todo)
 		write(2, "Memory allocation failed\n", 26);
 		exit(EXIT_FAILURE);
 	}
+	ft_memset(ptr, 0, __size);
 	return (ptr);
 }
 
