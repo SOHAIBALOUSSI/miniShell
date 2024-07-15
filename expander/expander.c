@@ -44,7 +44,8 @@ static void	expand_argv(t_tree *node)
 			add_to_new_argv(expanded_arg, &expanded_argv, to_split);
 		i++;
 	}
-	m_free(node->argv);
+	// mem_free(node->argv, i);
+	// m_free(node->argv);
 	node->argv = expanded_argv;
 }
 

@@ -67,19 +67,20 @@ typedef struct s_slice
 /* lexer */
 typedef struct s_token
 {
-	e_tok			type;
-	t_slice			location;
-	char			*heredoc_file;
-	char 			*delimiter;
-	struct s_token	*next;
-	struct s_token	*prev;
-}   			t_token;
+    struct s_token  *next;
+    struct s_token  *prev;
+    char            *heredoc_file;
+    char            *delimiter;
+    t_slice         location;
+    e_tok           type;
+}   t_token;
 
 /* The Struct used in the garbage collector */
 typedef struct s_gc
 {
 	void		*ptr;
 	struct s_gc	*next;
+    struct s_gc	*prev;
 }				t_gc;
 
 typedef struct s_env
@@ -89,47 +90,47 @@ typedef struct s_env
 	struct s_env	*next;
 }				t_env;
 
-typedef	struct s_minishell
+typedef struct s_minishell
 {
-	t_gc	*arena;
-	t_gc	*last;
-	size_t	single_quote_count;
-	size_t	double_quote_count;
-	size_t	open_paren_count;
-	size_t	closed_paren_count;
-	size_t	pipe_count;
-	size_t	heredoc_count;
-	t_env	**env_list;
-	char	*pwd;
-	int		exit_status;
-	int		expand_oho;
-	bool	hd_interrupt;
-}			t_minishell;
+    t_gc    *arena;
+    t_env   **env_list;
+    char    *pwd;
+    size_t  single_quote_count;
+    size_t  double_quote_count;
+    size_t  open_paren_count;
+    size_t  closed_paren_count;
+    size_t  pipe_count;
+    size_t  heredoc_count;
+    int     exit_status;
+    int     expand_oho;
+    bool    hd_interrupt;
+    bool    is_complex;
+}           t_minishell;
 
 typedef struct s_redir
 {
-	e_tok	type;
-	int		fds[2];
-	int		heredoc_fd;
-	int		original_out;
-	int		original_in;
-	char	*file_name;
-	bool	is_ambiguous;
-	struct s_redir	*next;
-}	t_redir;
+    struct s_redir  *next;
+    char            *file_name;
+    int             fds[2];
+    int             heredoc_fd;
+    int             original_out;
+    int             original_in;
+    e_tok           type;
+    bool            is_ambiguous;
+}   t_redir;
 
 typedef struct s_tree
 {
-	e_tok			type;
-	size_t			pipe_count;
-	struct s_tree	*left;
-	struct s_tree	*right;
-	struct s_tree	**pipe_line;
-	struct s_tree	*subtree;
-	t_redir			*redir_list;	
-	char			**argv;
-	size_t			argc;
-	char			*value;
+    struct s_tree   *left;
+    struct s_tree   *right;
+    struct s_tree   **pipe_line;
+    struct s_tree   *subtree;
+    t_redir         *redir_list;
+    char            **argv;
+    char            *value;
+    size_t          pipe_count;
+    size_t          argc;
+    e_tok           type;
 }               t_tree;
 
 char	**lst_to_arr(t_env **env_list);
@@ -279,5 +280,6 @@ void	reset_counters(void);
 void	handle_signals(void);
 void	handler(int sig);
 int		count_words(char *str);
+char	**mem_free(char **arr, size_t count);
 
 #endif /*	MINISHELL_H	*/

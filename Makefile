@@ -1,6 +1,6 @@
 NAME = minishell
 CC = cc
-# CFLAGS = 
+# CFLAGS = -Wall -Wextra -Werror
 CFLAGS = -fsanitize=address
 
 LIBFT_SRC = $(addprefix ./libs/libft/, ft_atoi.c ft_lstadd_back_bonus.c ft_memchr.c ft_putendl_fd.c ft_striteri.c ft_strtrim.c \
@@ -31,7 +31,7 @@ OBJS = $(SRCS:.c=.o)
 all : $(NAME)
 
 $(NAME) : $(OBJS)
-	stty -echoctl
+# stty -echoctl
 	@$(CC) $(CFLAGS)  $^ -o $@ -lreadline
 
 clean :

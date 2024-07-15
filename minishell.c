@@ -54,7 +54,6 @@ int	main(int ac, char **av, char **env)
 	{
 		read_cmd();
 	}
-	m_alloc(0, FREE);
 	exit_clean(mshell()->exit_status);
 	return (EXIT_SUCCESS);
 }

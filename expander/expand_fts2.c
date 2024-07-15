@@ -17,7 +17,6 @@ static char	**add_to_argv(char *expanded_arg, char ***expanded_argv)
 	}
 	new_argv[i] = expanded_arg;
 	new_argv[i + 1] = NULL;
-	m_free(*expanded_argv);
 	return (new_argv);
 }
 
@@ -33,7 +32,6 @@ static void	split_and_add_to_new_argv(char *expanded_arg, char ***expanded_argv)
 		add_to_new_argv(split[i], expanded_argv, false);
 		i++;
 	}
-	m_free(split);
 }
 
 void	add_to_new_argv(char *expanded_arg, char ***expanded_argv, bool to_split)

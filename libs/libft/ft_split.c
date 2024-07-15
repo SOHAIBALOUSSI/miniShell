@@ -32,7 +32,7 @@ static size_t	_count_words(const char *s, char *set)
 	return (count);
 }
 
-static char	**mem_free(char **arr, size_t count)
+char	**mem_free(char **arr, size_t count)
 {
 	size_t	i;
 
