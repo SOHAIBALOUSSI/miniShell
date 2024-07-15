@@ -33,8 +33,9 @@ void	add_arg_to_cmd(t_tree *cmd, char *location, size_t length)
 void    add_cmd_to_pipeline(t_tree *pipe, t_tree *cmd)
 {
 	pipe->pipe_line = m_realloc(pipe->pipe_line, sizeof(t_tree *) * pipe->pipe_count,
-                    sizeof(t_tree *) * (pipe->pipe_count + 1));
+                    sizeof(t_tree *) * (pipe->pipe_count + 2));
 	pipe->pipe_line[pipe->pipe_count] = cmd;
 	pipe->pipe_count++;
+	pipe->pipe_line[pipe->pipe_count] = NULL;
 }
 

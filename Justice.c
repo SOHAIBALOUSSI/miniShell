@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Justice.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: m3ayz00 <m3ayz00@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 16:29:30 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/15 18:44:02 by msaadidi         ###   ########.fr       */
+/*   Updated: 2024/07/15 22:50:38 by m3ayz00          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int	m_add_back(t_gc **lst, t_gc *new)
 {
 	if (!lst || !new)
 		return (EXIT_FAILURE);
+	new->next = NULL;
 	if (*lst == NULL)
 	{
 		*lst = new;
@@ -64,6 +65,7 @@ int	m_add_back(t_gc **lst, t_gc *new)
 	mshell()->last = new;
 	return (EXIT_SUCCESS);
 }
+
 void	free_arena(void)
 {
 	t_gc	**arena;
