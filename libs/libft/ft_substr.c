@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "../../minishell.h"
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
@@ -23,7 +24,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		return (ft_strdup(""));
 	if (len > ft_strlen(s + start))
 		len = ft_strlen(s + start);
-	sub = ft_calloc((len + 1), sizeof(char));
+	sub = m_alloc((len + 1) * sizeof(char), ALLOC);
 	if (!sub)
 		return (NULL);
 	i = 0;

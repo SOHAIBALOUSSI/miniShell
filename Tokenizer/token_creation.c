@@ -4,6 +4,7 @@ int	add_op_token(t_token **head, int c1, int c2, char *start)
 {
 	e_tok	type;
 	size_t	length;
+	t_token	*token;
 
 	type = decode_type(c1, c2);
 	mshell()->open_paren_count += (type == _PAREN_OPEN) * 1;
@@ -11,13 +12,15 @@ int	add_op_token(t_token **head, int c1, int c2, char *start)
 	mshell()->heredoc_count += (type == _HEREDOC) * 1;
 	length = (type == _HEREDOC || type == _AND ||
 			type == _OR || type == _APPEND) * 1 + 1;
-	append_token(head, create_token(type, start, length));
+	token = create_token(type, start, length);
+	append_token(head, token);
 	return (length);
 }
 size_t	add_quote_token(t_token **head, char *start)
 {
 	char	*p;
 	size_t	length;
+	t_token	*token;
 
 	p = start;
 	length = 1;
@@ -36,7 +39,8 @@ size_t	add_quote_token(t_token **head, char *start)
 		length++;
 		p++;
 	}
-	append_token(head, create_token(_QUOTE, start, length));
+	token = create_token(_QUOTE, start, length);
+	append_token(head, token);
 	return (length);
 }
 
@@ -44,7 +48,8 @@ size_t	add_word_token(t_token **head, char *start)
 {
 	char	*p;
 	size_t	length;
-	
+	t_token	*token;
+
 	p = start;
 	length = 0;
 	while (*p && (!is_space(*p) && !is_op(*p, *(p + 1)))
@@ -53,7 +58,8 @@ size_t	add_word_token(t_token **head, char *start)
 		p++;
 		length++;
 	}
-	append_token(head, create_token(_WORD, start, length));
+	token = create_token(_WORD, start, length);
+	append_token(head, token);
 	return (length);
 }
 

@@ -21,33 +21,37 @@ e_tok	decode_type(char c1, char c2)
 	return (type);
 }
 
-static void	remove_spaces(t_token **head)
+static void remove_spaces(t_token **head)
 {
-	t_token	*current;
-	t_token	*prev;
-	t_token	*temp;
+    t_token *current;
+    t_token *next;
 
-	current = *head;
-	prev = NULL;
-	while (current)
-	{
-		if (current->type == _SPACE)
-		{
-			temp = current;
-			if (prev)
-				prev->next = current->next;
-			else
-				*head = current->next;
-			current = current->next;
-			m_free(temp);
-		}
-		else
-		{
-			prev = current;
-			current = current->next;
-		}
-	}
+    if (!head || !*head)
+        return;
+    current = *head;
+    while (current && current->type == _SPACE)
+    {
+        *head = current->next;
+        if (*head)
+            (*head)->prev = NULL;
+        m_free(current);
+        current = *head;
+    }
+    while (current)
+    {
+        next = current->next;
+        while (next && next->type == _SPACE)
+        {
+            current->next = next->next;
+            if (next->next)
+                next->next->prev = current;
+            m_free(next);
+            next = current->next;
+        }
+        current = next;
+    }
 }
+
 static void string_concatenation(t_token **head)
 {
 	t_token *curr;

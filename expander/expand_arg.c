@@ -1,15 +1,23 @@
 #include "../minishell.h"
 
+static	char	*handle_exit_status(char *result)
+{
+	char	*exit_status;
+
+	exit_status = ft_itoa(mshell()->exit_status);
+	result = ft_strjoin(result, exit_status);
+	m_free(exit_status);
+	return (result);
+}
+
 char	*handle_dollar_sign(char *arg, int *i, char *result)
 {
 	char	*var_name;
 	char	*var_value;
+
 	(*i)++;
     if (arg[*i] == '?')
-    {
-        result = ft_strjoin(result, ft_itoa(mshell()->exit_status));
-        return (result);
-    }
+        return (handle_exit_status(result));
     var_name = get_var_key(&arg[*i]);
     var_value = get_var_value(var_name);
     result = ft_strjoin(result, var_value);

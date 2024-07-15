@@ -23,16 +23,12 @@ static int	is_valid_number(char *str)
 static int	check_overflow(char *str)
 {
 	int		i;
-	int		sign;
 	size_t	num;
 
 	i = 0;
-	sign = 1;
 	num = 0;
 	while (str[i] && is_space(str[i]))
 		i++;
-	if (str[i] == '-')
-		sign = -1;
 	if (str[i] == '+' || str[i] == '-')
 		i++;
 	while (str[i] >= '0' && str[i] <= '9')

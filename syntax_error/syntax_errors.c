@@ -73,6 +73,11 @@ int	catch_syntax_errors(t_token *token_lst)
 	current = token_lst;
 	while (current)
 	{
+		if (current->type == _SPACE)
+        {
+            current = current->next;
+            continue;
+        }
 		if (!check_pipe_and(current) || !check_redirection(current)
 			|| !check_parentheses(current) || !check_word(current)
 			|| !check_heredoc(current))

@@ -24,7 +24,7 @@ static char	*read_line(int fd, char *content, char *buffer)
 		readed = read(fd, buffer, 1);
 		if (readed < 0)
 		{
-			free(buffer);
+			m_free(buffer);
 			return (NULL);
 		}
 		else if (readed == 0)
@@ -34,10 +34,10 @@ static char	*read_line(int fd, char *content, char *buffer)
 		buffer[readed] = '\0';
 		tmp = content;
 		content = ft_strjoin(tmp, buffer);
-		free(tmp);
+		m_free(tmp);
 		tmp = NULL;
 	}
-	free(buffer);
+	m_free(buffer);
 	return (content);
 }
 
@@ -54,7 +54,7 @@ static char	*get_rest(char *line)
 	result = ft_substr(line, i + 1, ft_strlen(line) - i);
 	if (*result == 0)
 	{
-		free(result);
+		m_free(result);
 		result = NULL;
 	}
 	line[i + 1] = '\0';
@@ -71,7 +71,7 @@ char	*get_next_line(int fd)
 	buffer = m_alloc((2) * sizeof(char), ALLOC);
 	if (fd < 0)
 	{
-		free(buffer);
+		m_free(buffer);
 		buffer = NULL;
 		return (NULL);
 	}
