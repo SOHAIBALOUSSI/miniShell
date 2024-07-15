@@ -41,7 +41,6 @@ static char *get_cmd_path(char *cmd)
 	path = get_value("PATH");
 	if (path)
     {
-        paths = ft_split(path, ":");
         if (ft_strchr(cmd, '/'))
         {
             if (is_directory(cmd))
@@ -57,12 +56,21 @@ static char *get_cmd_path(char *cmd)
                 return (perror(cmd), NULL);
             }
         }
+		else
+		{
+			if (is_directory(cmd))
+            {
+                mshell()->exit_status = 127;
+                return (print_error(cmd, "command not found"), NULL);
+            }
+		}
+        paths = ft_split(path, ":");
         i = 0;
         while (paths && paths[i])
         {
             tmp = ft_strjoin(paths[i], "/");
             tmp = ft_strjoin(tmp, cmd);
-            if (access(tmp, F_OK | X_OK) == 0)
+            if (!access(tmp, F_OK | X_OK))
                 return (tmp);
             i++;
         }
@@ -95,7 +103,6 @@ int execute_builtin(t_tree *root)
     char **argv;
     int ret;
 
-    // handle_process_signals();
     ret = -1;
     argv = root->argv;
     if (root->redir_list)
@@ -120,7 +127,6 @@ int execute_builtin(t_tree *root)
     else if (ft_strcmp(argv[0], "exit") == 0)
         ret = builtin_exit(argv + 1);
     restore_redirections(root->redir_list);
-    // handle_signals();
     return (ret);
 }
 
