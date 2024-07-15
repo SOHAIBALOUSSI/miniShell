@@ -94,8 +94,6 @@ void	builtin_export(char **args)
 	
 	if (!*args)
 		return (put_sorted_env());
-	existing_var = NULL;
-	var = NULL;
 	while (*args)
 	{
 		if (is_valid_key(*args))

@@ -75,6 +75,7 @@ static t_tree *parse_pipe_line(t_token **tokens)
     t_tree *pipe;
 
 	cmd = NULL;
+	pipe = NULL;
     pipe = create_pipe_node(tokens);
     while (*tokens)
     {
@@ -91,9 +92,9 @@ static t_tree *parse_pipe_line(t_token **tokens)
         else
 			break;
     }
-	pipe->pipe_line[pipe->pipe_count] = NULL;
     if (pipe->pipe_count <= 1)
         return (cmd);
+	pipe->pipe_line[pipe->pipe_count] = NULL;
     return (pipe);
 }
 
@@ -102,6 +103,8 @@ t_tree	*parse_cmd_line(t_token **tokens)
 	t_tree	*left;
 	t_tree	*op;
 
+	left = NULL;
+	op = NULL;
 	left = parse_pipe_line(tokens);
 	while (*tokens && ((*tokens)->type == _AND || (*tokens)->type == _OR))
 	{

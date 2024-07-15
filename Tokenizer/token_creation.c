@@ -64,8 +64,6 @@ t_token	*create_token(e_tok type, char *start, size_t length)
 	new = m_alloc(sizeof(t_token), ALLOC);
 	new->type = type;
 	new->location = (t_slice){start, length};
-	new->prev = NULL;
-	new->next = NULL;
 	return (new);
 }
 

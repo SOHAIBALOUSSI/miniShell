@@ -1,31 +1,32 @@
 #include "minishell.h"
 
-void append_env(t_env **lst, t_env *new_env)
+void	append_env(t_env **lst, t_env *new_env)
 {
-    t_env *tail;
+	t_env *tail;
 
-    if (lst == NULL || new_env == NULL)
-        return;
-    new_env->next = NULL;
-    if (*lst == NULL)
-    {
-        *lst = new_env;
-        return;
-    }
-    tail = *lst;
-    while (tail->next)
-        tail = tail->next;
-    tail->next = new_env;
+	if (lst == NULL || new_env == NULL)
+		return;
+	new_env->next = NULL;
+	if (*lst == NULL)
+	{
+		*lst = new_env;
+		return;
+	}
+	tail = *lst;
+	while (tail->next)
+		tail = tail->next;
+	tail->next = new_env;
 }
 
 
 void set_shlvl(t_env *node)
 {
 	int old_lvl;
-
+	
 	if (node)
 	{
 		old_lvl = ft_atoi(node->value);
+		m_free(node->value);
 		if (old_lvl < 0)
 			node->value = ft_itoa(0);
 		else if (old_lvl >= 999)
@@ -97,13 +98,16 @@ t_env	*setup_clean_env(void)
 void get_env_list(char **env)
 {
 	int i;
-    t_env **env_list;
+	t_env **env_list;
+	t_env	*shlvl;
 
 	i = -1;
+	shlvl = NULL;
 	env_list = mshell()->env_list;
 	if (!*env)
 		*env_list = setup_clean_env();
 	while (env[++i])
 		append_env(env_list, create_env(env[i]));
-	set_shlvl(find_env_var("SHLVL", *env_list));
+	shlvl = find_env_var("SHLVL", *env_list);
+	set_shlvl(shlvl);
 }

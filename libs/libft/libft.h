@@ -14,7 +14,7 @@
 # define LIBFT_H
 
 # include <unistd.h> /* write */
-# include <stdlib.h> /* malloc(), free() and size_t */
+# include <stdlib.h> /* m_alloc(), free() and size_t */
 # include <stdarg.h> /* variadic functions */
 
 # ifndef BUFFER_SIZE

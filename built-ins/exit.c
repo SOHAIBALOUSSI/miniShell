@@ -1,11 +1,4 @@
 #include "../minishell.h"
-#include <limits.h>
-
-void	exit_clean(int exit_status)
-{
-	m_alloc(0, FREE);
-	exit(exit_status);
-}
 
 static int	is_valid_number(char *str)
 {

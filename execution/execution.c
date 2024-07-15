@@ -10,17 +10,17 @@ static int is_builtin(char *cmd)
 
 int is_directory(const char *path)
 {
-    struct stat path_stat;
-    if (stat(path, &path_stat) == 0)
-        return (S_ISDIR(path_stat.st_mode));
-    return (0); 
+	struct stat path_stat;
+	if (stat(path, &path_stat) == 0)
+		return (S_ISDIR(path_stat.st_mode));
+	return (0); 
 }
 
 void print_error(char *cmd, char *str)
 {
-    ft_putstr_fd(cmd, 2);
-    ft_putstr_fd(": ", 2);
-    ft_putendl_fd(str, 2);
+	ft_putstr_fd(cmd, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putendl_fd(str, 2);
 }
 
 
@@ -100,8 +100,8 @@ static char *get_cmd_path(char *cmd)
 
 int execute_builtin(t_tree *root)
 {
-    char **argv;
-    int ret;
+	char **argv;
+	int ret;
 
     ret = -1;
     argv = root->argv;
@@ -132,30 +132,30 @@ int execute_builtin(t_tree *root)
 
 char *get_last_arg(char **args)
 {
-    int i;
+	int i;
 
-    i = 0;
-    while (args[i + 1])
-        i++;
-    return (args[i]);
+	i = 0;
+	while (args[i + 1])
+		i++;
+	return (args[i]);
 }
 
-void    set_env_var(char *key, char *value)
+void    set$_(char *key, char *value)
 {
-    t_env *env;
+	t_env *env;
 
-    env = find_env_var(key, *mshell()->env_list);
-    if (env)
-        env->value = ft_strdup(value);
-    else
-        append_env(mshell()->env_list, create_env(ft_strjoin(key, ft_strjoin("=", value))));
+	env = find_env_var(key, *mshell()->env_list);
+	if (env)
+		env->value = ft_strdup(value);
+	else
+		append_env(mshell()->env_list, create_env(ft_strjoin(key, ft_strjoin("=", value))));
 }
 
 int execute_cmd(t_tree *root)
 {
-    char *cmd_path;
-    pid_t pid;
-    int status;
+	char *cmd_path;
+	pid_t pid;
+	int status;
 
     cmd_path = NULL;
     expander(root);
@@ -224,7 +224,7 @@ int execute_pipeline(t_tree **pipeline, int n_cmd)
 }
 
 
-int execute_ast(t_tree *root)
+int	execute_ast(t_tree *root)
 {
     if (mshell()->hd_interrupt)
     {

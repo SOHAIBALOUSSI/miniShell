@@ -1,5 +1,27 @@
 #include "../minishell.h"
 
+bool    is_expandable(char c)
+{
+    return (c && (ft_isalnum(c) || c == '?' || c == '_'));
+}
+int	count_words(char *str)
+{
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (str && str[i])
+	{
+		while (str[i] && is_space(str[i]))
+			i++;
+		if (str[i] && !is_space(str[i]))
+			count++;
+		while (str[i] && !is_space(str[i]))
+			i++;
+	}
+	return (count);
+}
 
 char	*get_var_key(char *str)
 {

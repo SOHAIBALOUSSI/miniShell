@@ -2,9 +2,12 @@
 
 void	add_space_token(t_token **head, char **start)
 {
+	t_token *tok;
+
 	while (is_space(**start))
 		(*start)++;
-	append_token(head, create_token(_SPACE, *start, 1));
+	tok = create_token(_SPACE, *start, 1);
+	append_token(head, tok);
 }
 t_token	*tokenizer(char *input)
 {

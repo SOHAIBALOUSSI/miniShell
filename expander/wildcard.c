@@ -63,10 +63,10 @@ void    free_strs(char **strs)
 
 void    realloc_argv(char ***new_argv, int *argc, char *content)
 {
-    (*new_argv) = m_realloc((*new_argv), sizeof(char *) * (*argc), sizeof(char *) * (*argc) + 2);
+    (*new_argv) = m_realloc((*new_argv), sizeof(char *) * (*argc), sizeof(char *) * ((*argc) + 2));
     (*new_argv)[(*argc)] = ft_strdup(content);
+    (*new_argv)[(*argc) + 1] = NULL;
     (*argc)++;
-    (*new_argv)[(*argc)] = NULL;
 }
 
 void    expand_wildard(char ***old_argv)
@@ -79,6 +79,8 @@ void    expand_wildard(char ***old_argv)
 
     i = 0;
     new_argc = 0;
+    new_argv = NULL;
+    matched = NULL;
     while ((*old_argv)[i])
     {
         if (ft_strchr((*old_argv)[i], '*') != NULL)
