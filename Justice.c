@@ -64,52 +64,41 @@ int	m_add_back(t_gc **lst, t_gc *new)
 	last = new;
 	return (EXIT_SUCCESS);
 }
-void	free_arena(t_gc *arena)
+void	free_arena(void)
 {
+	t_gc	**arena;
 	t_gc	*tmp;
 
-	while (arena)
+	arena = &(mshell()->arena);
+	while (*arena)
 	{
-		tmp = arena;
-		arena = arena->next;
+		tmp = *arena;
+		*arena = (*arena)->next;
 		free(tmp->ptr);
 		free(tmp);
 	}
-	arena = NULL;
+	*arena = NULL;
 }
 void	*m_alloc(size_t __size, char todo)
 {
 	void		*ptr;
-	t_gc		*arena;
-	t_gc		*del;
+	t_gc		**arena;
 
-	arena = mshell()->arena;
+	arena = &(mshell()->arena);
 	if (todo == FREE)
 	{
-		free_arena(arena);
+		free_arena();
 		return (NULL);
 	}
 	ptr = malloc(__size);
-	if (!ptr || m_add_back(&arena, m_new_node(ptr)))
+	if (!ptr || m_add_back(arena, m_new_node(ptr)))
 	{
 		if (ptr)
 			free(ptr);
-		free_arena(arena);
+		free_arena();
 		write(2, "Memory allocation failed\n", 26);
 		exit(EXIT_FAILURE);
 	}
 	return (ptr);
 }
 
-void *m_realloc(void *ptr, size_t oldsize, size_t newsize)
-{
-	void *new_ptr;
-
-	new_ptr = m_alloc(newsize, ALLOC);
-	if (ptr)
-	{
-		ft_memcpy(new_ptr, ptr, oldsize);
-		m_free(ptr);
-	}
-	return (new_ptr);
-}

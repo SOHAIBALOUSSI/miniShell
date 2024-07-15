@@ -1,4 +1,3 @@
-
 #include "../minishell.h"
 
 static int	count_words(char *str)

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "../../minishell.h"
 
 static char	*read_line(int fd, char *content, char *buffer)
 {
@@ -67,7 +68,7 @@ char	*get_next_line(int fd)
 	char		*line;
 
 	line = NULL;
-	buffer = malloc((2) * sizeof(char));
+	buffer = m_alloc((2) * sizeof(char), ALLOC);
 	if (fd < 0)
 	{
 		free(buffer);

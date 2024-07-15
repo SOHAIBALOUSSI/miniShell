@@ -21,26 +21,24 @@ int	builtin_echo(char **args)
 	int flag;
 	int	ignore_n;
 
-	i = 0;
+	i = -1;
 	flag = 0;
 	ignore_n = 0;
 	if (!*args) 
 		return (write(1, "\n", 1), EXIT_SUCCESS);
-	while (args[i])
+	while (args[++i])
 	{
 		if (!ignore_n && check_n_option(args[i]) == true)
 		{
 			flag = 1;
-			i++;
 			continue ;
 		}
-		printf("%s", args[i]);
+		write(1, args[i], ft_strlen(args[i]));
 		if (args[i + 1])
-			printf(" ");
-		ignore_n = 1; // if a the arg is a word , any other -n will be ignored
-		i++;
+			write(1, " ", 1);
+		ignore_n = 1;
 	}
 	if (!flag)
-		printf("\n");
+		write(1, "\n", 1);
 	return (0);
 }

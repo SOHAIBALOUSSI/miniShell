@@ -3,12 +3,12 @@
 void	pop_error(char *error_msg)
 {
 	ft_putstr_fd(error_msg, 2);
-	mshell()->closed_paren_count = 0;
-	mshell()->open_paren_count = 0;
-	mshell()->single_quote_count = 0;
-	mshell()->double_quote_count = 0;
-	mshell()->pipe_count = 0;
-	mshell()->heredoc_count = 0;
+	// mshell()->closed_paren_count = 0;
+	// mshell()->open_paren_count = 0;
+	// mshell()->single_quote_count = 0;
+	// mshell()->double_quote_count = 0;
+	// mshell()->pipe_count = 0;
+	// mshell()->heredoc_count = 0;
 }
 
 e_tok	decode_type(char c1, char c2)
@@ -27,62 +27,56 @@ e_tok	decode_type(char c1, char c2)
 	return (type);
 }
 
-static void remove_spaces(t_token **head)
+static void	remove_spaces(t_token **head)
 {
-    t_token *current;
-    t_token *prev;
-    t_token *temp;
+	t_token	*current;
+	t_token	*prev;
+	t_token	*temp;
 
-    if (*head && (*head)->type == _SPACE)
-    {
-        temp = *head;
-        *head = (*head)->next;
-        m_free(temp);
-    }
-    if (!*head)
-        return;
-    current = *head;
-    prev = *head;
-    while (current)
-    {
-        if (current->type == _SPACE)
-        {
-            temp = current;
-            prev->next = current->next;
-            current = current->next;
-            m_free(temp);
-        }
-        else
-        {
-            prev = current;
-            current = current->next;
-        }
-    }
+	current = *head;
+	prev = NULL;
+	while (current)
+	{
+		if (current->type == _SPACE)
+		{
+			temp = current;
+			if (prev)
+				prev->next = current->next;
+			else
+				*head = current->next;
+			current = current->next;
+			m_free(temp);
+		}
+		else
+		{
+			prev = current;
+			current = current->next;
+		}
+	}
 }
-
-static void    string_concatenation(t_token **head)
+static void string_concatenation(t_token **head)
 {
-    t_token *curr;
-    t_token *prev;
+	t_token *curr;
+	t_token *prev;
 
-    curr = *head;
-    prev = NULL;
-    while (curr)
-    {
-        if (is_word(curr->type) && prev && is_word(prev->type))
-        {
-            prev->location.length += curr->location.length;
-            prev->next = curr->next;
-            m_free(curr);
-            curr = prev;
-        }
-        prev = curr;
-        curr = curr->next;
-    }
+	curr = *head;
+	prev = NULL;
+	while (curr)
+	{
+		if (is_word(curr->type) && prev && is_word(prev->type))
+		{
+			prev->location.length += curr->location.length;
+			prev->next = curr->next;
+			m_free(curr);
+			curr = prev;
+		}
+		prev = curr;
+		curr = curr->next;
+	}
 }
 
 void    refine_tokens(t_token **head)
 {
-    string_concatenation(head);
-    remove_spaces(head);
+	string_concatenation(head);
+	remove_spaces(head);
 }
