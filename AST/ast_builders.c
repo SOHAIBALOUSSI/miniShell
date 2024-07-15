@@ -54,5 +54,7 @@ t_tree	*create_pipe_node(t_token **tokens)
 
 	pipe = m_alloc(sizeof(t_tree), ALLOC);
 	pipe->type = _PIPE;
+	pipe->pipe_count = 0;
+	pipe->pipe_line = NULL;
 	return (pipe);
 }

@@ -13,7 +13,7 @@ int is_directory(const char *path)
 	struct stat path_stat;
 	if (stat(path, &path_stat) == 0)
 		return (S_ISDIR(path_stat.st_mode));
-	return (0); 
+	return (0);
 }
 
 void print_error(char *cmd, char *str)
@@ -159,6 +159,8 @@ int execute_cmd(t_tree *root)
 
     cmd_path = NULL;
     expander(root);
+	if (root->argv)
+		set$_("_", get_last_arg(root->argv));
     if (root->argv && root->argv[0] && is_builtin(root->argv[0]))
         return (execute_builtin(root));
     pid = fork();

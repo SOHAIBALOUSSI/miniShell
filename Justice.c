@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Justice.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sait-alo <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 16:29:30 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/05/11 16:29:34 by sait-alo         ###   ########.fr       */
+/*   Updated: 2024/07/15 18:44:02 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	m_free(void *ptr)
 				prev->next = tmp->next;
 			else
 				mshell()->arena = tmp->next;
+			if (mshell()->last == tmp)
+				mshell()->last = prev;
 			free(tmp->ptr);
 			free(tmp);
 			break ;
@@ -50,18 +52,16 @@ void	m_free(void *ptr)
 
 int	m_add_back(t_gc **lst, t_gc *new)
 {
-	static t_gc	*last;
-
 	if (!lst || !new)
 		return (EXIT_FAILURE);
 	if (*lst == NULL)
 	{
 		*lst = new;
-		last = new;
+		mshell()->last = new;
 		return (EXIT_SUCCESS);
 	}
-	last->next = new;
-	last = new;
+	mshell()->last->next = new;
+	mshell()->last = new;
 	return (EXIT_SUCCESS);
 }
 void	free_arena(void)
@@ -78,6 +78,7 @@ void	free_arena(void)
 		free(tmp);
 	}
 	*arena = NULL;
+	mshell()->last = NULL;
 }
 void	*m_alloc(size_t __size, char todo)
 {
