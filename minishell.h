@@ -27,7 +27,7 @@
 # include <linux/limits.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include "./libs/libft/libft.h"
+# include "./libft/libft.h"
 
 # define ALLOC 'A'
 # define FREE 'F'

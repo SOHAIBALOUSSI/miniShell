@@ -1,32 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putnbr.c                                        :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sait-alo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/17 22:30:05 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/15 16:19:50 by msaadidi         ###   ########.fr       */
+/*   Created: 2023/11/14 12:35:07 by sait-alo          #+#    #+#             */
+/*   Updated: 2023/11/14 12:35:10 by sait-alo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-int	ft_putnbr(long n)
-{
-	int	printed;
+#include "../minishell.h"
 
-	printed = 0;
-	if (n < 0)
+char	*ft_strdup(const char *s)
+{
+	size_t	i;
+	char	*new;
+
+	i = 0;
+	if (!s)
+		return (NULL);
+	new = (char *)m_alloc(ft_strlen(s) + 1, ALLOC);
+	if (!new)
+		return (NULL);
+	while (s[i])
 	{
-		printed += ft_putchar('-');
-		printed += ft_putnbr(-n);
+		new[i] = s[i];
+		i++;
 	}
-	else if (n > 9)
-	{
-		printed += ft_putnbr(n / 10);
-		printed += ft_putchar(n % 10 + '0');
-	}
-	else
-		printed += ft_putchar(n + '0');
-	return (printed);
+	new[i] = '\0';
+	return (new);
 }

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "libft.h"
-#include "../../minishell.h"
+#include "../minishell.h"
 
 static int	int_len(long n)
 {

@@ -1,29 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sait-alo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/24 13:31:06 by sait-alo          #+#    #+#             */
-/*   Updated: 2023/12/24 13:31:14 by sait-alo         ###   ########.fr       */
+/*   Created: 2023/11/17 20:08:53 by sait-alo          #+#    #+#             */
+/*   Updated: 2023/11/17 20:09:19 by sait-alo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "libft.h"
+#include "../minishell.h"
 
-int	gnl_strchr(const char *s, char c)
+char	*ft_strjoin(const char *s1, const char *s2)
 {
-	int		i;
+	size_t	i;
+	size_t	j;
+	char	*new;
 
-	if (!s)
-		return (0);
+	if (!s1 && !s2)
+		return (NULL);
+	if (!s1)
+		return (ft_strdup(s2));
+	else if (!s2)
+		return (ft_strdup(s1));
 	i = 0;
-	while (s[i])
-	{
-		if (s[i] == c)
-			return (1);
-		i++;
-	}
-	return (0);
+	j = 0;
+	new = m_alloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char), ALLOC);
+	while (s1[i])
+		new[j++] = s1[i++];
+	i = 0;
+	while (s2[i])
+		new[j++] = s2[i++];
+	new[j] = '\0';
+	return (new);
 }

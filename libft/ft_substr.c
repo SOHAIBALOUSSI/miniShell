@@ -1,26 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstnew_bonus.c                                  :+:      :+:    :+:   */
+/*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sait-alo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/30 19:42:23 by sait-alo          #+#    #+#             */
-/*   Updated: 2023/11/30 19:42:25 by sait-alo         ###   ########.fr       */
+/*   Created: 2023/11/13 17:06:47 by sait-alo          #+#    #+#             */
+/*   Updated: 2023/11/13 17:06:49 by sait-alo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "../../minishell.h"
+#include "../minishell.h"
 
-t_list	*ft_lstnew(void *content)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	t_list	*node;
+	size_t	i;
+	char	*sub;
 
-	node = m_alloc(sizeof(t_list), ALLOC);
-	if (!node)
+	if (!s)
 		return (NULL);
-	node->content = content;
-	node->next = NULL;
-	return (node);
+	if (start >= ft_strlen(s))
+		return (ft_strdup(""));
+	if (len > ft_strlen(s + start))
+		len = ft_strlen(s + start);
+	sub = m_alloc((len + 1) * sizeof(char), ALLOC);
+	if (!sub)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		sub[i] = s[start + i];
+		i++;
+	}
+	return (sub);
 }

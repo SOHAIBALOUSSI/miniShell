@@ -13,9 +13,9 @@
 #ifndef LIBFT_H
 # define LIBFT_H
 
-# include <unistd.h> /* write */
-# include <stdlib.h> /* m_alloc(), free() and size_t */
-# include <stdarg.h> /* variadic functions */
+# include <unistd.h> 
+# include <stdlib.h>
+# include <stdarg.h> 
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1
@@ -56,7 +56,7 @@ char	*ft_strrchr(const char *s, int c);
 int		ft_tolower(int i);
 int		ft_toupper(int i);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
-char    *ft_strjoin(const char *s1, const char *s2);
+char	*ft_strjoin(const char *s1, const char *s2);
 char	*ft_strtrim(char const *s1, char const *set);
 char	**ft_split(char const *s, char *set);
 char	*ft_itoa(int n);
