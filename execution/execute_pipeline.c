@@ -27,6 +27,7 @@ static int    pipe_it_up(int fd[][2], int n_cmd)
         }
         i++;
     }
+    return (0);
 }
 
 void    wait_children(pid_t pid[], int n_cmd, int *status)

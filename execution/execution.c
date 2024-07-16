@@ -25,6 +25,7 @@ void print_error(char *cmd, char *str)
 
 char    *check_command(char *cmd)
 {
+    fflush(stdout);
     if (is_directory(cmd))
     {
         mshell()->exit_status = 126;
@@ -80,8 +81,6 @@ static char *get_cmd_path(char *cmd)
                 return (tmp);
             i++;
         }
-        if (!access(cmd, F_OK | X_OK))
-            return (cmd);
     }
     else
         return (check_command(cmd));
@@ -208,6 +207,3 @@ int count_pipes(t_tree **pipe_line)
 		i++;
 	return (i);
 }
-
-
-
