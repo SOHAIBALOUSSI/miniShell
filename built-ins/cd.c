@@ -4,6 +4,7 @@ static void	update_pwd_env(char *new_dir, char *old_dir)
 {
 	t_env	*pwd;
 	t_env	*oldpwd;
+	char	*cwd;
 
 	pwd = find_env_var("PWD", *mshell()->env_list);
 	oldpwd = find_env_var("OLDPWD", *mshell()->env_list);
@@ -15,7 +16,11 @@ static void	update_pwd_env(char *new_dir, char *old_dir)
 			oldpwd->value = ft_strdup(old_dir);
 	}
 	if (pwd)
-		pwd->value = ft_strdup(getcwd(NULL, PATH_MAX));
+	{
+		cwd = getcwd(NULL, PATH_MAX);
+		pwd->value = ft_strdup(cwd);
+		free(cwd);
+	}
 	mshell()->pwd = pwd->value;
 }
 

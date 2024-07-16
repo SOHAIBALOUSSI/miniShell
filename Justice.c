@@ -6,7 +6,7 @@
 /*   By: m3ayz00 <m3ayz00@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 16:29:30 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/16 00:47:55 by m3ayz00          ###   ########.fr       */
+/*   Updated: 2024/07/16 01:03:20 by m3ayz00          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ void free_arena(void)
     }
     *arena = NULL;
 }
+
 void	*m_alloc(size_t __size, char todo)
 {
 	void		*ptr;

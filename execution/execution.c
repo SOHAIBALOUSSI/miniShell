@@ -23,6 +23,29 @@ void print_error(char *cmd, char *str)
 	ft_putendl_fd(str, 2);
 }
 
+char    *check_command(char *cmd)
+{
+    if (is_directory(cmd))
+    {
+        mshell()->exit_status = 126;
+        return (print_error(cmd, "Is a directory"), NULL);
+    }
+    if (!access(cmd, F_OK | X_OK))
+        return (cmd);
+    mshell()->exit_status = 127;
+    return (perror(cmd), NULL);
+}
+
+int minishell_error(char *cmd)
+{
+    if (!ft_strcmp(cmd, "minishell") || !*cmd)
+    {
+        print_error(cmd, "command not found");
+        mshell()->exit_status = 127;
+        return (EXIT_FAILURE);
+    }
+    return (EXIT_SUCCESS);
+}
 
 static char *get_cmd_path(char *cmd) 
 {
@@ -32,30 +55,13 @@ static char *get_cmd_path(char *cmd)
 	int			i;
 
     paths = NULL;
-    if (!ft_strcmp(cmd, "minishell") || !*cmd)
-    {
-        print_error(cmd, "command not found");
-        mshell()->exit_status = 127;
+    if (minishell_error(cmd))
         return (NULL);
-    }
 	path = get_value("PATH");
 	if (path)
     {
         if (ft_strchr(cmd, '/'))
-        {
-            if (is_directory(cmd))
-            {
-                mshell()->exit_status = 126;
-                return (print_error(cmd, "Is a directory"), NULL);
-            }
-            else
-            {
-                if (!access(cmd, F_OK | X_OK))
-                    return (cmd);
-                mshell()->exit_status = 127;
-                return (perror(cmd), NULL);
-            }
-        }
+            return (check_command(cmd));
 		else
 		{
 			if (is_directory(cmd))
@@ -78,20 +84,7 @@ static char *get_cmd_path(char *cmd)
             return (cmd);
     }
     else
-    {
-        if (is_directory(cmd))
-        {
-            mshell()->exit_status = 126;
-            return (print_error(cmd, "Is a directory"), NULL);
-        }
-        else
-        {
-            if (!access(cmd, F_OK | X_OK))
-                return (cmd);
-            mshell()->exit_status = 127;
-            return (perror(cmd), NULL); 
-        }
-    }
+        return (check_command(cmd));
 	print_error(cmd, "command not found");
     mshell()->exit_status = 127;
 	return (NULL);
@@ -151,6 +144,33 @@ void    set$_(char *key, char *value)
 		append_env(mshell()->env_list, create_env(ft_strjoin(key, ft_strjoin("=", value))));
 }
 
+void    actual_command(t_tree *root, char *cmd_path)
+{
+    if (cmd_path && execve(cmd_path, root->argv, get_current_env_array()) == -1)
+        exit(EXIT_FAILURE);
+    else
+        exit(EXIT_SUCCESS);
+}
+
+void	prepare_command(t_tree *root, char **cmd_path)
+{
+	if (root->redir_list)
+		handle_redirections(root->redir_list); 
+	if (root->argv)
+	{
+		(*cmd_path) = get_cmd_path(root->argv[0]);
+		if (!(*cmd_path))
+			exit(mshell()->exit_status);
+		else if (is_directory((*cmd_path)))
+		{
+			print_error((*cmd_path), "command not found");
+			mshell()->exit_status = 127;
+			exit(mshell()->exit_status);
+		}
+	}
+    actual_command(root, *cmd_path);
+}
+
 int execute_cmd(t_tree *root)
 {
 	char *cmd_path;
@@ -165,31 +185,9 @@ int execute_cmd(t_tree *root)
         return (execute_builtin(root));
     pid = fork();
     if (pid == 0)
-    {
-        if (root->redir_list)
-            handle_redirections(root->redir_list); 
-        if (root->argv)
-        {
-            cmd_path = get_cmd_path(root->argv[0]);
-            if (!cmd_path)
-                exit(mshell()->exit_status);
-            else if (is_directory(cmd_path))
-            {
-                print_error(cmd_path, "command not found");
-                mshell()->exit_status = 127;
-                exit(mshell()->exit_status);
-            }
-        }
-        if (cmd_path && execve(cmd_path, root->argv, get_current_env_array()) == -1)
-            exit(EXIT_FAILURE);
-        else
-            exit(EXIT_SUCCESS);
-    }
+		prepare_command(root, &cmd_path);
     else if (pid < 0)
-    {
-        pop_error("Fork failed\n");
-        return (1);
-    }
+        return (pop_error("Fork failed\n"), 1);
     else
     {
         waitpid(pid, &status, 0);
@@ -207,43 +205,6 @@ int count_pipes(t_tree **pipe_line)
 		i++;
 	return (i);
 }
-int execute_pipeline(t_tree **pipeline, int n_cmd)
-{
-	int saved_output;
-	int saved_input;
-	int result;
-
-	if (!pipeline || !(*pipeline))
-		return (1);
-	saved_output = dup(STDOUT_FILENO);
-	saved_input = dup(STDIN_FILENO);
-	result = actual_pipeline(pipeline, n_cmd);
-	dup2(saved_input, STDIN_FILENO);
-	close(saved_input);
-	dup2(saved_output, STDOUT_FILENO);
-	close(saved_output);
-	return (result);   
-}
 
 
-int	execute_ast(t_tree *root)
-{
-    if (mshell()->hd_interrupt)
-    {
-        mshell()->hd_interrupt = 0;
-        return (mshell()->exit_status);
-    }
-    if (!root)
-        return (1);
-    else if (root->type == _AND || root->type == _OR)
-        mshell()->exit_status = execute_operator(root);
-    else if (root->type == _SUBSHELL)
-        mshell()->exit_status = execute_subshell(root);
-    else if (root->type == _PIPE)
-        mshell()->exit_status = execute_pipeline(root->pipe_line, count_pipes(root->pipe_line));
-    else if (root->type == _CMD)
-        mshell()->exit_status = execute_cmd(root);
-    if (root->redir_list)
-        restore_redirections(root->redir_list);
-    return (mshell()->exit_status);
-}
+

@@ -202,8 +202,9 @@ void 	restore_redirections(t_redir *redir);
 /*		Execution		*/
 int 	execute_ast(t_tree *root);
 int 	execute_cmd(t_tree *root);
-
+int		execute_pipeline(t_tree **pipeline, int n_cmd);
 char 	*get_value(char *key);
+int     count_pipes(t_tree **pipe_line);
 
 
 /*		Expander		*/
