@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "minishell.h": "c",
-        "cstdlib": "c",
-        "libft.h": "c",
-        "climits": "c"
-    }
-}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_arg.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: m3ayz00 <m3ayz00@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/16 16:44:12 by sait-alo         ###   ########.fr       */
+/*   Updated: 2024/07/17 00:26:01 by m3ayz00          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char	*expand_arg(char *arg, bool *to_split)
 			qs.in_squote = !qs.in_squote;
 		else if (arg[qs.i] == DQUOTE && !qs.in_squote)
 			qs.in_dquote = !qs.in_dquote;
-		else if (arg[qs.i] == '$' && is_exp(arg[qs.i + 1]) && !qs.in_squote)
+		else if (arg[qs.i] == '$' && !qs.in_squote)// && is_exp(arg[qs.i + 1])
 			result = handle_expansion(arg, &qs.i, result, &qs.got_expansion);
 		else
 			result = ft_strjoin_char(result, arg[qs.i]);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_helpers.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: m3ayz00 <m3ayz00@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 18:04:54 by msaadidi          #+#    #+#             */
-/*   Updated: 2024/07/16 18:06:23 by msaadidi         ###   ########.fr       */
+/*   Updated: 2024/07/17 00:42:59 by m3ayz00          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,5 +68,6 @@ char	*check_command(char *cmd, char *path)
 	tmp = get_path(cmd, path);
 	if (tmp)
 		return (tmp);
+	mshell()->exit_status = 127;
 	return (print_error(cmd, "command not found"), NULL);
 }
