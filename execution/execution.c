@@ -191,7 +191,10 @@ int execute_cmd(t_tree *root)
     else
     {
         waitpid(pid, &status, 0);
-        mshell()->exit_status = WEXITSTATUS(status);
+        if (WIFSIGNALED(status))
+            mshell()->exit_status = 128 + WTERMSIG(status);
+        else
+            mshell()->exit_status = WEXITSTATUS(status);
     }
     return (mshell()->exit_status);
 }
