@@ -1,5 +1,6 @@
 #include "../minishell.h"
 
+
 static int	expand_redirection(t_redir *redir_list)
 {
 	t_redir	*redir;

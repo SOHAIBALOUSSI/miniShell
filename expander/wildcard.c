@@ -127,7 +127,7 @@ char   *get_matching_file(char *filename, int *count)
     while ((entry = readdir(dir)) != NULL)
     {
         if (entry->d_name[0] == '.')
-            continue;
+            continue ;
         if (is_match(filename, entry->d_name))
         {
             if (*count == 0)
@@ -165,7 +165,8 @@ void    expnd_redir_wildcard(t_redir **redir)
             }
             else if (matched)
             {
-                m_free(current->file_name);
+                if (current->file_name)
+                    m_free(current->file_name);
                 current->file_name = matched;
             }
         }

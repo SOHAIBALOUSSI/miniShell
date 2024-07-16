@@ -1,7 +1,7 @@
 NAME = minishell
 CC = cc
 # CFLAGS = -Wall -Wextra -Werror
-CFLAGS = -fsanitize=address
+# CFLAGS = -fsanitize=address
 
 LIBFT_SRC = $(addprefix ./libs/libft/, ft_atoi.c ft_lstadd_back_bonus.c ft_memchr.c ft_putendl_fd.c ft_striteri.c ft_strtrim.c \
 ft_bzero.c ft_lstadd_front_bonus.c ft_memcmp.c ft_puthex.c ft_strjoin.c ft_substr.c \
@@ -17,7 +17,7 @@ SRCS = minishell.c Justice.c  shell_env.c type_check.c \
 	$(addprefix ./built-ins/, export.c export_fts.c env.c unset.c exit.c pwd.c echo.c cd.c builtins_utils.c) $(LIBFT_SRC) \
 	$(addprefix ./AST/, ast_utils.c ast_parser.c ast_builders.c) \
 	$(addprefix ./Tokenizer/, token_creation.c token_utils.c tokenizer.c) \
-	$(addprefix ./execution/, execution.c open_files.c execute_pipeline.c execute_subshell.c execute_operator.c) \
+	$(addprefix ./execution/, execution.c open_files.c execute_pipeline.c execute_subshell.c executors.c) \
 	$(addprefix ./expander/, expander.c wildcard.c expand_arg.c expand_fts.c  expand_fts2.c expand_heredoc.c) \
 	$(addprefix ./syntax_error/, syntax_errors.c syntax_utils.c read_heredoc.c ) \
 	$(addprefix ./common/, helpers.c)

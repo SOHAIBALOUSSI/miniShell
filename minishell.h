@@ -7,11 +7,11 @@
 #include <signal.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <dirent.h>
-#include <limits.h>
 #include <linux/limits.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -202,8 +202,9 @@ void 	restore_redirections(t_redir *redir);
 /*		Execution		*/
 int 	execute_ast(t_tree *root);
 int 	execute_cmd(t_tree *root);
-
+int		execute_pipeline(t_tree **pipeline, int n_cmd);
 char 	*get_value(char *key);
+int     count_pipes(t_tree **pipe_line);
 
 
 /*		Expander		*/
@@ -246,7 +247,6 @@ char	*get_var_value(char *key);
 char	*get_var_key(char *str);
 
 /*	ENV */
-
 int		builtin_env(void);
 int		builtin_unset(char **args);
 int		builtin_pwd(void);
