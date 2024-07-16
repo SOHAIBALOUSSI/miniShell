@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard_redir.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: m3ayz00 <m3ayz00@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 19:46:50 by msaadidi          #+#    #+#             */
-/*   Updated: 2024/07/16 19:51:09 by msaadidi         ###   ########.fr       */
+/*   Updated: 2024/07/16 23:35:38 by m3ayz00          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
 
 void	matching_file(struct dirent *entry, char *filename,
 	char **matched, int *count)
@@ -36,14 +37,12 @@ char	*get_matching_file(char *filename, int *count)
 
 	if (init_vars2(&matched, count, &dir))
 		return (NULL);
-	entry = readdir(dir);
-	while (entry)
+	while ((entry = readdir(dir)) != NULL)
 	{
 		if (entry->d_name[0] == '.')
-			continue ;
+			continue;
 		if (is_match(filename, entry->d_name))
 			matching_file(entry, filename, &matched, count);
-		entry = readdir(dir);
 	}
 	closedir(dir);
 	if (*count == 0)
@@ -66,7 +65,7 @@ void	expand_redir_wildcard(t_redir **redir)
 			if (count > 1)
 			{
 				current->is_ambiguous = 1;
-				break ;
+				break;
 			}
 			else if (matched)
 			{

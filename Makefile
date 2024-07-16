@@ -18,7 +18,7 @@ SRCS = minishell.c Justice.c  shell_env.c type_check.c \
 	$(addprefix ./AST/, ast_utils.c ast_parser.c ast_builders.c) \
 	$(addprefix ./Tokenizer/, token_creation.c token_utils.c tokenizer.c) \
 	$(addprefix ./execution/, execute_pipeline.c execute_command.c execution_errors.c execution_helpers.c execution_helpers2.c executors.c open_files.c) \
-	$(addprefix ./expander/, expander.c expand_arg.c expand_fts.c  expand_fts2.c expand_heredoc.c wildcard.c ) \
+	$(addprefix ./expander/, expander.c expand_arg.c expand_fts.c  expand_fts2.c expand_heredoc.c wildcard.c wildcard_redir.c wildcard_utils.c) \
 	$(addprefix ./syntax_error/, syntax_errors.c syntax_utils.c read_heredoc.c ) \
 	$(addprefix ./common/, helpers.c)
 
