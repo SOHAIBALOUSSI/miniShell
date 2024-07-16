@@ -1,21 +1,33 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo <sait-alo@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 15:17:24 by sait-alo          #+#    #+#             */
+/*   Updated: 2024/07/16 15:17:28 by sait-alo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-t_minishell *mshell(void)
+t_minishell	*mshell(void)
 {
-    static t_minishell shell;
-    static t_env *env_list;
-    
-    if (!shell.env_list)
-        shell.env_list = &env_list;
-    return (&shell);
+	static t_minishell	shell;
+	static t_env		*env_list;
+
+	if (!shell.env_list)
+		shell.env_list = &env_list;
+	return (&shell);
 }
 
-void	process_input(char *line)
+void	process_line(char *line)
 {
 	t_token	*token_lst;
 	t_tree	*root;
 
-	token_lst = tokenizer(line);
+	token_lst = tokenize_line(line);
 	if (mshell()->heredoc_count > 16)
 		return (pop_error(HEREDOC_MAX_ERROR), exit_clean(2));
 	if (token_lst)
@@ -27,16 +39,16 @@ void	process_input(char *line)
 	}
 }
 
-void	read_cmd(void)
+void	shell_loop(void)
 {
 	char	*line;
 
 	line = readline(SHELL_PROMPT);
 	if (!line)
-		return (write(2, "exit\n", 6), exit_clean(0));
+		return (write(2, "exit\n", 6), exit_clean(mshell()->exit_status));
 	if (line[0] && check_spaces(line))
 		add_history(line);
-	process_input(line);
+	process_line(line);
 	reset_counters();
 	free(line);
 }
@@ -45,15 +57,12 @@ int	main(int ac, char **av, char **env)
 {
 	(void)av;
 	(void)ac;
-
 	if (!isatty(STDIN_FILENO))
 		return (printf(NOT_TTY), EXIT_FAILURE);
 	get_env_list(env);
 	handle_signals();
 	while (true)
-	{
-		read_cmd();
-	}
+		shell_loop();
 	exit_clean(mshell()->exit_status);
 	return (EXIT_SUCCESS);
 }

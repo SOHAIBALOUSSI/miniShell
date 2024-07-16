@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_heredoc.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
+/*   Updated: 2024/07/16 16:21:46 by sait-alo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	read_expand_write(char *file_name)
@@ -14,7 +26,7 @@ int	read_expand_write(char *file_name)
 	line = get_next_line(fd);
 	if (!line)
 		return (-1);
-	while (line > 0)
+	while (line != NULL)
 	{
 		heredoc = ft_strjoin(heredoc, line);
 		m_free(line);
@@ -30,14 +42,14 @@ int	read_expand_write(char *file_name)
 
 static char	*expand_heredoc_line(char *heredoc_line)
 {
-	char *result;
 	int		i;
+	char	*result;
 
 	i = 0;
 	result = ft_strdup("");
 	while (heredoc_line[i])
 	{
-		if (heredoc_line[i] == '$' && is_expandable(heredoc_line[i + 1]))
+		if (heredoc_line[i] == '$' && is_exp(heredoc_line[i + 1]))
 			result = handle_dollar_sign(heredoc_line, &i, result);
 		else
 			result = ft_strjoin_char(result, heredoc_line[i]);

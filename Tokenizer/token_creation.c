@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   token_creation.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 16:14:32 by batman            #+#    #+#             */
+/*   Updated: 2024/07/16 16:49:06 by sait-alo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	add_op_token(t_token **head, int c1, int c2, char *start)
 {
-	e_tok	type;
+	t_tok	type;
 	size_t	length;
 	t_token	*token;
 
@@ -10,13 +22,14 @@ int	add_op_token(t_token **head, int c1, int c2, char *start)
 	mshell()->open_paren_count += (type == _PAREN_OPEN) * 1;
 	mshell()->closed_paren_count += (type == _PAREN_CLOSED) * 1;
 	mshell()->heredoc_count += (type == _HEREDOC) * 1;
-	length = (type == _HEREDOC || type == _AND ||
+	length = (type == _HEREDOC || type == _AND || \
 			type == _OR || type == _APPEND) * 1 + 1;
-	token = create_token(type, start, length);
+	token = creatt_token(type, start, length);
 	append_token(head, token);
 	return (length);
 }
-size_t	add_quote_token(t_token **head, char *start)
+
+size_t	add_quott_token(t_token **head, char *start)
 {
 	char	*p;
 	size_t	length;
@@ -39,7 +52,7 @@ size_t	add_quote_token(t_token **head, char *start)
 		length++;
 		p++;
 	}
-	token = create_token(_QUOTE, start, length);
+	token = creatt_token(_QUOTE, start, length);
 	append_token(head, token);
 	return (length);
 }
@@ -52,18 +65,18 @@ size_t	add_word_token(t_token **head, char *start)
 
 	p = start;
 	length = 0;
-	while (*p && (!is_space(*p) && !is_op(*p, *(p + 1)))
-        && *p!= SQUOTE && *p!= DQUOTE)
+	while (*p && !is_space(*p) && !is_op(*p, *(p + 1))
+		&& *p != SQUOTE && *p != DQUOTE)
 	{
 		p++;
 		length++;
 	}
-	token = create_token(_WORD, start, length);
+	token = creatt_token(_WORD, start, length);
 	append_token(head, token);
 	return (length);
 }
 
-t_token	*create_token(e_tok type, char *start, size_t length)
+t_token	*creatt_token(t_tok type, char *start, size_t length)
 {
 	t_token	*new;
 
@@ -80,7 +93,7 @@ void	append_token(t_token **head, t_token *token)
 	if (!*head)
 	{
 		*head = token;
-		return;
+		return ;
 	}
 	last = *head;
 	while (last->next)

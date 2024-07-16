@@ -1,13 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ast_parser.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 16:08:37 by batman            #+#    #+#             */
+/*   Updated: 2024/07/16 16:29:09 by sait-alo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
-
-static t_tree	*parse_pipe_line(t_token **tokens);
-static t_tree	*parse_subshell(t_token **tokens);
-
 
 static t_tree	*parse_redirection(t_token **tokens, t_tree *cmd)
 {
 	char	*heredocfilename;
-	e_tok	redir_type;
+	t_tok	redir_type;
 	t_redir	*redir;
 	t_redir	*last_redir;
 
@@ -15,7 +23,7 @@ static t_tree	*parse_redirection(t_token **tokens, t_tree *cmd)
 	redir_type = (*tokens)->type;
 	heredocfilename = (*tokens)->heredoc_file;
 	*tokens = (*tokens)->next;
-	redir = create_redir_node(*tokens ,redir_type, heredocfilename);
+	redir = create_redir_node(*tokens, redir_type, heredocfilename);
 	if (!cmd->redir_list)
 		cmd->redir_list = redir;
 	else
@@ -30,11 +38,9 @@ static t_tree	*parse_redirection(t_token **tokens, t_tree *cmd)
 
 static t_tree	*parse_cmd(t_token **tokens)
 {
-	size_t	argc;
 	t_tree	*cmd;
 	t_token	*tmp;
 
-	argc = 0;
 	tmp = *tokens;
 	cmd = create_cmd_node();
 	while (tmp)
@@ -43,7 +49,7 @@ static t_tree	*parse_cmd(t_token **tokens)
 			add_arg_to_cmd(cmd, tmp->location.location, tmp->location.length);
 		else if (is_redirection(tmp->type))
 			cmd = parse_redirection(&tmp, cmd);
-		else 
+		else
 			break ;
 		tmp = tmp->next;
 	}
@@ -69,33 +75,33 @@ static t_tree	*parse_subshell(t_token **tokens)
 	return (cmd);
 }
 
-static t_tree *parse_pipe_line(t_token **tokens)
+static t_tree	*parse_pipe_line(t_token **tokens)
 {
-    t_tree *cmd;
-    t_tree *pipe;
+	t_tree	*cmd;
+	t_tree	*pipe;
 
 	cmd = NULL;
 	pipe = NULL;
-    pipe = create_pipe_node(tokens);
-    while (*tokens)
-    {
+	pipe = create_pipe_node();
+	while (*tokens)
+	{
 		if ((*tokens)->type == _PAREN_OPEN)
 			cmd = parse_subshell(tokens);
-        else
-        	cmd = parse_cmd(tokens);
-        add_cmd_to_pipeline(pipe, cmd);
-        if (*tokens && (*tokens)->type == _PIPE)
+		else
+			cmd = parse_cmd(tokens);
+		add_cmd_to_pipeline(pipe, cmd);
+		if (*tokens && (*tokens)->type == _PIPE)
 		{
 			mshell()->pipe_count++;
-        	*tokens = (*tokens)->next;
+			*tokens = (*tokens)->next;
 		}
-        else
-			break;
-    }
-    if (pipe->pipe_count <= 1)
-        return (cmd);
+		else
+			break ;
+	}
+	if (pipe->pipe_count <= 1)
+		return (cmd);
 	pipe->pipe_line[pipe->pipe_count] = NULL;
-    return (pipe);
+	return (pipe);
 }
 
 t_tree	*parse_cmd_line(t_token **tokens)

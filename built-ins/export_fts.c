@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_fts.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
+/*   Updated: 2024/07/16 16:34:58 by sait-alo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 t_env	*find_env_var(char *key, t_env *env_list)
@@ -14,15 +26,16 @@ t_env	*find_env_var(char *key, t_env *env_list)
 	return (NULL);
 }
 
-char *get_value(char *key)
+char	*get_value(char *key)
 {
-	t_env *found;
+	t_env	*found;
 
 	found = find_env_var(key, *mshell()->env_list);
 	if (found)
 		return (found->value);
 	return (NULL);
 }
+
 bool	has_add_sign(char *s)
 {
 	int	i;
@@ -36,6 +49,7 @@ bool	has_add_sign(char *s)
 	}
 	return (false);
 }
+
 bool	has_only_equal_sign(char *s)
 {
 	int	i;

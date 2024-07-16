@@ -1,3 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execute_pipeline.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo  <sait-alo@student.1337.ma >      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 11:16:37 by sait-alo          #+#    #+#             */
+/*   Updated: 2024/07/16 15:35:33 by sait-alo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
 #include "../minishell.h"
 
 void    close_pipes(int fd[][2], int n_cmd)
@@ -27,6 +40,7 @@ static int    pipe_it_up(int fd[][2], int n_cmd)
         }
         i++;
     }
+    return (0);
 }
 
 void    wait_children(pid_t pid[], int n_cmd, int *status)

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo  <sait-alo@student.1337.ma >      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 11:16:37 by sait-alo          #+#    #+#             */
+/*   Updated: 2024/07/16 14:42:43 by sait-alo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static int is_builtin(char *cmd)
@@ -25,26 +37,26 @@ void print_error(char *cmd, char *str)
 
 char    *check_command(char *cmd)
 {
-    if (is_directory(cmd))
-    {
-        mshell()->exit_status = 126;
-        return (print_error(cmd, "Is a directory"), NULL);
-    }
-    if (!access(cmd, F_OK | X_OK))
-        return (cmd);
-    mshell()->exit_status = 127;
-    return (perror(cmd), NULL);
+	if (is_directory(cmd))
+	{
+		mshell()->exit_status = 126;
+		return (print_error(cmd, "Is a directory"), NULL);
+	}
+	if (!access(cmd, F_OK | X_OK))
+		return (cmd);
+	mshell()->exit_status = 127;
+	return (perror(cmd), NULL);
 }
 
 int minishell_error(char *cmd)
 {
-    if (!ft_strcmp(cmd, "minishell") || !*cmd)
-    {
-        print_error(cmd, "command not found");
-        mshell()->exit_status = 127;
-        return (EXIT_FAILURE);
-    }
-    return (EXIT_SUCCESS);
+	if (!ft_strcmp(cmd, "minishell") || !*cmd)
+	{
+		print_error(cmd, "command not found");
+		mshell()->exit_status = 127;
+		return (EXIT_FAILURE);
+	}
+	return (EXIT_SUCCESS);
 }
 
 static char *get_cmd_path(char *cmd) 
@@ -54,73 +66,72 @@ static char *get_cmd_path(char *cmd)
 	char 		**paths;
 	int			i;
 
-    paths = NULL;
-    if (minishell_error(cmd))
-        return (NULL);
+	paths = NULL;
+	if (minishell_error(cmd))
+		return (NULL);
 	path = get_value("PATH");
 	if (path)
-    {
-        if (ft_strchr(cmd, '/'))
-            return (check_command(cmd));
+	{
+		if (ft_strchr(cmd, '/'))
+			return (check_command(cmd));
 		else
 		{
 			if (is_directory(cmd))
-            {
-                mshell()->exit_status = 127;
-                return (print_error(cmd, "command not found"), NULL);
-            }
+			{
+				mshell()->exit_status = 127;
+				return (print_error(cmd, "command not found"), NULL);
+			}
 		}
-        paths = ft_split(path, ":");
-        i = 0;
-        while (paths && paths[i])
-        {
-            tmp = ft_strjoin(paths[i], "/");
-            tmp = ft_strjoin(tmp, cmd);
-            if (!access(tmp, F_OK | X_OK))
-                return (tmp);
-            i++;
-        }
-        if (!access(cmd, F_OK | X_OK))
-            return (cmd);
-    }
-    else
-        return (check_command(cmd));
+		paths = ft_split(path, ":");
+		i = 0;
+		while (paths && paths[i])
+		{
+			tmp = ft_strjoin(paths[i], "/");
+			tmp = ft_strjoin(tmp, cmd);
+			if (!access(tmp, F_OK | X_OK))
+				return (tmp);
+			i++;
+		}
+		if (!access(cmd, F_OK | X_OK))
+			return (cmd);
+	}
+	else
+		return (check_command(cmd));
 	print_error(cmd, "command not found");
-    mshell()->exit_status = 127;
+	mshell()->exit_status = 127;
 	return (NULL);
 }
-
 
 int execute_builtin(t_tree *root)
 {
 	char **argv;
 	int ret;
 
-    ret = -1;
-    argv = root->argv;
-    if (root->redir_list)
-        handle_redirections2(root->redir_list, &ret);
-    if (ret == EXIT_FAILURE)
-        return (ret);
-    if (ft_strcmp(argv[0], "cd") == 0)
-        ret = builtin_cd(argv + 1);
-    else if (ft_strcmp(argv[0], "echo") == 0)
-        ret = builtin_echo(argv + 1);
-    else if (ft_strcmp(argv[0], "env") == 0)
-        ret = builtin_env();
-    else if (ft_strcmp(argv[0], "pwd") == 0)
-        ret = builtin_pwd();
-    else if (ft_strcmp(argv[0], "export") == 0)
-    {
-        builtin_export(argv + 1);
-        ret = EXIT_SUCCESS;
-    }
-    else if (ft_strcmp(argv[0], "unset") == 0)
-        ret = builtin_unset(argv + 1);
-    else if (ft_strcmp(argv[0], "exit") == 0)
-        ret = builtin_exit(argv + 1);
-    restore_redirections(root->redir_list);
-    return (ret);
+	ret = -1;
+	argv = root->argv;
+	if (root->redir_list)
+		handle_redirections2(root->redir_list, &ret);
+	if (ret == EXIT_FAILURE)
+		return (ret);
+	if (ft_strcmp(argv[0], "cd") == 0)
+		ret = builtin_cd(argv + 1);
+	else if (ft_strcmp(argv[0], "echo") == 0)
+		ret = builtin_echo(argv + 1);
+	else if (ft_strcmp(argv[0], "env") == 0)
+		ret = builtin_env();
+	else if (ft_strcmp(argv[0], "pwd") == 0)
+		ret = builtin_pwd();
+	else if (ft_strcmp(argv[0], "export") == 0)
+	{
+		builtin_export(argv + 1);
+		ret = EXIT_SUCCESS;
+	}
+	else if (ft_strcmp(argv[0], "unset") == 0)
+		ret = builtin_unset(argv + 1);
+	else if (ft_strcmp(argv[0], "exit") == 0)
+		ret = builtin_exit(argv + 1);
+	restore_redirections(root->redir_list);
+	return (ret);
 }
 
 char *get_last_arg(char **args)
@@ -133,7 +144,7 @@ char *get_last_arg(char **args)
 	return (args[i]);
 }
 
-void    set$_(char *key, char *value)
+void    set_underscore(char *key, char *value)
 {
 	t_env *env;
 
@@ -146,10 +157,10 @@ void    set$_(char *key, char *value)
 
 void    actual_command(t_tree *root, char *cmd_path)
 {
-    if (cmd_path && execve(cmd_path, root->argv, get_current_env_array()) == -1)
-        exit(EXIT_FAILURE);
-    else
-        exit(EXIT_SUCCESS);
+	if (cmd_path && execve(cmd_path, root->argv, get_current_env_array()) == -1)
+		exit(EXIT_FAILURE);
+	else
+		exit(EXIT_SUCCESS);
 }
 
 void	prepare_command(t_tree *root, char **cmd_path)
@@ -168,7 +179,7 @@ void	prepare_command(t_tree *root, char **cmd_path)
 			exit(mshell()->exit_status);
 		}
 	}
-    actual_command(root, *cmd_path);
+	actual_command(root, *cmd_path);
 }
 
 int execute_cmd(t_tree *root)
@@ -177,21 +188,25 @@ int execute_cmd(t_tree *root)
 	pid_t pid;
 	int status;
 
-    cmd_path = NULL;
-    expander(root);
+	cmd_path = NULL;
+	expander(root);
 	if (root->argv)
-		set$_("_", get_last_arg(root->argv));
-    if (root->argv && root->argv[0] && is_builtin(root->argv[0]))
-        return (execute_builtin(root));
-    pid = fork();
-    if (pid == 0)
+		set_underscore("_", get_last_arg(root->argv));
+	if (root->argv && root->argv[0] && is_builtin(root->argv[0]))
+		return (execute_builtin(root));
+	pid = fork();
+	if (pid == 0)
 		prepare_command(root, &cmd_path);
-    else if (pid < 0)
-        return (pop_error("Fork failed\n"), 1);
+	else if (pid < 0)
+		return (pop_error("Fork failed\n"), 1);
     else
     {
+		mshell()->in_exec = 1;
         waitpid(pid, &status, 0);
-        mshell()->exit_status = WEXITSTATUS(status);
+        if (WIFSIGNALED(status))
+            mshell()->exit_status = 128 + WTERMSIG(status);
+        else
+            mshell()->exit_status = WEXITSTATUS(status);
     }
     return (mshell()->exit_status);
 }

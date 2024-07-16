@@ -1929,7 +1929,7 @@
 				"color": "black",
 				"size": "m",
 				"w": 340.953125,
-				"text": "typedef struct s_tree\n{\n  e_tok      type;\n  size_t      pipe_count;\n  struct s_tree  *left;\n  struct s_tree  *right;\n  struct s_tree  **pipe_line;\n  struct s_tree  *subtree;\n  t_redir      *redir_list;\n  char      **argv;\n  size_t      argc;\n  char      *value;\n}               t_tree;",
+				"text": "typedef struct s_tree\n{\n  t_tok      type;\n  size_t      pipe_count;\n  struct s_tree  *left;\n  struct s_tree  *right;\n  struct s_tree  **pipe_line;\n  struct s_tree  *subtree;\n  t_redir      *redir_list;\n  char      **argv;\n  size_t      argc;\n  char      *value;\n}               t_tree;",
 				"font": "draw",
 				"textAlign": "start",
 				"autoSize": true,

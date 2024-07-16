@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   syntax_errors.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
+/*   Updated: 2024/07/16 16:24:59 by sait-alo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static int	check_pipe_and(t_token *current)
@@ -68,16 +80,16 @@ static int	check_word(t_token *current)
 
 int	catch_syntax_errors(t_token *token_lst)
 {
-	t_token *current;
+	t_token	*current;
 
 	current = token_lst;
 	while (current)
 	{
 		if (current->type == _SPACE)
-        {
-            current = current->next;
-            continue;
-        }
+		{
+			current = current->next;
+			continue ;
+		}
 		if (!check_pipe_and(current) || !check_redirection(current)
 			|| !check_parentheses(current) || !check_word(current)
 			|| !check_heredoc(current))

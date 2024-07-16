@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Justice.c                                          :+:      :+:    :+:   */
+/*   gc.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: m3ayz00 <m3ayz00@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 16:29:30 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/16 01:03:20 by m3ayz00          ###   ########.fr       */
+/*   Updated: 2024/07/16 16:18:37 by batman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,74 +24,75 @@ t_gc	*m_new_node(void *ptr)
 	return (to_collect);
 }
 
-void    m_free(void *ptr)
+void	m_free(void *ptr)
 {
-    t_gc    **tmp;
-    t_gc    *current;
-    t_gc    *prev;
+	t_gc	**tmp;
+	t_gc	*current;
+	t_gc	*prev;
 
-    tmp = &(mshell()->arena);
-    current = *tmp;
-    prev = NULL;
-    while (current)
-    {
-        if (current->ptr == ptr)
-        {
-            if (prev)
-                prev->next = current->next;
-            else
-                *tmp = current->next;
-            if (current->next)
-                current->next->prev = prev;
-            free(current->ptr);
+	tmp = &(mshell()->arena);
+	current = *tmp;
+	prev = NULL;
+	while (current)
+	{
+		if (current->ptr == ptr)
+		{
+			if (prev)
+				prev->next = current->next;
+			else
+				*tmp = current->next;
+			if (current->next)
+				current->next->prev = prev;
+			free(current->ptr);
 			current->ptr = NULL;
-            free(current);
-            return;
-        }
-        prev = current;
-        current = current->next;
-    }
+			free(current);
+			return ;
+		}
+		prev = current;
+		current = current->next;
+	}
 }
 
-int m_add_back(t_gc **lst, t_gc *new)
+int	m_add_back(t_gc **lst, t_gc *new)
 {
 	t_gc	*last;
 
-    if (!lst || !new)
-        return (EXIT_FAILURE);
-    new->next = NULL;
-    if (!*lst)
-    {
-        *lst = new;
-        new->prev = NULL;
-    }
-    else
-    {
-        last = *lst;
-        while (last->next)
-            last = last->next;
-        last->next = new;
-        new->prev = last;
-    }
-    return (EXIT_SUCCESS);
+	if (!lst || !new)
+		return (EXIT_FAILURE);
+	new->next = NULL;
+	if (!*lst)
+	{
+		*lst = new;
+		new->prev = NULL;
+	}
+	else
+	{
+		last = *lst;
+		while (last->next)
+			last = last->next;
+		last->next = new;
+		new->prev = last;
+	}
+	return (EXIT_SUCCESS);
 }
-void free_arena(void)
+
+void	free_arena(void)
 {
-    t_gc **arena;
-    t_gc *tmp;
+	t_gc	**arena;
+	t_gc	*tmp;
 
 	arena = &(mshell()->arena);
-    if (!arena || !*arena)
-        return;
-    while (*arena)
-    {
-        tmp = *arena;
-        *arena = (*arena)->next;
-        free(tmp->ptr);
-        tmp->ptr = NULL;
-        free(tmp);
-    }
-    *arena = NULL;
+	if (!arena || !*arena)
+		return ;
+	while (*arena)
+	{
+		tmp = *arena;
+		*arena = (*arena)->next;
+		free(tmp->ptr);
+		tmp->ptr = NULL;
+		free(tmp);
+	}
+	*arena = NULL;
 }
 
 void	*m_alloc(size_t __size, char todo)
@@ -118,4 +119,3 @@ void	*m_alloc(size_t __size, char todo)
 	ft_memset(ptr, 0, __size);
 	return (ptr);
 }
-

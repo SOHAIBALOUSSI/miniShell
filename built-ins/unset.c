@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   unset.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
+/*   Updated: 2024/07/16 16:35:45 by sait-alo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	del_env(t_env *env)
@@ -20,10 +32,10 @@ void	del_head_env(void)
 	del_env(tmp);
 }
 
-int    builtin_unset(char **args)
+int	builtin_unset(char **args)
 {
-	t_env   *tmp;
-	t_env   *del; 
+	t_env	*tmp;
+	t_env	*del;
 
 	while (*args)
 	{
@@ -31,7 +43,7 @@ int    builtin_unset(char **args)
 		if (tmp && ft_strcmp(tmp->key, *args) == 0)
 		{
 			del_head_env();
-			continue;
+			continue ;
 		}
 		while (tmp && tmp->next)
 		{
@@ -40,7 +52,7 @@ int    builtin_unset(char **args)
 				del = tmp->next;
 				tmp->next = tmp->next->next;
 				del_env(del);
-				break;
+				break ;
 			}
 			tmp = tmp->next;
 		}
@@ -48,4 +60,3 @@ int    builtin_unset(char **args)
 	}
 	return (EXIT_SUCCESS);
 }
-

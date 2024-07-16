@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   echo.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
+/*   Updated: 2024/07/16 16:33:48 by sait-alo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 bool	check_n_option(char *arg)
 {
-	int i;
+	int	i;
 
 	if (arg[0] == '-')
 	{
@@ -17,14 +29,14 @@ bool	check_n_option(char *arg)
 
 int	builtin_echo(char **args)
 {
-	int i;
-	int flag;
+	int	i;
+	int	flag;
 	int	ignore_n;
 
 	i = -1;
 	flag = 0;
 	ignore_n = 0;
-	if (!*args) 
+	if (!*args)
 		return (write(1, "\n", 1), EXIT_SUCCESS);
 	while (args[++i])
 	{
