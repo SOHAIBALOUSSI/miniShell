@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   token_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 16:14:45 by batman            #+#    #+#             */
+/*   Updated: 2024/07/16 16:54:19 by sait-alo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	pop_error(char *error_msg)
@@ -5,57 +17,49 @@ void	pop_error(char *error_msg)
 	ft_putstr_fd(error_msg, 2);
 }
 
-e_tok	decode_type(char c1, char c2)
+static void	remove_head(t_token **head)
 {
-	e_tok	type;
+	t_token	*tmp;
 
-	type = (c1 == '(') * _PAREN_OPEN + (c1 == ')') * _PAREN_CLOSED
-		+ (c1 == '$') * _ENV + (c1 == '*') * _WILDCARD
-		+ (c1 == '|' && c2 != '|') * _PIPE
-		+ (c1 == '|' && c2 == '|') * _OR
-		+ (c1 == '<' && c2 != '<') * _RED_IN
-		+ (c1 == '<' && c2 == '<') * _HEREDOC
-		+ (c1 == '>' && c2 != '>') * _RED_OUT
-		+ (c1 == '>' && c2 == '>') * _APPEND
-		+ (c1 == '&' && c2 == '&') * _AND;
-	return (type);
+	tmp = *head;
+	*head = (*head)->next;
+	if (*head)
+		(*head)->prev = NULL;
+	m_free(tmp);
 }
 
-static void remove_spaces(t_token **head)
+static void	remove_spaces(t_token **head)
 {
-    t_token *current;
-    t_token *next;
+	t_token	*current;
+	t_token	*next;
 
-    if (!head || !*head)
-        return;
-    current = *head;
-    while (current && current->type == _SPACE)
-    {
-        *head = current->next;
-        if (*head)
-            (*head)->prev = NULL;
-        m_free(current);
-        current = *head;
-    }
-    while (current)
-    {
-        next = current->next;
-        while (next && next->type == _SPACE)
-        {
-            current->next = next->next;
-            if (next->next)
-                next->next->prev = current;
-            m_free(next);
-            next = current->next;
-        }
-        current = next;
-    }
+	if (!head || !*head)
+		return ;
+	current = *head;
+	while (current && current->type == _SPACE)
+	{
+		remove_head(head);
+		current = *head;
+	}
+	while (current)
+	{
+		next = current->next;
+		while (next && next->type == _SPACE)
+		{
+			current->next = next->next;
+			if (next->next)
+				next->next->prev = current;
+			m_free(next);
+			next = current->next;
+		}
+		current = next;
+	}
 }
 
-static void string_concatenation(t_token **head)
+static void	string_concatenation(t_token **head)
 {
-	t_token *curr;
-	t_token *prev;
+	t_token	*curr;
+	t_token	*prev;
 
 	curr = *head;
 	prev = NULL;
@@ -73,7 +77,7 @@ static void string_concatenation(t_token **head)
 	}
 }
 
-void    refine_tokens(t_token **head)
+void	refint_tokens(t_token **head)
 {
 	string_concatenation(head);
 	remove_spaces(head);

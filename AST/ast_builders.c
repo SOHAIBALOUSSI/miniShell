@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ast_builders.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 16:08:22 by batman            #+#    #+#             */
+/*   Updated: 2024/07/16 16:28:15 by sait-alo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-t_tree	*create_op_node(e_tok type)
+t_tree	*create_op_node(t_tok type)
 {
 	t_tree	*op;
 
@@ -9,7 +21,8 @@ t_tree	*create_op_node(e_tok type)
 	return (op);
 }
 
-t_redir	*create_redir_node(t_token *token, e_tok redir_type, char *heredocfilename)
+t_redir	*create_redir_node(t_token *token, t_tok redir_type,
+		char *heredocfilename)
 {
 	t_redir	*redir;
 
@@ -18,7 +31,8 @@ t_redir	*create_redir_node(t_token *token, e_tok redir_type, char *heredocfilena
 	if (redir_type == _HEREDOC)
 		redir->file_name = heredocfilename;
 	else
-		redir->file_name = ft_strndup(token->location.location, token->location.length);
+		redir->file_name = ft_strndup(token->location.location,
+				token->location.length);
 	redir->fds[0] = -1;
 	redir->fds[1] = -1;
 	redir->original_in = -1;
@@ -35,7 +49,7 @@ t_tree	*create_cmd_node(void)
 	return (cmd);
 }
 
-t_tree *create_subshell_node(t_tree *subshell)
+t_tree	*create_subshell_node(t_tree *subshell)
 {
 	t_tree	*cmd;
 
@@ -45,13 +59,12 @@ t_tree *create_subshell_node(t_tree *subshell)
 	return (cmd);
 }
 
-t_tree	*create_pipe_node(t_token **tokens)
+t_tree	*create_pipe_node(void)
 {
 	t_tree	*pipe;
 
 	pipe = m_alloc(sizeof(t_tree), ALLOC);
 	pipe->type = _PIPE;
-	pipe->pipe_count = 0;
 	pipe->pipe_line = NULL;
 	return (pipe);
 }

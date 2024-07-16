@@ -1,37 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sait-alo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/17 20:08:53 by sait-alo          #+#    #+#             */
-/*   Updated: 2023/11/17 20:09:19 by sait-alo         ###   ########.fr       */
+/*   Created: 2023/11/13 09:48:31 by sait-alo          #+#    #+#             */
+/*   Updated: 2023/11/13 09:48:33 by sait-alo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
-#include "../../minishell.h"
+#include "../minishell.h"
 
-char	*ft_strjoin(const char *s1, const char *s2)
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-	size_t	i;
-	size_t	j;
-	char	*new;
+	void	*tmp;
+	size_t	buffer;
 
-	if (!s1 && !s2)
+	buffer = nmemb * size;
+	if (nmemb > 0 && size > 0 && buffer / size != nmemb)
 		return (NULL);
-	if (!s1)
-		return (ft_strdup(s2));
-	else if (!s2)
-		return (ft_strdup(s1));
-	i = 0;
-	j = 0;
-	new = m_alloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char), ALLOC);
-	while (s1[i])
-		new[j++] = s1[i++];
-	i = 0;
-	while (s2[i])
-		new[j++] = s2[i++];
-	new[j] = '\0';
-	return (new);
+	tmp = m_alloc(nmemb * size, ALLOC);
+	if (!tmp)
+		return (NULL);
+	ft_bzero(tmp, nmemb * size);
+	return (tmp);
 }

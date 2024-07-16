@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtins_utils.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
+/*   Updated: 2024/07/16 16:29:46 by sait-alo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	exit_clean(int exit_status)
@@ -25,7 +37,7 @@ size_t	lst_size(t_env **lst)
 		if (ft_strcmp(tmp->key, "_") == 0)
 		{
 			tmp = tmp->next;
-			continue;
+			continue ;
 		}
 		size++;
 		tmp = tmp->next;

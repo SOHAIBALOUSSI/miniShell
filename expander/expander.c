@@ -1,5 +1,16 @@
-#include "../minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
+/*   Updated: 2024/07/16 16:22:37 by sait-alo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "../minishell.h"
 
 static int	expand_redirection(t_redir *redir_list)
 {
@@ -18,7 +29,8 @@ static int	expand_redirection(t_redir *redir_list)
 		else if (redir->file_name)
 		{
 			redir->file_name = expand_arg(redir->file_name, &to_split);
-			if (count_words(redir->file_name) == 0 || count_words(redir->file_name) > 1)
+			if (count_words(redir->file_name) == 0 || \
+					count_words(redir->file_name) > 1)
 				redir->is_ambiguous = 1;
 		}
 		redir = redir->next;
@@ -44,8 +56,6 @@ static void	expand_argv(t_tree *node)
 			add_to_new_argv(expanded_arg, &expanded_argv, to_split);
 		i++;
 	}
-	// mem_free(node->argv, i);
-	// m_free(node->argv);
 	node->argv = expanded_argv;
 }
 

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   syntax_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
+/*   Updated: 2024/07/16 16:26:59 by sait-alo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	syntax_err(t_token *current)
@@ -7,16 +19,11 @@ void	syntax_err(t_token *current)
 	if (current == NULL)
 		err = ft_strdup("newline");
 	else
-		err = ft_substr(current->location.location, 0, current->location.length);
+		err = ft_substr(current->location.location,
+				0, current->location.length);
 	ft_putstr_fd("Minishell: syntax error near unexpected token `", 2);
 	ft_putstr_fd(err, 2);
 	ft_putstr_fd("\'\n", 2);
-	// mshell()->closed_paren_count = 0;
-	// mshell()->open_paren_count = 0;
-	// mshell()->single_quote_count = 0;
-	// mshell()->double_quote_count = 0;
-	// mshell()->pipe_count = 0;
-	// mshell()->heredoc_count = 0;
 	m_free(err);
 }
 
@@ -62,16 +69,17 @@ bool	has_quotes(char *str)
 
 int	check_quotes_and_parens(void)
 {
-	if (mshell()->single_quote_count % 2 != 0 || mshell()->double_quote_count % 2 != 0)
-    {
-        pop_error("Minishell: syntax error 'unclosed parenthesis'\n");
+	if ((mshell()->single_quote_count % 2) != 0 || \
+			(mshell()->double_quote_count % 2) != 0)
+	{
+		pop_error("Minishell: syntax error 'unclosed parenthesis'\n");
 		return (0);
-    }
+	}
 	else if (mshell()->closed_paren_count != mshell()->open_paren_count)
-    {
-        pop_error("Minishell: syntax error 'unclosed parenthesis'\n");
-        return (0);
-    }
+	{
+		pop_error("Minishell: syntax error 'unclosed parenthesis'\n");
+		return (0);
+	}
 	return (1);
 }
 

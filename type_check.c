@@ -1,29 +1,43 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   type_check.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo <sait-alo@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 15:31:58 by sait-alo          #+#    #+#             */
+/*   Updated: 2024/07/16 15:32:00 by sait-alo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	is_space(char c)
 {
-	return (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r');
+	return (c == ' ' || c == '\t' || c == '\n'
+		|| c == '\v' || c == '\f' || c == '\r');
 }
 
 int	is_op(char c, char c1)
 {
 	if (c == '&' && c1 == '&')
 		return (1);
-	return (c == '|' || c == '>' || c == '<' || c == '(' 
-			|| c == ')' || c == '*' || c == '$');
+	return (c == '|' || c == '>' || c == '<' || c == '('
+		|| c == ')' || c == '*' || c == '$');
 }
-int	is_redirection(e_tok type)
+
+int	is_redirection(t_tok type)
 {
 	return (type == _APPEND || type == _HEREDOC
 		|| type == _RED_IN || type == _RED_OUT);
 }
 
-int	is_pipe_or_and(e_tok type)
+int	is_pipe_or_and(t_tok type)
 {
 	return (type == _PIPE || type == _OR || type == _AND);
 }
 
-int	is_word(e_tok type)
+int	is_word(t_tok type)
 {
 	return (type == _WORD || type == _ENV
 		|| type == _WILDCARD || type == _QUOTE);

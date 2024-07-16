@@ -1,34 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sait-alo <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: m3ayz00 <m3ayz00@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/14 12:35:07 by sait-alo          #+#    #+#             */
-/*   Updated: 2023/11/14 12:35:10 by sait-alo         ###   ########.fr       */
+/*   Created: 2023/11/06 11:09:14 by sait-alo          #+#    #+#             */
+/*   Updated: 2024/07/14 19:07:53 by m3ayz00          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "libft.h"
-#include "../../minishell.h"
 
-char	*ft_strdup(const char *s)
+char	*ft_strchr(const char *s, int c)
 {
-	size_t	i;
-	char	*new;
+	int		i;
+	char	char_c;
 
 	i = 0;
-	if (!s)
-		return (NULL);
-	new = (char *)m_alloc(ft_strlen(s) + 1, ALLOC);
-	if (!new)
-		return (NULL);
-	while (s[i])
+	char_c = (char)c;
+	while (s && s[i])
 	{
-		new[i] = s[i];
+		if (s[i] == char_c)
+			return ((char *) &s[i + 1]);
 		i++;
 	}
-	new[i] = '\0';
-	return (new);
+	if (char_c == '\0')
+		return ((char *) &s[i]);
+	return (NULL);
 }

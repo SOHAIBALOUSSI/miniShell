@@ -1,9 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_fts.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
+/*   Updated: 2024/07/16 16:41:11 by sait-alo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-bool    is_expandable(char c)
+/* func to check if the char is expandable
+* the norm force me to name it short :p */
+
+bool	is_exp(char c)
 {
-    return (c && (ft_isalnum(c) || c == '?' || c == '_'));
+	return (c && (ft_isalnum(c) || c == '?' || c == '_'));
 }
+
 int	count_words(char *str)
 {
 	int	i;

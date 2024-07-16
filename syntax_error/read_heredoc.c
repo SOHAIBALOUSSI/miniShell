@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   read_heredoc.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
+/*   Updated: 2024/07/16 16:24:04 by sait-alo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	process_handler(int sig)
@@ -13,9 +25,9 @@ void	handle_process_signals(void)
 	signal(SIGINT, process_handler);
 }
 
-void write_to_heredoc(int fd, char *delimiter)
+void	write_to_heredoc(int fd, char *delimiter)
 {
-	char *line;
+	char	*line;
 
 	while (1)
 	{
@@ -24,7 +36,7 @@ void write_to_heredoc(int fd, char *delimiter)
 		{
 			if (line)
 				free(line);
-			break;
+			break ;
 		}
 		ft_putendl_fd(line, fd);
 		free(line);
@@ -63,12 +75,12 @@ void	here_doc(int fd, char *delimiter)
 	}
 }
 
-char *read_heredoc(char *delimiter)
+char	*read_heredoc(char *delimiter)
 {
-	static	int	heredoc = 1;
-	char	*heredoc_filename;
-	int		fd;
-	char	*heredoc_number;
+	static int	heredoc = 1;
+	char		*heredoc_filename;
+	int			fd;
+	char		*heredoc_number;
 
 	heredoc_number = ft_itoa(heredoc++);
 	heredoc_filename = ft_strjoin("/tmp/heredoc_", heredoc_number);
@@ -79,4 +91,3 @@ char *read_heredoc(char *delimiter)
 	here_doc(fd, delimiter);
 	return (heredoc_filename);
 }
-

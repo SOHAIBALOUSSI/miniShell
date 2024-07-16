@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   helpers.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
+/*   Updated: 2024/07/16 16:36:17 by sait-alo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-int     check_spaces(char *line)
+int	check_spaces(char *line)
 {
-	int i;
-	
+	int	i;
+
 	i = -1;
 	while (line[++i])
 	{
@@ -19,7 +31,8 @@ void	handler(int sig)
 	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
-	rl_redisplay();
+	if (mshell()->in_exec != 1)
+		rl_redisplay();
 	mshell()->exit_status = 130;
 }
 
@@ -39,11 +52,12 @@ void	reset_counters(void)
 	mshell()->pipe_count = 0;
 	mshell()->heredoc_count = 0;
 	mshell()->expand_oho = 0;
+	mshell()->in_exec = 0;
 }
 
-void *m_realloc(void *ptr, size_t oldsize, size_t newsize)
+void	*m_realloc(void *ptr, size_t oldsize, size_t newsize)
 {
-	void *new_ptr;
+	void	*new_ptr;
 
 	new_ptr = NULL;
 	new_ptr = m_alloc(newsize, ALLOC);

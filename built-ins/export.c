@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo <sait-alo@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
+/*   Updated: 2024/07/16 16:10:58 by batman           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "../minishell.h"
 
 static void	update_env_var_value(t_env *var, char *new_value, bool has_add_sign)
@@ -19,8 +30,8 @@ static void	update_env_var_value(t_env *var, char *new_value, bool has_add_sign)
 
 static char	**sort_array(char **arr)
 {
-	int i;
-	char *tmp;
+	int		i;
+	char	*tmp;
 
 	i = 0;
 	while (arr[i])
@@ -52,7 +63,7 @@ char	**lst_to_arr(t_env **env_list)
 		if (ft_strcmp(ptr->key, "_") == 0)
 		{
 			ptr = ptr->next;
-			continue;
+			continue ;
 		}
 		arr[i] = ptr->key;
 		i++;
@@ -78,7 +89,7 @@ static void	put_sorted_env(void)
 		if (put)
 		{
 			printf("%s", env_array[i]);
-			printf("=\"");	
+			printf("=\"");
 			printf("%s\"\n", put);
 		}
 		else
@@ -91,7 +102,7 @@ void	builtin_export(char **args)
 {
 	t_env	*var;
 	t_env	*existing_var;
-	
+
 	if (!*args)
 		return (put_sorted_env());
 	while (*args)
@@ -115,4 +126,3 @@ void	builtin_export(char **args)
 		args++;
 	}
 }
-

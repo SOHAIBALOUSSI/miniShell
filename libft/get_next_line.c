@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "../../minishell.h"
+#include "../minishell.h"
 
 static char	*read_line(int fd, char *content, char *buffer)
 {

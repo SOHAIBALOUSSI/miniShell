@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_fts2.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
+/*   Updated: 2024/07/16 16:44:56 by sait-alo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static char	**add_to_argv(char *expanded_arg, char ***expanded_argv)
 {
-	int	i;
-	char **new_argv;
+	int		i;
+	char	**new_argv;
 
 	i = 0;
 	while ((*expanded_argv)[i])
@@ -34,7 +46,8 @@ static void	split_and_add_to_new_argv(char *expanded_arg, char ***expanded_argv)
 	}
 }
 
-void	add_to_new_argv(char *expanded_arg, char ***expanded_argv, bool to_split)
+void	add_to_new_argv(char *expanded_arg,
+		char ***expanded_argv, bool to_split)
 {
 	if (to_split == true)
 		split_and_add_to_new_argv(expanded_arg, expanded_argv);

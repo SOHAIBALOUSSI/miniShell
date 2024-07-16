@@ -1,16 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env_init.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sait-alo <sait-alo@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 15:25:23 by sait-alo          #+#    #+#             */
+/*   Updated: 2024/07/16 16:15:10 by batman           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	append_env(t_env **lst, t_env *new_env)
 {
-	t_env *tail;
+	t_env	*tail;
 
 	if (lst == NULL || new_env == NULL)
-		return;
+		return ;
 	new_env->next = NULL;
 	if (*lst == NULL)
 	{
 		*lst = new_env;
-		return;
+		return ;
 	}
 	tail = *lst;
 	while (tail->next)
@@ -18,21 +30,20 @@ void	append_env(t_env **lst, t_env *new_env)
 	tail->next = new_env;
 }
 
-
-void set_shlvl(t_env *node)
+void	set_shlvl(t_env *node)
 {
-	int old_lvl;
-	t_env *shlvl;
+	int		old_lvl;
+	t_env	*shlvl;
 
 	if (node)
 	{
 		old_lvl = ft_atoi(node->value);
-		// m_free(node->value);
+		m_free(node->value);
 		if (old_lvl < 0)
 			node->value = ft_itoa(0);
 		else if (old_lvl >= 999)
 		{
-			pop_error(HIGH_SHLVL);
+			pop_error(_SHLVL);
 			node->value = ft_itoa(1);
 		}
 		else
@@ -43,45 +54,6 @@ void set_shlvl(t_env *node)
 		shlvl = create_env("SHLVL=1");
 		append_env(mshell()->env_list, shlvl);
 	}
-}
-
-char *get_env_key(char *s)
-{
-	int i;
-
-	i = 0;
-	while (s[i] && s[i] != '=' && s[i] != '+')
-		i++;
-	return(ft_substr(s, 0, i));
-}
-
-char	*get_env_value(char *env)
-{
-	int i;
-
-	i = 0;
-	while (env[i] && env[i] != '=')
-		i++;
-	if (env[i] == '=')
-	{
-		if (env[i + 1])
-			return (ft_strdup(env + i + 1));
-		else
-			return (ft_strdup(""));
-	}
-	return (NULL);
-}
-
-t_env	*create_env(char *env)
-{
-	t_env	*node;
-	char	*value;
-	
-	node = m_alloc(sizeof(t_env), ALLOC);
-	node->key = get_env_key(env);
-	value = get_env_value(env);
-	node->value = value;
-	return (node);
 }
 
 t_env	*setup_clean_env(void)
@@ -97,10 +69,9 @@ t_env	*setup_clean_env(void)
 	return (clean_env);
 }
 
-
-void get_env_list(char **env)
+void	get_env_list(char **env)
 {
-	int i;
+	int		i;
 	t_env	*shlvl;
 	t_env	**env_list;
 	t_env	*env_node;

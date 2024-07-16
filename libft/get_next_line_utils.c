@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sait-alo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/13 09:48:31 by sait-alo          #+#    #+#             */
-/*   Updated: 2023/11/13 09:48:33 by sait-alo         ###   ########.fr       */
+/*   Created: 2023/12/24 13:31:06 by sait-alo          #+#    #+#             */
+/*   Updated: 2023/12/24 13:31:14 by sait-alo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "../../minishell.h"
 
-void	*ft_calloc(size_t nmemb, size_t size)
+int	gnl_strchr(const char *s, char c)
 {
-	void	*tmp;
-	size_t	buffer;
+	int		i;
 
-	buffer = nmemb * size;
-	if (nmemb > 0 && size > 0 && buffer / size != nmemb)
-		return (NULL);
-	tmp = m_alloc(nmemb * size, ALLOC);
-	if (!tmp)
-		return (NULL);
-	ft_bzero(tmp, nmemb * size);
-	return (tmp);
+	if (!s)
+		return (0);
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == c)
+			return (1);
+		i++;
+	}
+	return (0);
 }
