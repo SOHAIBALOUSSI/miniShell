@@ -3,24 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipeline.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-<<<<<<< HEAD
-/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: m3ayz00 <m3ayz00@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:53:36 by msaadidi          #+#    #+#             */
-/*   Updated: 2024/07/16 18:24:53 by msaadidi         ###   ########.fr       */
+/*   Updated: 2024/07/17 00:04:31 by m3ayz00          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-=======
-/*   By: sait-alo  <sait-alo@student.1337.ma >      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/16 11:16:37 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/16 15:35:33 by sait-alo         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-
->>>>>>> partner-repo3/main
 #include "../minishell.h"
 
 static int	pipe_it_up(int fd[][2], int n_cmd)
@@ -44,7 +33,6 @@ void	wait_children(pid_t pid[], int n_cmd, int *status)
 {
 	int	i;
 
-<<<<<<< HEAD
 	i = 0;
 	while (i < n_cmd)
 	{
@@ -52,19 +40,6 @@ void	wait_children(pid_t pid[], int n_cmd, int *status)
 		mshell()->exit_status = WEXITSTATUS(*status);
 		i++;
 	}
-=======
-    i = 0;
-    while (i < n_cmd - 1)
-    {
-        if (pipe(fd[i]) < 0)
-        {
-            perror("Minishell: ");
-            return (close_pipes(fd, i), -1);
-        }
-        i++;
-    }
-    return (0);
->>>>>>> partner-repo3/main
 }
 
 void	execute_process(t_tree **pipeline, int i, int *status)
