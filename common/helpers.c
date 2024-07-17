@@ -31,7 +31,7 @@ void	handler(int sig)
 	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
-	if (mshell()->in_exec != 1)
+	if (mshell()->in_exec == 0 && mshell()->pipe_count == 0)
 		rl_redisplay();
 	mshell()->exit_status = 130;
 }

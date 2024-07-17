@@ -72,7 +72,7 @@ int	check_quotes_and_parens(void)
 	if ((mshell()->single_quote_count % 2) != 0 || \
 			(mshell()->double_quote_count % 2) != 0)
 	{
-		pop_error("Minishell: syntax error 'unclosed parenthesis'\n");
+		pop_error("Minishell: syntax error 'unclosed quotes'\n");
 		return (0);
 	}
 	else if (mshell()->closed_paren_count != mshell()->open_paren_count)

@@ -119,7 +119,7 @@ typedef struct s_minishell
 	int		exit_status;
 	int		expand_oho;
 	bool	hd_interrupt;
-	bool	in_exec;
+	int		in_exec;
 }	t_minishell;
 
 typedef struct s_redir

@@ -65,6 +65,7 @@ void	expander(t_tree *root)
 	{
 		expand_argv(root);
 		expand_wildard(&root->argv);
+		set_dollar_("_", get_last_arg(root->argv));
 	}
 	if (root->redir_list)
 	{

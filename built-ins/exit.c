@@ -6,7 +6,7 @@
 /*   By: sait-alo <sait-alo@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/16 16:10:03 by batman           ###   ########.fr       */
+/*   Updated: 2024/07/16 16:10:03 by sait-alo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int	builtin_exit(char **args)
 	long long	exit_status;
 
 	if (!mshell()->pipe_count)
-		ft_putendl_fd("exit", 1);
+		ft_putendl_fd("exit", 2);
 	if (!args || !args[0])
 		exit_clean(mshell()->exit_status);
 	if (!is_valid_number(args[0]) || check_overflow(args[0]))

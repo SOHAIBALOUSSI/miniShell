@@ -58,8 +58,6 @@ int	execute_cmd(t_tree *root)
 
 	cmd_path = NULL;
 	expander(root);
-	if (root->argv)
-		set_dollar_("_", get_last_arg(root->argv));
 	if (root->argv && root->argv[0] && is_builtin(root->argv[0]))
 		return (execute_builtin(root));
 	handle_p_signals();
@@ -70,6 +68,7 @@ int	execute_cmd(t_tree *root)
 		return (pop_error("Fork failed\n"), 1);
 	else
 	{
+		mshell()->in_exec = 1;
 		waitpid(pid, &status, 0);
 		if (WIFSIGNALED(status))
 			mshell()->exit_status = 128 + WTERMSIG(status);

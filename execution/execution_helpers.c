@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_helpers.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: m3ayz00 <m3ayz00@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/16 18:04:54 by msaadidi          #+#    #+#             */
-/*   Updated: 2024/07/17 00:42:59 by m3ayz00          ###   ########.fr       */
+/*   Created: 2024/07/16 18:04:54 by sait-alo          #+#    #+#             */
+/*   Updated: 2024/07/17 00:42:59 by sait-alo          ###   ########.fr      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ char	*get_last_arg(char **args)
 {
 	int	i;
 
+	if (!args || !*args)
+		return (NULL);
 	i = 0;
 	while (args[i + 1])
 		i++;
