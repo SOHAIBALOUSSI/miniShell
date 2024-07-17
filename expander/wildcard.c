@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: m3ayz00 <m3ayz00@student.42.fr>            +#+  +:+       +#+        */
+/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 19:37:31 by msaadidi          #+#    #+#             */
-/*   Updated: 2024/07/17 00:00:14 by m3ayz00          ###   ########.fr       */
+/*   Updated: 2024/07/17 17:39:30 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,20 +42,24 @@ char	**get_matching_files(char *pattern)
 
 	if (init_vars(&matched, &count, &dir))
 		return (NULL);
-	while ((entry = readdir(dir)) != NULL)
+	entry = readdir(dir);
+	while (entry)
 	{
 		if (entry->d_name[0] == '.')
-			continue;
+		{
+			entry = readdir(dir);
+			continue ;
+		}
 		if (is_match(pattern, entry->d_name))
 			add_file_to_matched(&matched, &count, entry);
+		entry = readdir(dir);
 	}
-	closedir(dir);
 	if (count == 0)
 	{
 		matched = malloc(sizeof(char *) * 1);
 		matched[0] = NULL;
 	}
-	return (matched);
+	return (closedir(dir), matched);
 }
 
 void	add_matched_files(char ***matched, char ***new_argv, int *new_argc)

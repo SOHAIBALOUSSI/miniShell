@@ -6,7 +6,7 @@
 #    By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/17 17:13:13 by msaadidi          #+#    #+#              #
-#    Updated: 2024/07/17 17:13:14 by msaadidi         ###   ########.fr        #
+#    Updated: 2024/07/17 17:18:30 by msaadidi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ SRCS = minishell.c \
 	$(addprefix ./execution/, execute_pipeline.c execute_command.c execution_errors.c execution_helpers.c execution_helpers2.c executors.c open_files.c) \
 	$(addprefix ./expander/, expander.c expand_arg.c expand_fts.c  expand_fts2.c expand_heredoc.c wildcard.c wildcard_redir.c wildcard_utils.c) \
 	$(addprefix ./syntax_error/, syntax_errors.c syntax_utils.c read_heredoc.c ) \
-	$(addprefix ./common/, gc.c  env_init.c  env_utils.c type_check.c helpers.c)
+	$(addprefix ./common/, gc.c  env_init.c  env_utils.c type_check.c helpers.c signals.c)
 
 OBJS = $(SRCS:.c=.o)
 

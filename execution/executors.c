@@ -6,7 +6,7 @@
 /*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 18:07:19 by msaadidi          #+#    #+#             */
-/*   Updated: 2024/07/17 17:13:47 by msaadidi         ###   ########.fr       */
+/*   Updated: 2024/07/17 17:35:17 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,7 @@ int	execute_cmd(t_tree *root)
 		else
 			mshell()->exit_status = WEXITSTATUS(status);
 	}
-	handle_signals();
-	return (mshell()->exit_status);
+	return (handle_signals(), mshell()->exit_status);
 }
 
 int	execute_pipeline(t_tree **pipeline, int n_cmd)

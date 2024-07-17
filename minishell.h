@@ -6,7 +6,7 @@
 /*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/17 17:03:41 by msaadidi         ###   ########.fr       */
+/*   Updated: 2024/07/17 17:24:28 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,7 +222,7 @@ int			execute_pipeline(t_tree **pipeline, int n_cmd);
 void		close_pipes(int fd[][2], int n_cmd);
 int			count_pipes(t_tree **pipe_line);
 int			actual_pipeline(t_tree **pipeline, int n_cmd);
-char 		*get_value(char *key);
+char		*get_value(char *key);
 void		set_dollar_(char *key, char *value);
 char		*get_last_arg(char **args);
 void		prepare_command(t_tree *root, char **cmd_path);
@@ -234,28 +234,28 @@ int			minishell_error(char *cmd);
 int			alloc_pipe_fd(pid_t **pid, int (**fd)[2], int n_cmd);
 
 /*		Expander		*/
-void    	expander(t_tree *root);
+void		expander(t_tree *root);
 char		*expand_arg(char *arg, bool *to_split);
-void		add_to_new_argv(char *expanded_arg, char ***expanded_argv, bool to_split);
+void		add_to_new_argv(char *expanded_arg,
+				char ***expanded_argv, bool to_split);
 int			read_expand_write(char *file_name);
 char		*handle_dollar_sign(char *arg, int *i, char *result);
 char		*expand_heredoc(char *heredoc_content);
 char		*ft_strjoin_char(char *str, char c);
 char		*expand_var(char *var_name);
 char		*expand_variable(char *arg, int *i);
-bool    	is_expandable(char c);
-
+bool		is_expandable(char c);
 
 /*		Wildcard		*/
 void		expand_wildard(char ***old_argv);
-void    	expand_redir_wildcard(t_redir **redir);
+void		expand_redir_wildcard(t_redir **redir);
 void		realloc_argv(char ***new_argv, int *argc, char *content);
 int			init_vars(char ***matched, int *count, DIR **dir);
 int			init_vars2(char **matched, int *count, DIR **dir);
-void		init_expand_vars(int *i, int *new_argc, char ***new_argv, char ***matched);
+void		init_expand_vars(int *i, int *new_argc,
+				char ***new_argv, char ***matched);
 int			is_match(char *pattern, char *str);
 void		free_strs(char **strs);
-
 
 /*			Signals			*/
 void		handle_signals(void);
@@ -276,6 +276,7 @@ bool		has_only_equal_sign(char *s);
 char		*get_var_value(char *key);
 char		*get_var_key(char *str);
 char		**lst_to_arr(t_env **env_list);
+bool		is_exp(char c);
 
 /*	ENV 	*/
 int			builtin_env(void);
