@@ -66,7 +66,7 @@ int	builtin_cd(char **args)
 	if (args[1])
 		return (pop_error("Minishell: cd: too many arguments\n"), EXIT_FAILURE);
 	if (!getcwd(old_dir, PATH_MAX))
-		return (perror("Minishell: cd: getcwd: "), EXIT_FAILURE);
+		return (perror("Minishell: cd: getcwd: "), EXIT_SUCCESS);
 	new_dir = args[0];
 	if (new_dir && *args[0])
 	{

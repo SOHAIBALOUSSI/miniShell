@@ -20,7 +20,7 @@ int	builtin_env(void)
 	while (tmp)
 	{
 		if (tmp->value)
-			printf("%s`=%s\n", tmp->key, tmp->value);
+			printf("%s=%s\n", tmp->key, tmp->value);
 		tmp = tmp->next;
 	}
 	return (0);
