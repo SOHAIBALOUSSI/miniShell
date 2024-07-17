@@ -1,39 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/06 10:10:45 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/16 16:28:38 by msaadidi         ###   ########.fr       */
+/*   Created: 2024/07/17 17:02:29 by msaadidi          #+#    #+#             */
+/*   Updated: 2024/07/17 17:25:25 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../minishell.h"
 
-size_t	ft_strlen(const char *s)
+void	process_handler(int sig)
 {
-	int	i;
-
-	i = 0;
-	while (s && s[i])
-		i++;
-	return (i);
+	(void)sig;
+	exit(130);
 }
 
-int	ft_strlen_read(const char *s)
+void	handle_process_signals(void)
 {
-	int	i;
-	int	len;
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGTERM, SIG_IGN);
+	signal(SIGINT, process_handler);
+}
 
-	len = 0;
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] != '\n')
-			len++;
-		i++;
-	}
-	return (len);
+void	sig_quit(int sig)
+{
+	(void)sig;
+	ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
+}
+
+void	handle_p_signals(void)
+{
+	signal(SIGQUIT, sig_quit);
+	signal(SIGTERM, SIG_IGN);
+	signal(SIGINT, handler);
 }

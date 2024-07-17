@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/16 16:13:18 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/16 16:46:16 by sait-alo         ###   ########.fr       */
+/*   Created: 2024/07/16 19:37:31 by msaadidi          #+#    #+#             */
+/*   Updated: 2024/07/17 17:39:30 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,97 +17,76 @@ int	is_match(char *pattern, char *str)
 	if (*pattern == '\0' && *str == '\0')
 		return (1);
 	if (*pattern == '*')
-		return (is_match(pattern + 1, str) || \
-			(*str != '\0' && is_match(pattern, str + 1)));
+		return (is_match(pattern + 1, str)
+			|| (*str != '\0' && is_match(pattern, str + 1)));
 	if (*pattern == *str)
 		return (is_match(pattern + 1, str + 1));
 	return (0);
 }
 
+void	add_file_to_matched(char ***matched, int *count, struct dirent *entry)
+{
+	(*matched) = m_realloc((*matched),
+			sizeof(char *) * ((*count) + 1), sizeof(char *) * ((*count) + 2));
+	(*matched)[(*count)] = ft_strdup(entry->d_name);
+	(*count)++;
+	(*matched)[(*count)] = NULL;
+}
+
 char	**get_matching_files(char *pattern)
 {
-	char            **matched;
-	int             count;
-	DIR             *dir;
-	struct dirent   *entry;
+	char			**matched;
+	int				count;
+	DIR				*dir;
+	struct dirent	*entry;
 
-	matched = NULL;
-	count = 0;
-	dir = opendir(".");
-	if (!dir)
-	{
-		perror("opendir");
+	if (init_vars(&matched, &count, &dir))
 		return (NULL);
-	}
-	while ((entry = readdir(dir)) != NULL)
+	entry = readdir(dir);
+	while (entry)
 	{
 		if (entry->d_name[0] == '.')
-			continue;
-		if (is_match(pattern, entry->d_name))
 		{
-			matched = m_realloc(matched,  sizeof(char *) * (count + 1), sizeof(char *) * (count + 2));
-			matched[count] = ft_strdup(entry->d_name);
-			count++;
-			matched[count] = NULL;
+			entry = readdir(dir);
+			continue ;
 		}
+		if (is_match(pattern, entry->d_name))
+			add_file_to_matched(&matched, &count, entry);
+		entry = readdir(dir);
 	}
-	closedir(dir);
 	if (count == 0)
 	{
-		matched = m_alloc(sizeof(char *) * 1, ALLOC);
+		matched = malloc(sizeof(char *) * 1);
 		matched[0] = NULL;
 	}
-	return (matched);
+	return (closedir(dir), matched);
 }
 
-void    free_strs(char **strs)
+void	add_matched_files(char ***matched, char ***new_argv, int *new_argc)
 {
-	int i;
+	int	j;
 
-	i = 0;
-	while (strs[i])
-	{
-		m_free(strs[i]);
-		i++;
-	}
-	m_free(strs);
+	j = -1;
+	while ((*matched)[++j])
+		realloc_argv(new_argv, new_argc, (*matched)[j]);
+	free_strs((*matched));
 }
 
-void    realloc_argv(char ***new_argv, int *argc, char *content)
+void	expand_wildard(char ***old_argv)
 {
-	(*new_argv) = m_realloc((*new_argv), sizeof(char *) * (*argc), sizeof(char *) * ((*argc) + 2));
-	(*new_argv)[(*argc)] = ft_strdup(content);
-	(*new_argv)[(*argc) + 1] = NULL;
-	(*argc)++;
-}
+	int		i;
+	char	**matched;
+	char	**new_argv;
+	int		new_argc;
 
-void    expand_wildard(char ***old_argv)
-{
-	int i;
-	char **matched;
-	char **new_argv;
-	int j;
-	int new_argc;
-
-	i = 0;
-	new_argc = 0;
-	new_argv = NULL;
-	matched = NULL;
-	while ((*old_argv)[i])
+	init_expand_vars(&i, &new_argc, &new_argv, &matched);
+	while ((*old_argv)[++i])
 	{
 		if (ft_strchr((*old_argv)[i], '*') != NULL)
 		{
 			matched = get_matching_files((*old_argv)[i]);
 			if (matched[0])
-			{
-				j = 0;
-				while (matched[j])
-				{
-					realloc_argv(&new_argv, &new_argc, matched[j]);
-					j++;
-				}
-				free_strs(matched);
-			}
+				add_matched_files(&matched, &new_argv, &new_argc);
 			else
 			{
 				free_strs(matched);
@@ -116,72 +95,7 @@ void    expand_wildard(char ***old_argv)
 		}
 		else
 			realloc_argv(&new_argv, &new_argc, (*old_argv)[i]);
-		i++;
 	}
 	free_strs((*old_argv));
 	(*old_argv) = new_argv;
-}
-
-char   *get_matching_file(char *filename, int *count)
-{
-	char            *matched;
-	DIR             *dir;
-	struct dirent   *entry;
-
-	matched = NULL;
-	*count = 0;
-	dir = opendir(".");
-	if (!dir)
-	{
-		perror("opendir");
-		return (NULL);
-	}
-	while ((entry = readdir(dir)) != NULL)
-	{
-		if (entry->d_name[0] == '.')
-			continue ;
-		if (is_match(filename, entry->d_name))
-		{
-			if (*count == 0)
-				matched = ft_strdup(entry->d_name);
-			else
-			{
-				if (matched)
-					m_free(matched);
-			}
-			(*count)++;
-		}
-	}
-	closedir(dir);
-	if (*count == 0)
-		return (NULL);
-	return (matched);
-}
-
-void    expnd_redir_wildcard(t_redir **redir)
-{
-	t_redir *current;
-	char *matched;
-	int count;
-
-	current = (*redir);
-	while (current)
-	{
-		if (ft_strchr(current->file_name, '*') != NULL)
-		{
-			matched = get_matching_file(current->file_name, &count);
-			if (count > 1)
-			{
-				current->is_ambiguous = 1;
-				break ;
-			}
-			else if (matched)
-			{
-				if (current->file_name)
-					m_free(current->file_name);
-				current->file_name = matched;
-			}
-		}
-		current = current->next;
-	}
 }

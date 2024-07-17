@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/16 16:38:26 by sait-alo         ###   ########.fr       */
+/*   Updated: 2024/07/17 17:24:28 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <limits.h>
+# include <stddef.h>
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
@@ -196,6 +197,8 @@ char		*ft_strndup(char *s1, size_t n);
 /*			Error		*/
 void		print_error(char *cmd, char *str);
 void		exit_clean(int exit_status);
+void		perror_file(char *file_name);
+int			perror_ambiguous(char *file_name);
 
 /*			Execute pipeline		*/
 int			actual_pipeline(t_tree **pipeline, int pc);
@@ -206,21 +209,32 @@ int			execute_subshell(t_tree *root);
 /*			Execute Operator		*/
 int			execute_operator(t_tree *operator);
 
-/*			Open files		*/
-void		handle_redirections(t_redir *redir_list);
-void		handle_redirections2(t_redir *redir_list, int *exit);
+/*		Open files		*/
+void		handle_redirections(t_redir *redir_list, int *ext, int is_builtin);
 void		restore_redirections(t_redir *redir);
 
-/*			Execution		*/
+/*		Execution		*/
 int			execute_ast(t_tree *root);
+int			is_builtin(char *cmd);
+int			execute_builtin(t_tree *root);
 int			execute_cmd(t_tree *root);
 int			execute_pipeline(t_tree **pipeline, int n_cmd);
-char		*get_value(char *key);
+void		close_pipes(int fd[][2], int n_cmd);
 int			count_pipes(t_tree **pipe_line);
+int			actual_pipeline(t_tree **pipeline, int n_cmd);
+char		*get_value(char *key);
+void		set_dollar_(char *key, char *value);
+char		*get_last_arg(char **args);
+void		prepare_command(t_tree *root, char **cmd_path);
+char		*check_validity(char *cmd);
+char		*check_command(char *cmd, char *path);
+int			is_directory(const char *path);
+char		*get_path(char *cmd, char *env_path);
+int			minishell_error(char *cmd);
+int			alloc_pipe_fd(pid_t **pid, int (**fd)[2], int n_cmd);
 
-/*			Expander		*/
+/*		Expander		*/
 void		expander(t_tree *root);
-void		expand_wildard(char ***old_argv);
 char		*expand_arg(char *arg, bool *to_split);
 void		add_to_new_argv(char *expanded_arg,
 				char ***expanded_argv, bool to_split);
@@ -230,19 +244,26 @@ char		*expand_heredoc(char *heredoc_content);
 char		*ft_strjoin_char(char *str, char c);
 char		*expand_var(char *var_name);
 char		*expand_variable(char *arg, int *i);
-void		expnd_redir_wildcard(t_redir **redir);
-bool		is_exp(char c);
+bool		is_expandable(char c);
 
+/*		Wildcard		*/
 void		expand_wildard(char ***old_argv);
-void		free_strs(char **strs);
-char		**get_matching_files(char *pattern);
+void		expand_redir_wildcard(t_redir **redir);
+void		realloc_argv(char ***new_argv, int *argc, char *content);
+int			init_vars(char ***matched, int *count, DIR **dir);
+int			init_vars2(char **matched, int *count, DIR **dir);
+void		init_expand_vars(int *i, int *new_argc,
+				char ***new_argv, char ***matched);
 int			is_match(char *pattern, char *str);
+void		free_strs(char **strs);
 
 /*			Signals			*/
 void		handle_signals(void);
 void		handler(int sig);
 void		process_handler(int sig);
 void		handle_process_signals(void);
+void		sig_quit(int sig);
+void		handle_p_signals(void);
 
 /* Expor	t */
 void		builtin_export(char **args);
@@ -255,6 +276,7 @@ bool		has_only_equal_sign(char *s);
 char		*get_var_value(char *key);
 char		*get_var_key(char *str);
 char		**lst_to_arr(t_env **env_list);
+bool		is_exp(char c);
 
 /*	ENV 	*/
 int			builtin_env(void);
@@ -288,8 +310,6 @@ char		*read_heredoc(char *delimiter);
 int			check_spaces(char *line);
 int			is_space(char c);
 void		reset_counters(void);
-void		handle_signals(void);
-void		handler(int sig);
 int			count_words(char *str);
 char		**mem_free(char **arr, size_t count);
 char		*get_env_value(char *env);

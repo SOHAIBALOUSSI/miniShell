@@ -69,6 +69,6 @@ void	expander(t_tree *root)
 	if (root->redir_list)
 	{
 		expand_redirection(root->redir_list);
-		expnd_redir_wildcard(&root->redir_list);
+		expand_redir_wildcard(&root->redir_list);
 	}
 }

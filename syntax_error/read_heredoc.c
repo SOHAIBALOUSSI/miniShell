@@ -3,27 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   read_heredoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/16 16:24:04 by sait-alo         ###   ########.fr       */
+/*   Updated: 2024/07/17 17:29:01 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	process_handler(int sig)
-{
-	(void)sig;
-	exit(130);
-}
-
-void	handle_process_signals(void)
-{
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGTERM, SIG_IGN);
-	signal(SIGINT, process_handler);
-}
 
 void	write_to_heredoc(int fd, char *delimiter)
 {
@@ -43,6 +30,14 @@ void	write_to_heredoc(int fd, char *delimiter)
 	}
 }
 
+void	heredoc_process(int *fd, char **delimiter)
+{
+	handle_process_signals();
+	write_to_heredoc(*fd, *delimiter);
+	close(*fd);
+	exit(EXIT_SUCCESS);
+}
+
 void	here_doc(int fd, char *delimiter)
 {
 	pid_t	pid;
@@ -57,12 +52,7 @@ void	here_doc(int fd, char *delimiter)
 			return ;
 		}
 		else if (pid == 0)
-		{
-			handle_process_signals();
-			write_to_heredoc(fd, delimiter);
-			close(fd);
-			exit(EXIT_SUCCESS);
-		}
+			heredoc_process(&fd, &delimiter);
 		else
 		{
 			waitpid(pid, &status, 0);
