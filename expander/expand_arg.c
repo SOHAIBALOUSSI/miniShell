@@ -28,6 +28,8 @@ char	*handle_dollar_sign(char *arg, int *i, char *result)
 	char	*var_value;
 
 	(*i)++;
+	if (arg[*i] == '$')
+		return (ft_strjoin(result, ft_strdup("")));
 	if (arg[*i] == '?')
 		return (handle_exit_status(result));
 	var_name = get_var_key(&arg[*i]);

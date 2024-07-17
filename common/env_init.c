@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	append_env(t_env **lst, t_env *new_env)
 {
@@ -74,17 +74,13 @@ void	get_env_list(char **env)
 	int		i;
 	t_env	*shlvl;
 	t_env	**env_list;
-	t_env	*env_node;
 
 	i = -1;
 	env_list = mshell()->env_list;
 	if (!*env)
 		*env_list = setup_clean_env();
 	while (env[++i])
-	{
-		env_node = create_env(env[i]);
-		append_env(env_list, env_node);
-	}
+		append_env(env_list, create_env(env[i]));
 	shlvl = find_env_var("SHLVL", *env_list);
 	set_shlvl(shlvl);
 }

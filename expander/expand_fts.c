@@ -17,7 +17,7 @@
 
 bool	is_exp(char c)
 {
-	return (c && (ft_isalnum(c) || c == '?' || c == '_'));
+	return (c && (ft_isalnum(c) || c == '?' || c == '_' || c == '$'));
 }
 
 int	count_words(char *str)

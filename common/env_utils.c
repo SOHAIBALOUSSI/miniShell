@@ -9,7 +9,7 @@
 /*   Updated: 2024/07/16 16:15:37 by batman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "minishell.h"
+#include "../minishell.h"
 
 char	*get_env_key(char *s)
 {

@@ -6,7 +6,7 @@
 /*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 18:03:19 by msaadidi          #+#    #+#             */
-/*   Updated: 2024/07/17 16:38:40 by msaadidi         ###   ########.fr       */
+/*   Updated: 2024/07/17 17:15:20 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,6 @@ int	execute_builtin(t_tree *root)
 
 int	alloc_pipe_fd(pid_t **pid, int (**fd)[2], int n_cmd)
 {
-	int	i;
-
 	*pid = (pid_t *)m_alloc(sizeof(pid_t) * n_cmd, ALLOC);
 	if (!(*pid))
 		return (-1);
