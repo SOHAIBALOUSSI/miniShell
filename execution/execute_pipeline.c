@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipeline.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: m3ayz00 <m3ayz00@student.42.fr>            +#+  +:+       +#+        */
+/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:53:36 by msaadidi          #+#    #+#             */
-/*   Updated: 2024/07/17 00:04:31 by m3ayz00          ###   ########.fr       */
+/*   Updated: 2024/07/17 16:38:30 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,13 @@ void	redirect_process(int n_cmd, int *i, int fd[][2])
 
 int	actual_pipeline(t_tree **pipeline, int n_cmd)
 {
-	pid_t	pid[n_cmd];
-	int		fd[n_cmd - 1][2];
+	pid_t	*pid;
+	int		(*fd)[2];
 	int		status;
 	int		i;
 
-	if ((pipe_it_up(fd, n_cmd)) == -1)
+	if ((alloc_pipe_fd(&pid, &fd, n_cmd))
+		|| (pipe_it_up(fd, n_cmd)) == -1)
 		return (-1);
 	i = 0;
 	while (i < n_cmd)

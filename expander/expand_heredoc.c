@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_heredoc.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: m3ayz00 <m3ayz00@student.42.fr>            +#+  +:+       +#+        */
+/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/17 00:26:39 by m3ayz00          ###   ########.fr       */
+/*   Updated: 2024/07/17 17:04:30 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static char	*expand_heredoc_line(char *heredoc_line)
 	result = ft_strdup("");
 	while (heredoc_line[i])
 	{
-		if (heredoc_line[i] == '$')// && is_exp(heredoc_line[i + 1])
+		if (heredoc_line[i] == '$' && is_exp(heredoc_line[i + 1]))
 			result = handle_dollar_sign(heredoc_line, &i, result);
 		else
 			result = ft_strjoin_char(result, heredoc_line[i]);

@@ -6,7 +6,7 @@
 /*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 18:03:19 by msaadidi          #+#    #+#             */
-/*   Updated: 2024/07/16 18:29:46 by msaadidi         ###   ########.fr       */
+/*   Updated: 2024/07/17 16:38:40 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,17 @@ int	execute_builtin(t_tree *root)
 		ret = execute_builtin2(root);
 	restore_redirections(root->redir_list);
 	return (ret);
+}
+
+int	alloc_pipe_fd(pid_t **pid, int (**fd)[2], int n_cmd)
+{
+	int	i;
+
+	*pid = (pid_t *)m_alloc(sizeof(pid_t) * n_cmd, ALLOC);
+	if (!(*pid))
+		return (-1);
+	(*fd) = (int (*)[2])m_alloc(sizeof(int [2]) * (n_cmd - 1), ALLOC);
+	if (!(*fd))
+		return (-1);
+	return (0);
 }

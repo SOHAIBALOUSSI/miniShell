@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: m3ayz00 <m3ayz00@student.42.fr>            +#+  +:+       +#+        */
+/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/17 00:21:13 by m3ayz00          ###   ########.fr       */
+/*   Updated: 2024/07/17 17:03:41 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,6 +231,7 @@ char		*check_command(char *cmd, char *path);
 int			is_directory(const char *path);
 char		*get_path(char *cmd, char *env_path);
 int			minishell_error(char *cmd);
+int			alloc_pipe_fd(pid_t **pid, int (**fd)[2], int n_cmd);
 
 /*		Expander		*/
 void    	expander(t_tree *root);
@@ -261,6 +262,8 @@ void		handle_signals(void);
 void		handler(int sig);
 void		process_handler(int sig);
 void		handle_process_signals(void);
+void		sig_quit(int sig);
+void		handle_p_signals(void);
 
 /* Expor	t */
 void		builtin_export(char **args);

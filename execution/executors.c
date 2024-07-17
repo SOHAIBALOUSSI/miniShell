@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executors.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: m3ayz00 <m3ayz00@student.42.fr>            +#+  +:+       +#+        */
+/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 18:07:19 by msaadidi          #+#    #+#             */
-/*   Updated: 2024/07/16 23:59:23 by m3ayz00          ###   ########.fr       */
+/*   Updated: 2024/07/17 17:02:19 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ int	execute_cmd(t_tree *root)
 		set_dollar_("_", get_last_arg(root->argv));
 	if (root->argv && root->argv[0] && is_builtin(root->argv[0]))
 		return (execute_builtin(root));
+	handle_p_signals();
 	pid = fork();
 	if (pid == 0)
 		prepare_command(root, &cmd_path);
@@ -75,6 +76,7 @@ int	execute_cmd(t_tree *root)
 		else
 			mshell()->exit_status = WEXITSTATUS(status);
 	}
+	handle_signals();
 	return (mshell()->exit_status);
 }
 
