@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/17 17:24:28 by msaadidi         ###   ########.fr       */
+/*   Updated: 2024/07/18 14:54:37 by sait-alo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ typedef struct s_minishell
 	t_gc	*arena;
 	t_env	**env_list;
 	char	*pwd;
+	char	*oldpwd;
 	size_t	single_quote_count;
 	size_t	double_quote_count;
 	size_t	open_paren_count;
@@ -127,7 +128,6 @@ typedef struct s_redir
 	struct s_redir	*next;
 	char			*file_name;
 	int				fds[2];
-	int				heredoc_fd;
 	int				original_out;
 	int				original_in;
 	t_tok			type;
@@ -142,7 +142,6 @@ typedef struct s_tree
 	struct s_tree	*subtree;
 	t_redir			*redir_list;
 	char			**argv;
-	char			*value;
 	size_t			pipe_count;
 	size_t			argc;
 	t_tok			type;
@@ -232,6 +231,8 @@ int			is_directory(const char *path);
 char		*get_path(char *cmd, char *env_path);
 int			minishell_error(char *cmd);
 int			alloc_pipe_fd(pid_t **pid, int (**fd)[2], int n_cmd);
+void		dupping(int is_builtin, t_redir *current);
+void		assign_exit(int status);
 
 /*		Expander		*/
 void		expander(t_tree *root);

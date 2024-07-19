@@ -14,22 +14,19 @@
 
 int	init_vars(char ***matched, int *count, DIR **dir)
 {
-	*matched = NULL;
-	*count = 0;
+	(*matched) = NULL;
+	(*count) = 0;
 	(*dir) = opendir(".");
 	if (!(*dir))
-	{
-		perror("opendir");
 		return (1);
-	}
 	return (0);
 }
 
 int	init_vars2(char **matched, int *count, DIR **dir)
 {
-	*matched = NULL;
-	*count = 0;
-	*dir = opendir(".");
+	(*matched) = NULL;
+	(*count) = 0;
+	(*dir) = opendir(".");
 	if (!(*dir))
 	{
 		perror("opendir");

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/16 19:37:31 by msaadidi          #+#    #+#             */
-/*   Updated: 2024/07/17 17:39:30 by msaadidi         ###   ########.fr       */
+/*   Created: 2024/07/18 11:43:35 by sait-alo          #+#    #+#             */
+/*   Updated: 2024/07/18 11:50:42 by sait-alo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	**get_matching_files(char *pattern)
 	}
 	if (count == 0)
 	{
-		matched = malloc(sizeof(char *) * 1);
+		matched = m_alloc(sizeof(char *) * 1, ALLOC);
 		matched[0] = NULL;
 	}
 	return (closedir(dir), matched);
@@ -80,22 +80,18 @@ void	expand_wildard(char ***old_argv)
 	int		new_argc;
 
 	init_expand_vars(&i, &new_argc, &new_argv, &matched);
-	while ((*old_argv)[++i])
+	while (*old_argv && (*old_argv)[++i])
 	{
 		if (ft_strchr((*old_argv)[i], '*') != NULL)
 		{
 			matched = get_matching_files((*old_argv)[i]);
-			if (matched[0])
+			if (matched && matched[0])
 				add_matched_files(&matched, &new_argv, &new_argc);
-			else
-			{
-				free_strs(matched);
-				realloc_argv(&new_argv, &new_argc, (*old_argv)[i]);
-			}
 		}
 		else
 			realloc_argv(&new_argv, &new_argc, (*old_argv)[i]);
 	}
-	free_strs((*old_argv));
+	if (!*old_argv)
+		return ;
 	(*old_argv) = new_argv;
 }

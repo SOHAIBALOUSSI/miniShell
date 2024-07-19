@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executors.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 18:07:19 by msaadidi          #+#    #+#             */
-/*   Updated: 2024/07/17 17:35:17 by msaadidi         ###   ########.fr       */
+/*   Updated: 2024/07/18 13:13:04 by sait-alo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,7 @@ int	execute_cmd(t_tree *root)
 	{
 		mshell()->in_exec = 1;
 		waitpid(pid, &status, 0);
-		if (WIFSIGNALED(status))
-			mshell()->exit_status = 128 + WTERMSIG(status);
-		else
-			mshell()->exit_status = WEXITSTATUS(status);
+		assign_exit(status);
 	}
 	return (handle_signals(), mshell()->exit_status);
 }

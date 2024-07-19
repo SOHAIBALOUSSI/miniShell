@@ -3,23 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   expand_arg.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/17 17:04:56 by msaadidi         ###   ########.fr       */
+/*   Updated: 2024/07/18 15:46:31 by sait-alo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static	char	*handle_exit_status(char *result)
+int	is_special_var(char *key)
 {
-	char	*exit_status;
+	if ((!ft_strcmp("PWD", key) || !ft_strcmp("OLDPWD", key)))
+		return (1);
+	return (0);
+}
 
-	exit_status = ft_itoa(mshell()->exit_status);
-	result = ft_strjoin(result, exit_status);
-	m_free(exit_status);
-	return (result);
+char	*handle_special_var(char *key, char *result, int *i)
+{
+	if (!ft_strcmp("PWD", key))
+	{
+		*i += ft_strlen(key) - 1;
+		if (!mshell()->pwd)
+			return (ft_strjoin(result, ""));
+		return (ft_strjoin(result, mshell()->pwd));
+	}
+	else if (!ft_strcmp("OLDPWD", key))
+	{
+		*i += ft_strlen(key) - 1;
+		if (!mshell()->oldpwd)
+			return (ft_strjoin(result, ""));
+		return (ft_strjoin(result, mshell()->oldpwd));
+	}
+	return (NULL);
 }
 
 char	*handle_dollar_sign(char *arg, int *i, char *result)
@@ -31,9 +47,11 @@ char	*handle_dollar_sign(char *arg, int *i, char *result)
 	if (arg[*i] == '$')
 		return (ft_strjoin(result, ft_strdup("")));
 	if (arg[*i] == '?')
-		return (handle_exit_status(result));
+		return (ft_strjoin(result, ft_itoa(mshell()->exit_status)));
 	var_name = get_var_key(&arg[*i]);
 	var_value = get_var_value(var_name);
+	if (is_special_var(var_name) == 1 && !var_value)
+		return (handle_special_var(var_name, result, i));
 	result = ft_strjoin(result, var_value);
 	*i += ft_strlen(var_name) - 1;
 	m_free(var_name);

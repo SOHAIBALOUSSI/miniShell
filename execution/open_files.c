@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/16 18:08:33 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/16 23:59:35 by sait-alo         ###   ########.fr       */
+/*   Created: 2024/07/16 18:08:33 by msaadidi          #+#    #+#             */
+/*   Updated: 2024/07/18 18:53:46 by sait-alo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	handle_input_redirection(t_redir *current, int *errors)
+int	handle_input_redirection(t_redir *current, int *errors, int is_builtin)
 {
 	if (current->is_ambiguous)
 	{
@@ -26,13 +26,12 @@ int	handle_input_redirection(t_redir *current, int *errors)
 		return (perror_file(current->file_name), 1);
 	}
 	current->original_in = dup(STDIN_FILENO);
-	if (!current->next)
-		dup2(current->fds[0], STDOUT_FILENO);
+	dupping(is_builtin, current);
 	close(current->fds[0]);
 	return (0);
 }
 
-int	handle_output_redirection(t_redir *current, int *errors)
+int	handle_output_redirection(t_redir *current, int *errors, int is_builtin)
 {
 	int	flags;
 
@@ -53,8 +52,7 @@ int	handle_output_redirection(t_redir *current, int *errors)
 		return (perror_file(current->file_name), 1);
 	}
 	current->original_out = dup(STDOUT_FILENO);
-	if (!current->next)
-		dup2(current->fds[1], STDOUT_FILENO);
+	dupping(is_builtin, current);
 	close(current->fds[1]);
 	return (0);
 }
@@ -84,10 +82,10 @@ void	handle_redirections(t_redir *redir_list, int *ext, int is_builtin)
 	while (current)
 	{
 		if ((current->type == _RED_IN)
-			&& (handle_input_redirection(current, &errors)))
+			&& (handle_input_redirection(current, &errors, is_builtin)))
 			break ;
 		else if ((current->type == _RED_OUT || current->type == _APPEND)
-			&& (handle_output_redirection(current, &errors)))
+			&& (handle_output_redirection(current, &errors, is_builtin)))
 			break ;
 		else if ((current->type == _HEREDOC)
 			&& (handle_heredoc(current, &errors)))

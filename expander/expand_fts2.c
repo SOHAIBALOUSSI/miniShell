@@ -20,13 +20,9 @@ static char	**add_to_argv(char *expanded_arg, char ***expanded_argv)
 	i = 0;
 	while ((*expanded_argv)[i])
 		i++;
-	new_argv = m_alloc(sizeof(char *) * (i + 2), ALLOC);
-	i = 0;
-	while ((*expanded_argv)[i])
-	{
-		new_argv[i] = (*expanded_argv)[i];
-		i++;
-	}
+	new_argv = m_realloc(*expanded_argv, \
+					sizeof(char *) * (i + 1), \
+					sizeof(char *) * (i + 2));
 	new_argv[i] = expanded_arg;
 	new_argv[i + 1] = NULL;
 	return (new_argv);

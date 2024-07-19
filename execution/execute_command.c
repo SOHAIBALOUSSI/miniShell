@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:52:45 by msaadidi          #+#    #+#             */
-/*   Updated: 2024/07/17 16:49:46 by msaadidi         ###   ########.fr       */
+/*   Updated: 2024/07/18 19:03:30 by sait-alo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,12 @@ void	prepare_command(t_tree *root, char **cmd_path)
 		}
 	}
 	actual_command(root, *cmd_path);
+}
+
+void	dupping(int is_builtin, t_redir *current)
+{
+	if (is_builtin && !current->next)
+		dup2(current->fds[0], STDIN_FILENO);
+	else
+		dup2(current->fds[0], STDIN_FILENO);
 }

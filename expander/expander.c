@@ -6,11 +6,24 @@
 /*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/16 16:22:37 by sait-alo         ###   ########.fr       */
+/*   Updated: 2024/07/18 13:24:51 by sait-alo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	check_files(t_redir *redir)
+{
+	if (!redir->file_name)
+		return (1);
+	if (!check_spaces(redir->file_name))
+		return (0);
+	if ((count_words(redir->file_name) == 0 \
+			&& redir->file_name[0]) \
+			|| count_words(redir->file_name) > 1)
+		return (1);
+	return (0);
+}
 
 static int	expand_redirection(t_redir *redir_list)
 {
@@ -29,8 +42,7 @@ static int	expand_redirection(t_redir *redir_list)
 		else if (redir->file_name)
 		{
 			redir->file_name = expand_arg(redir->file_name, &to_split);
-			if (count_words(redir->file_name) == 0 || \
-					count_words(redir->file_name) > 1)
+			if (check_files(redir))
 				redir->is_ambiguous = 1;
 		}
 		redir = redir->next;

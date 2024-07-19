@@ -6,9 +6,10 @@
 /*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:15:36 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/16 16:15:37 by sait-alo         ###   ########.fr       */
+/*   Updated: 2024/07/18 13:25:51 by sait-alo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell.h"
 
 char	*get_env_key(char *s)
@@ -48,4 +49,16 @@ t_env	*create_env(char *env)
 	value = get_env_value(env);
 	node->value = value;
 	return (node);
+}
+
+void	assign_exit(int status)
+{
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGQUIT)
+			printf("Quit (core dumped)\n");
+		mshell()->exit_status = 128 + WTERMSIG(status);
+	}
+	else
+		mshell()->exit_status = WEXITSTATUS(status);
 }

@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+         #
+#    By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/07/17 17:13:13 by msaadidi          #+#    #+#              #
-#    Updated: 2024/07/17 17:18:30 by msaadidi         ###   ########.fr        #
+#    Created: 2024/07/18 11:38:38 by sait-alo          #+#    #+#              #
+#    Updated: 2024/07/18 14:38:00 by sait-alo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
 
 SRCS = minishell.c \
 	$(addprefix ./built-ins/, export.c export_fts.c env.c unset.c exit.c pwd.c echo.c cd.c builtins_utils.c) \

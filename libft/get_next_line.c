@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sait-alo <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 13:30:38 by sait-alo          #+#    #+#             */
-/*   Updated: 2023/12/24 13:30:40 by sait-alo         ###   ########.fr       */
+/*   Updated: 2024/07/18 12:05:57 by sait-alo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,16 +83,3 @@ char	*get_next_line(int fd)
 	content = get_rest(line);
 	return (line);
 }
-
-// #include <fcntl.h>
-// #include <stdio.h>
-
-// int main()
-// {
-// 	int fd;
-// 	fd = open("get_next_line_utils.c", O_RDWR);
-
-// 	char *line;
-// 	line = get_next_line(fd);
-// 	printf("%s\n", line);
-// }

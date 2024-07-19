@@ -6,7 +6,7 @@
 /*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/16 16:30:32 by sait-alo         ###   ########.fr       */
+/*   Updated: 2024/07/18 15:45:29 by sait-alo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,15 @@ static void	update_pwd_env(char *old_dir)
 	t_env	*oldpwd;
 	char	cwd[PATH_MAX];
 
+	mshell()->oldpwd = ft_strdup(old_dir);
+	if (getcwd(cwd, PATH_MAX))
+		mshell()->pwd = ft_strdup(cwd);
 	pwd = find_env_var("PWD", *mshell()->env_list);
 	oldpwd = find_env_var("OLDPWD", *mshell()->env_list);
 	if (oldpwd)
-	{
-		if (pwd)
-			oldpwd->value = ft_strdup(pwd->value);
-		else
-			oldpwd->value = ft_strdup(old_dir);
-	}
+		oldpwd->value = ft_strdup(mshell()->oldpwd);
 	if (pwd)
-	{
-		getcwd(cwd, PATH_MAX);
-		pwd->value = ft_strdup(cwd);
-	}
-	mshell()->pwd = pwd->value;
+		pwd->value = ft_strdup(mshell()->pwd);
 }
 
 int	chdir_and_update_env(char *new_dir, char *old_dir)
@@ -66,7 +60,7 @@ int	builtin_cd(char **args)
 	if (args[1])
 		return (pop_error("Minishell: cd: too many arguments\n"), EXIT_FAILURE);
 	if (!getcwd(old_dir, PATH_MAX))
-		return (perror("Minishell: cd: getcwd: "), EXIT_SUCCESS);
+		return (perror("Minishell: cd: "), EXIT_FAILURE);
 	new_dir = args[0];
 	if (new_dir && *args[0])
 	{
