@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_arg.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/18 15:46:31 by sait-alo         ###   ########.fr       */
+/*   Updated: 2024/07/19 18:43:28 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ char	*expand_arg(char *arg, bool *to_split)
 	result = ft_strdup("");
 	while (arg[qs.i])
 	{
-		if (arg[qs.i] == '=' && arg[qs.i + 1] && arg[qs.i + 1] == '$')
+		if (arg[qs.i] == '=' && arg[qs.i + 1] && arg[qs.i + 1] == '$' \
+			&& dollar_count(arg) == 1)
 			*to_split = false;
 		if (arg[qs.i] == SQUOTE || arg[qs.i] == DQUOTE)
 			*to_split = false;

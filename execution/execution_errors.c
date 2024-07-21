@@ -6,16 +6,20 @@
 /*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 18:02:28 by msaadidi          #+#    #+#             */
-/*   Updated: 2024/07/16 18:03:05 by msaadidi         ###   ########.fr       */
+/*   Updated: 2024/07/20 16:11:20 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <errno.h>
 
 void	perror_file(char *file_name)
 {
 	ft_putstr_fd("Minishell: ", 2);
-	perror(file_name);
+	if (file_name)
+		perror(file_name);
+	else
+		ft_putendl_fd(strerror(ENOENT), 2);
 }
 
 int	perror_ambiguous(char *file_name)

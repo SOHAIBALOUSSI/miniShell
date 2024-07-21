@@ -3,24 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/18 13:24:51 by sait-alo         ###   ########.fr       */
+/*   Updated: 2024/07/20 16:15:51 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+static int	check_redir(t_redir *redir)
+{
+	if (redir->file_name)
+		return (check_special_chars(redir->file_name));
+	else
+		return (1);
+}
+
 int	check_files(t_redir *redir)
 {
 	if (!redir->file_name)
-		return (1);
-	if (!check_spaces(redir->file_name))
 		return (0);
-	if ((count_words(redir->file_name) == 0 \
-			&& redir->file_name[0]) \
-			|| count_words(redir->file_name) > 1)
+	if (count_words(redir->file_name) > 1)
+		return (1);
+	if (count_words(redir->file_name) == 0)
 		return (1);
 	return (0);
 }
@@ -29,9 +35,11 @@ static int	expand_redirection(t_redir *redir_list)
 {
 	t_redir	*redir;
 	bool	to_split;
+	int		did_it_exp;
 
 	redir = redir_list;
 	to_split = false;
+	did_it_exp = 0;
 	while (redir)
 	{
 		if (redir->type == _HEREDOC)
@@ -41,8 +49,9 @@ static int	expand_redirection(t_redir *redir_list)
 		}
 		else if (redir->file_name)
 		{
+			did_it_exp = check_redir(redir);
 			redir->file_name = expand_arg(redir->file_name, &to_split);
-			if (check_files(redir))
+			if (did_it_exp && check_files(redir))
 				redir->is_ambiguous = 1;
 		}
 		redir = redir->next;
@@ -75,13 +84,13 @@ void	expander(t_tree *root)
 {
 	if (root->argv)
 	{
-		expand_argv(root);
 		expand_wildard(&root->argv);
+		expand_argv(root);
 		set_dollar_("_", get_last_arg(root->argv));
 	}
 	if (root->redir_list)
 	{
-		expand_redirection(root->redir_list);
 		expand_redir_wildcard(&root->redir_list);
+		expand_redirection(root->redir_list);
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: m3ayz00 <m3ayz00@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/18 14:54:37 by sait-alo         ###   ########.fr       */
+/*   Updated: 2024/07/20 23:21:03 by m3ayz00          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,7 @@ typedef struct s_tree
 	struct s_tree	*subtree;
 	t_redir			*redir_list;
 	char			**argv;
+	char			*value;
 	size_t			pipe_count;
 	size_t			argc;
 	t_tok			type;
@@ -231,7 +232,7 @@ int			is_directory(const char *path);
 char		*get_path(char *cmd, char *env_path);
 int			minishell_error(char *cmd);
 int			alloc_pipe_fd(pid_t **pid, int (**fd)[2], int n_cmd);
-void		dupping(int is_builtin, t_redir *current);
+void		dupping(int is_builtin, t_redir *current, int index, int std_fd);
 void		assign_exit(int status);
 
 /*		Expander		*/
@@ -246,6 +247,7 @@ char		*ft_strjoin_char(char *str, char c);
 char		*expand_var(char *var_name);
 char		*expand_variable(char *arg, int *i);
 bool		is_expandable(char c);
+int			check_special_chars(char *str);
 
 /*		Wildcard		*/
 void		expand_wildard(char ***old_argv);
@@ -315,5 +317,6 @@ int			count_words(char *str);
 char		**mem_free(char **arr, size_t count);
 char		*get_env_value(char *env);
 char		*get_env_key(char *s);
+int			dollar_count(char *arg);
 
 #endif /* MINISHELL_H */

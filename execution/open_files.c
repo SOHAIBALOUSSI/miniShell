@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_files.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: m3ayz00 <m3ayz00@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 18:08:33 by msaadidi          #+#    #+#             */
-/*   Updated: 2024/07/18 18:53:46 by sait-alo         ###   ########.fr       */
+/*   Updated: 2024/07/20 23:18:54 by m3ayz00          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	handle_input_redirection(t_redir *current, int *errors, int is_builtin)
 		return (perror_file(current->file_name), 1);
 	}
 	current->original_in = dup(STDIN_FILENO);
-	dupping(is_builtin, current);
+	dupping(is_builtin, current, 0, STDIN_FILENO);
 	close(current->fds[0]);
 	return (0);
 }
@@ -48,11 +48,12 @@ int	handle_output_redirection(t_redir *current, int *errors, int is_builtin)
 	current->fds[1] = open(current->file_name, flags, 0644);
 	if (current->fds[1] < 0)
 	{
+		perror_file(current->file_name);
 		(*errors)++;
-		return (perror_file(current->file_name), 1);
+		return (1);
 	}
 	current->original_out = dup(STDOUT_FILENO);
-	dupping(is_builtin, current);
+	dupping(is_builtin, current, 1, STDOUT_FILENO);
 	close(current->fds[1]);
 	return (0);
 }

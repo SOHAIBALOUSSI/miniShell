@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/16 16:33:48 by sait-alo         ###   ########.fr       */
+/*   Updated: 2024/07/19 17:08:01 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ bool	check_n_option(char *arg)
 {
 	int	i;
 
-	if (arg[0] == '-')
+	if (arg[0] == '-' && arg[1])
 	{
 		i = 1;
 		while (arg[i] == 'n')

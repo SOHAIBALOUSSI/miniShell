@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 11:43:35 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/18 11:50:42 by sait-alo         ###   ########.fr       */
+/*   Updated: 2024/07/19 18:05:21 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ void	expand_wildard(char ***old_argv)
 			matched = get_matching_files((*old_argv)[i]);
 			if (matched && matched[0])
 				add_matched_files(&matched, &new_argv, &new_argc);
+			else
+				realloc_argv(&new_argv, &new_argc, (*old_argv)[i]);
 		}
 		else
 			realloc_argv(&new_argv, &new_argc, (*old_argv)[i]);

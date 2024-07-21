@@ -3,13 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sait-alo <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 11:52:35 by sait-alo          #+#    #+#             */
-/*   Updated: 2023/11/27 11:52:55 by sait-alo         ###   ########.fr       */
+/*   Updated: 2024/07/19 17:08:01 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "libft.h"
+
 #include "../minishell.h"
 
 static int	int_len(long n)

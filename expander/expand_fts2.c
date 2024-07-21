@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_fts2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/16 16:44:56 by sait-alo         ###   ########.fr       */
+/*   Updated: 2024/07/20 15:18:00 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,34 @@ void	add_to_new_argv(char *expanded_arg,
 		split_and_add_to_new_argv(expanded_arg, expanded_argv);
 	else
 		*expanded_argv = add_to_argv(expanded_arg, expanded_argv);
+}
+
+int	check_special_chars(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '$')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	dollar_count(char *arg)
+{
+	int	count;
+	int	i;
+
+	i = 0;
+	count = 0;
+	while (arg[i])
+	{
+		if (arg[i] == '$')
+			count++;
+		i++;
+	}
+	return (count);
 }

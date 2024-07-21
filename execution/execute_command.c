@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: m3ayz00 <m3ayz00@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 17:52:45 by msaadidi          #+#    #+#             */
-/*   Updated: 2024/07/18 19:03:30 by sait-alo         ###   ########.fr       */
+/*   Updated: 2024/07/20 23:20:45 by m3ayz00          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,10 @@ void	prepare_command(t_tree *root, char **cmd_path)
 	actual_command(root, *cmd_path);
 }
 
-void	dupping(int is_builtin, t_redir *current)
+void	dupping(int is_builtin, t_redir *current, int index, int std_fd)
 {
 	if (is_builtin && !current->next)
-		dup2(current->fds[0], STDIN_FILENO);
-	else
-		dup2(current->fds[0], STDIN_FILENO);
+		dup2(current->fds[index], std_fd);
+	else if (!is_builtin)
+		dup2(current->fds[index], std_fd);
 }

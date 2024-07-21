@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sait-alo <sait-alo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: msaadidi <msaadidi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 15:32:22 by sait-alo          #+#    #+#             */
-/*   Updated: 2024/07/18 15:45:29 by sait-alo         ###   ########.fr       */
+/*   Updated: 2024/07/19 17:08:01 by msaadidi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	go__home(char *old_dir)
 	t_env	*home;
 
 	home = find_env_var("HOME", *mshell()->env_list);
-	if (!home)
+	if (!home || !home->value)
 		return (pop_error("Minishell: cd: HOME not set\n"), EXIT_FAILURE);
 	if (ft_strcmp(home->value, "") != 0)
 		return (chdir_and_update_env(home->value, old_dir));
@@ -55,12 +55,12 @@ int	builtin_cd(char **args)
 	char		old_dir[PATH_MAX];
 	struct stat	dir_stat;
 
+	if (!getcwd(old_dir, PATH_MAX))
+		return (perror("Minishell: cd: "), EXIT_FAILURE);
 	if (!*args)
 		return (go__home(old_dir));
 	if (args[1])
 		return (pop_error("Minishell: cd: too many arguments\n"), EXIT_FAILURE);
-	if (!getcwd(old_dir, PATH_MAX))
-		return (perror("Minishell: cd: "), EXIT_FAILURE);
 	new_dir = args[0];
 	if (new_dir && *args[0])
 	{
